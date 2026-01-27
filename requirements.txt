@@ -1,6 +1,7 @@
 django
 python-dotenv
 redis
+psycopg_binary
 psycopg[pool]
 pytest
 pytest_asyncio
