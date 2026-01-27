@@ -1,3 +1,7 @@
 django
 python-dotenv
 redis
+psycopg[pool]
+pytest
+pytest_asyncio
+google-auth
