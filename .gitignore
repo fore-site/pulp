@@ -3,3 +3,5 @@
 /__pycache__
 /config/__pycache__
 /config/settings.py
+/src/__pycache__
+/src/views/__pycache__
