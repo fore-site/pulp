@@ -1,10 +1,10 @@
-CREATE TYPE UserStatus AS ENUM (
+CREATE TYPE commerce.UserStatus AS ENUM (
     'Active',
     'Suspended',
     'Deleted'
 );
 
-CREATE TYPE BookFormat AS ENUM (
+CREATE TYPE commerce.BookFormat AS ENUM (
     'Hardcover',
     'Paperback',
     'Digital'
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS commerce.users (
     email VARCHAR(255) UNIQUE NOT NULL,
     phone_no INTEGER DEFAULT NULL,
     password_hash VARCHAR(255) DEFAULT NULL,
-    user_status UserStatus DEFAULT 'Active',
+    user_status commerce.UserStatus DEFAULT 'Active',
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS commerce.sku (
     code VARCHAR(30) UNIQUE NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
     quantity INT,
-    format BookFormat NOT NULL,
+    format commerce.BookFormat NOT NULL,
     created_at TIMESTAMPTZ NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
