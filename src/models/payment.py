@@ -24,6 +24,9 @@ class Payments(models.Model):
     payment_status = models.CharField(max_length=255, default='Pending')
     payment_date = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return self.transaction_id
+
     class Meta:
         db_table = 'payments'
 
@@ -32,6 +35,9 @@ class TransactionLogs(models.Model):
     events = models.CharField(max_length=50)
     details = models.TextField(blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.transaction
 
     class Meta:
         db_table = 'transaction_logs'

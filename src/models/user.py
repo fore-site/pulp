@@ -21,6 +21,9 @@ class Users(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.fullname
+
     class Meta:
         db_table = 'users'
 
@@ -30,6 +33,9 @@ class Addresses(models.Model):
     address_state = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
     is_default = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.description
 
     class Meta:
         db_table = 'addresses'
