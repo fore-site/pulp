@@ -1,7 +1,7 @@
 from django.db import models
 
 class Orders(models.Model):
-    user_id = models.ForeignKey('Users', on_delete=models.RESTRICT)
+    user = models.ForeignKey('Users', on_delete=models.RESTRICT)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     address_city = models.CharField(max_length=255)
     address_state = models.CharField(max_length=255)
@@ -14,8 +14,8 @@ class Orders(models.Model):
         db_table = 'orders'
 
 class OrderItems(models.Model):
-    order_id = models.ForeignKey(Orders, on_delete=models.RESTRICT)
-    sku_id = models.ForeignKey('Sku', on_delete=models.RESTRICT)
+    order = models.ForeignKey(Orders, on_delete=models.RESTRICT)
+    sku = models.ForeignKey('Sku', on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 

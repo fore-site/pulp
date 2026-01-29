@@ -20,7 +20,7 @@ class Users(models.Model):
         db_table = 'users'
 
 class Addresses(models.Model):
-    user_id = models.ForeignKey(Users, on_delete=models.RESTRICT)
+    user = models.ForeignKey(Users, on_delete=models.RESTRICT)
     city = models.CharField(max_length=255)
     address_state = models.CharField(max_length=255)
     description = models.CharField(max_length=255)

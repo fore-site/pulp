@@ -1,7 +1,7 @@
 from django.db import models
 
 class PaymentMethods(models.Model):
-    user_id = models.ForeignKey('Users', null=True, blank=True, on_delete=models.CASCADE)
+    user = models.ForeignKey('Users', null=True, blank=True, on_delete=models.CASCADE)
     provider = models.CharField(max_length=255)
     method_type = models.CharField(max_length=255)
     token = models.CharField(max_length=255, blank=True)
@@ -14,7 +14,7 @@ class PaymentMethods(models.Model):
         db_table = 'payment_methods'
 
 class Payments(models.Model):
-    order_id = models.ForeignKey('Orders', on_delete=models.RESTRICT)
+    order = models.ForeignKey('Orders', on_delete=models.RESTRICT)
     payment_method_id = models.ForeignKey(PaymentMethods, null=True, on_delete=models.SET_NULL)
     transaction_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
     provider = models.CharField(max_length=255)
@@ -28,7 +28,7 @@ class Payments(models.Model):
         db_table = 'payments'
 
 class TransactionLogs(models.Model):
-    transaction_id = models.ForeignKey(Payments, to_field='transaction_id', on_delete=models.RESTRICT)
+    transaction = models.ForeignKey(Payments, to_field='transaction_id', on_delete=models.RESTRICT)
     events = models.CharField(max_length=50)
     details = models.TextField(blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True)
