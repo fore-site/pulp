@@ -20,5 +20,9 @@ from src.views import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('home/', views.home, name='home')
+    path('', views.home, name='home'),
+    path('manga/', views.manga, name='manga_listing'),
+    path('manga/<int:manga_id>/', views.detail, name='manga_detail'),
+    path('comic/<int:comic_id>/', views.comic, name='comic_detail'),
+    path('order/<int:id>/', views.order, name='orders')
 ]

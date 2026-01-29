@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Products listing</title>
+    </head>
+    <body>
+        {% if manga_list %}
+        <ul>
+            {% for manga in manga_list %}
+            <li>
+                <a href="/manga/{{ manga.id }}/">{{ manga.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No manga is available.</p>
+        {% endif %}
+    </body>
+</html>

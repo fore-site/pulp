@@ -8,7 +8,7 @@ class Genre(models.Model):
         db_table = 'genre'
 
 class Series(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     image_url = models.TextField(blank=True)
     is_deleted = models.BooleanField(default=False)
 

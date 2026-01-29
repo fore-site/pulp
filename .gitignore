@@ -5,3 +5,4 @@
 /config/settings.py
 /src/__pycache__
 /src/views/__pycache__
+/src/models/__pycache__
