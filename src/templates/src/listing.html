@@ -10,7 +10,9 @@
         <ul>
             {% for manga in manga_list %}
             <li>
-                <a href="/manga/{{ manga.id }}/">{{ manga.name }}</a>
+                <a href="{% url 'manga_detail' manga.id %}"
+                    >{{ manga.title }}</a
+                >
             </li>
             {% endfor %}
         </ul>

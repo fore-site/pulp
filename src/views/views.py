@@ -8,14 +8,12 @@ def home(request):
     return HttpResponse('HELLO, You have reached the home page.')
 
 def detail(request, manga_id):
-        book = get_object_or_404(Series, pk=1)
+        book = get_object_or_404(Series, pk=manga_id)
         return render(request, 'src/detail.html', {'comic': book})
 
 def manga(request):
-    Series(title='Naruto').save()
-    Series(title='Bleach').save()
-    Series(title='Attack on titan').save()
     context = {'manga_list': Series.objects.order_by('id')}
+    print(context)
     return render(request, "src/listing.html", context)
 
 def comic(request, comic_id):

@@ -8,11 +8,16 @@ class Users(models.Model):
         Suspended = 'Suspended',
         Deleted = 'Deleted'
 
+    class UserRole(models.TextChoices):
+        Customer = 'Customer',
+        Admin = 'Admin'
+
     fullname = models.CharField(max_length=255)
     email = models.EmailField(max_length=255, unique=True)
     phone_no = models.CharField(max_length=50, blank=True)
     password_hash = models.CharField(max_length=255, blank=True)
     user_status = models.CharField(max_length=9, choices=UserStatus, default=UserStatus.Active)
+    role = models.CharField(max_length=8, choices=UserRole, default=UserRole.Customer)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

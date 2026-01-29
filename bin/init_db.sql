@@ -10,13 +10,19 @@
 --     'Digital'
 -- );
 
+-- CREATE TYPE commerce.UserRole AS ENUM (
+--     'Customer',
+--     'Admin'
+-- )
+
 -- CREATE TABLE IF NOT EXISTS commerce.users (
 --     id SERIAL PRIMARY KEY,
 --     fullname VARCHAR(255) NOT NULL,
 --     email VARCHAR(255) UNIQUE NOT NULL,
 --     phone_no VARCHAR(50) NOT NULL,
 --     password_hash VARCHAR(255),
---     user_status commerce.UserStatus,
+--     user_status commerce.UserStatus NOT NULL,
+--     role commerce.UserRole NOT NULL,
 --     created_at TIMESTAMPTZ NOT NULL,
 --     updated_at TIMESTAMPTZ NOT NULL
 -- );
