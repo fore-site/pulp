@@ -17,7 +17,7 @@ class Series(models.Model):
         Manga = 'Manga'
 
     title = models.CharField(max_length=255, unique=True)
-    series_type = models.CharField(max_length=5, choices=SeriesType)
+    series_type = models.CharField(max_length=5, choices=SeriesType.choices)
     image_url = models.TextField(blank=True)
     is_deleted = models.BooleanField(default=False)
 

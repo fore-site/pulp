@@ -8,6 +8,18 @@
     <body>
         {% if user and not user.is_staff %}
         <h1>Welcome {{user}}</h1>
+        {% endif %} {% if manga_comic_list %}
+        <ul>
+            {% for book in manga_comic_list %}
+            <li>
+                <a href="{% url 'book_detail' book.series.title book.id %}"
+                    >{{ book.title }}</a
+                >
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No book is available.</p>
         {% endif %}
     </body>
 </html>

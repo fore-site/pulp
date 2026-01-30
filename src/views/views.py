@@ -2,9 +2,21 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
-from src.models import User, Series
+from src.models import User, Series, Book
 # Create your views here.
 
+class IndexView(generic.ListView):
+    template_name = 'src/index.html'
+    context_object_name = 'manga_comic_list'
+
+    def get_queryset(self):
+        manga = Book.objects.filter(series__series_type='Manga')
+        comic = Book.objects.filter(series__series_type='Comic')
+        return manga | comic
+
+class DetailView(generic.DetailView):
+    model = Book
+    template_name = 'src/detail.html'
 
 def home(request, user_id=None):
     if user_id:
