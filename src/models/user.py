@@ -17,7 +17,6 @@ class User(models.Model):
     phone_no = models.CharField(max_length=50, blank=True)
     password_hash = models.CharField(max_length=255, blank=True)
     user_status = models.CharField(max_length=9, choices=UserStatus, default=UserStatus.Active)
-    role = models.CharField(max_length=8, choices=UserRole, default=UserRole.Customer)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

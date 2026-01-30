@@ -10,10 +10,10 @@
 --     'Digital'
 -- );
 
--- CREATE TYPE commerce.UserRole AS ENUM (
---     'Customer',
---     'Admin'
--- )
+CREATE TYPE commerce.SeriesType AS ENUM (
+    'Comic',
+    'Manga'
+)
 
 -- CREATE TABLE IF NOT EXISTS commerce.users (
 --     id SERIAL PRIMARY KEY,
@@ -22,7 +22,6 @@
 --     phone_no VARCHAR(50) NOT NULL,
 --     password_hash VARCHAR(255),
 --     user_status commerce.UserStatus NOT NULL,
---     role commerce.UserRole NOT NULL,
 --     created_at TIMESTAMPTZ NOT NULL,
 --     updated_at TIMESTAMPTZ NOT NULL
 -- );
@@ -45,6 +44,7 @@
 -- CREATE TABLE IF NOT EXISTS commerce.series (
 --     id SERIAL PRIMARY KEY,
 --     title VARCHAR(255) NOT NULL UNIQUE,
+--     series_type commerce.SeriesType NOT NULL,
 --     image_url TEXT NOT NULL,
 --     is_deleted BOOLEAN NOT NULL
 -- );

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sign Up</title>
+    </head>
+    <body>
+        <form action="{% url 'auth_signup' user.id %}" method="post">
+            {% csrf_token %}
+            <fieldset>
+                <legend>
+                    <h3>
+                        New to Pulp? Register with us and make your first
+                        purchase
+                    </h3>
+                </legend>
+                {% if signup_error_message %}
+                <p><strong>{{ signup_error_message }}</strong></p>
+                {% endif %}
+                <label for="email">Email</label><br />
+                <input
+                    type="email"
+                    name="email"
+                    id="signup_email"
+                    autocomplete="on"
+                />
+                <br />
+                <label for="password">Password</label><br />
+                <input
+                    type="password"
+                    name="password"
+                    id="signup_pass"
+                    minlength="7"
+                    title="Password must be minimum 7 characters"
+                />
+            </fieldset>
+            <input type="submit" value="register" />
+        </form>
+        <a href="http://google.com">Sign up with Google</a>
+    </body>
+</html>

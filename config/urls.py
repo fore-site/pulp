@@ -20,8 +20,12 @@ from src.views import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, {"user_id": None}, name='home'),
-    path('/<int:user_id>/', views.home, name='home'),
+    path('', views.home, name='home'),
+    path('<int:user_id>/', views.home, name='home'),
+    path('sign-in/', views.signin, name='signin'),
+    path('sign-up/', views.signup, name='signup'),
+    path('auth/sign-in/<int:user_id>/', views.auth_signin, name='auth_signin'),
+    path('auth/sign-up/<int:user_id>/', views.auth_signup, name='auth_signup'),
     path('manga/', views.manga, name='manga_listing'),
     path('manga/<int:manga_id>/', views.detail, name='manga_detail'),
     path('comic/<int:comic_id>/', views.comic, name='comic_detail'),

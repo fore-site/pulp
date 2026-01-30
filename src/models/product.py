@@ -11,7 +11,13 @@ class Genre(models.Model):
         db_table = 'genre'
 
 class Series(models.Model):
+
+    class SeriesType(models.TextChoices):
+        Comic = 'Comic'
+        Manga = 'Manga'
+
     title = models.CharField(max_length=255, unique=True)
+    series_type = models.CharField(max_length=5, choices=SeriesType)
     image_url = models.TextField(blank=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -23,6 +29,7 @@ class Series(models.Model):
         verbose_name_plural = 'Series'
 
 class Book(models.Model):
+
     series = models.ForeignKey(Series, null=True, blank=True, on_delete=models.RESTRICT)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)

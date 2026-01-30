@@ -6,7 +6,7 @@
         <title>Pulp</title>
     </head>
     <body>
-        {% if user %}
+        {% if user and not user.is_staff %}
         <h1>Welcome {{user}}</h1>
         {% endif %}
     </body>
