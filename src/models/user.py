@@ -12,7 +12,7 @@ class User(models.Model):
         Customer = 'Customer',
         Admin = 'Admin'
 
-    fullname = models.CharField(max_length=255)
+    fullname = models.CharField(max_length=255, blank=True)
     email = models.EmailField(max_length=255, unique=True)
     phone_no = models.CharField(max_length=50, blank=True)
     password_hash = models.CharField(max_length=255, blank=True)
@@ -22,7 +22,9 @@ class User(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.fullname
+        if self.fullname:
+            return self.fullname
+        return self.email
 
     class Meta:
         db_table = 'users'

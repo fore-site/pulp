@@ -1,11 +1,17 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse, Http404
-from src.models.product import Series
+from django.http import HttpResponse
+from src.models import User, Series
 # Create your views here.
 
 
-def home(request):
-    return HttpResponse('HELLO, You have reached the home page.')
+def home(request, user_id=None):
+    if user_id:
+        user = get_object_or_404(User)
+        return render(request, 'src/index.html', {"user": user})
+    return render(request, 'src/index.html')
+
+def register(request):
+    return render(request, 'src/register.html')
 
 def detail(request, manga_id):
         book = get_object_or_404(Series, pk=manga_id)

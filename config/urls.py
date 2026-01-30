@@ -20,7 +20,8 @@ from src.views import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home, name='home'),
+    path('', views.home, {"user_id": None}, name='home'),
+    path('/<int:user_id>/', views.home, name='home'),
     path('manga/', views.manga, name='manga_listing'),
     path('manga/<int:manga_id>/', views.detail, name='manga_detail'),
     path('comic/<int:comic_id>/', views.comic, name='comic_detail'),
