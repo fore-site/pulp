@@ -1,7 +1,7 @@
 from django.db import models
 from datetime import datetime
 
-class Users(models.Model):
+class User(models.Model):
 
     class UserStatus(models.TextChoices):
         Active = 'Active',
@@ -27,8 +27,8 @@ class Users(models.Model):
     class Meta:
         db_table = 'users'
 
-class Addresses(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.RESTRICT)
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.RESTRICT)
     city = models.CharField(max_length=255)
     address_state = models.CharField(max_length=255)
     description = models.CharField(max_length=255)
@@ -39,3 +39,4 @@ class Addresses(models.Model):
 
     class Meta:
         db_table = 'addresses'
+        verbose_name_plural = 'Addresses'

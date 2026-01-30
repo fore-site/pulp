@@ -1,7 +1,7 @@
 from django.db import models
 
-class PaymentMethods(models.Model):
-    user = models.ForeignKey('Users', null=True, blank=True, on_delete=models.CASCADE)
+class PaymentMethod(models.Model):
+    user = models.ForeignKey('User', null=True, blank=True, on_delete=models.CASCADE)
     provider = models.CharField(max_length=255)
     method_type = models.CharField(max_length=255)
     token = models.CharField(max_length=255, blank=True)
@@ -13,9 +13,9 @@ class PaymentMethods(models.Model):
     class Meta:
         db_table = 'payment_methods'
 
-class Payments(models.Model):
-    order = models.ForeignKey('Orders', on_delete=models.RESTRICT)
-    payment_method_id = models.ForeignKey(PaymentMethods, null=True, on_delete=models.SET_NULL)
+class Payment(models.Model):
+    order = models.ForeignKey('Order', on_delete=models.RESTRICT)
+    payment_method_id = models.ForeignKey(PaymentMethod, null=True, on_delete=models.SET_NULL)
     transaction_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
     provider = models.CharField(max_length=255)
     method_type = models.CharField(max_length=255)
@@ -30,8 +30,8 @@ class Payments(models.Model):
     class Meta:
         db_table = 'payments'
 
-class TransactionLogs(models.Model):
-    transaction = models.ForeignKey(Payments, to_field='transaction_id', on_delete=models.RESTRICT)
+class TransactionLog(models.Model):
+    transaction = models.ForeignKey(Payment, to_field='transaction_id', on_delete=models.RESTRICT)
     events = models.CharField(max_length=50)
     details = models.TextField(blank=True)
     time_stamp = models.DateTimeField(auto_now_add=True)

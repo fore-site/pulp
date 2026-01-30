@@ -1,12 +1,12 @@
-from .cart import CartItems, Carts
-from .order import OrderItems, Orders
-from .payment import PaymentMethods, Payments
-from .product import (Publishers, 
-                      Books, 
-                      BooksAuthorsPivot, 
-                      BooksPublishersPivot, 
-                      GenreBooksPivot, 
-                      Authors, Series, 
+from .cart import CartItem, Cart
+from .order import OrderItem, Order
+from .payment import PaymentMethod, Payment
+from .product import (Publisher, 
+                      Book, 
+                      BookAuthorPivot, 
+                      BookPublisherPivot, 
+                      GenreBookPivot, 
+                      Author, Series, 
                       Sku, 
                       Genre)
-from .user import Users, Addresses
+from .user import User, Address
