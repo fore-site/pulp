@@ -27,7 +27,7 @@ urlpatterns = [
     path('auth/sign-in/<int:user_id>/', views.auth_signin, name='auth_signin'),
     path('auth/sign-up/<int:user_id>/', views.auth_signup, name='auth_signup'),
     path('manga/', views.manga, name='manga_listing'),
-    path('books/<str:series_name>/<int:pk>/', views.DetailView.as_view(), name='book_detail'),
+    path('books/<slug:slug>/<int:pk>/', views.DetailView.as_view(), name='book_detail'),
     path('comic/', views.comic, name='comic_listing'),
     path('order/<int:id>/', views.order, name='orders')
 ]

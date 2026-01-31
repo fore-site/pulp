@@ -10,10 +10,10 @@
 --     'Digital'
 -- );
 
-CREATE TYPE commerce.SeriesType AS ENUM (
-    'Comic',
-    'Manga'
-)
+-- CREATE TYPE commerce.SeriesType AS ENUM (
+--     'Comic',
+--     'Manga'
+-- );
 
 -- CREATE TABLE IF NOT EXISTS commerce.users (
 --     id SERIAL PRIMARY KEY,
@@ -164,4 +164,6 @@ CREATE TYPE commerce.SeriesType AS ENUM (
 --     time_stamp TIMESTAMPTZ NOT NULL
 -- );
 
--- CREATE SCHEMA commerce;
+DROP SCHEMA public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;

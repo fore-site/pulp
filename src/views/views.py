@@ -5,24 +5,26 @@ from django.views import generic
 from src.models import User, Series, Book
 # Create your views here.
 
-class IndexView(generic.ListView):
+class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
-    context_object_name = 'manga_comic_list'
 
-    def get_queryset(self):
-        manga = Book.objects.filter(series__series_type='Manga')
-        comic = Book.objects.filter(series__series_type='Comic')
-        return manga | comic
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        manga = Book.objects.filter(series__series_type='Manga').order_by('series', 'created_at').distinct('series')
+        comic = Book.objects.filter(series__series_type='Comic').order_by('series', 'created_at').distinct('series')
+        user_id = self.kwargs.get('user_id')
+        
+        if user_id:
+            context['user'] = get_object_or_404(User, pk=user_id)
+
+        context['manga_list'] = manga
+        context['comic_list'] = comic
+        return context
+
 
 class DetailView(generic.DetailView):
     model = Book
     template_name = 'src/detail.html'
-
-def home(request, user_id=None):
-    if user_id:
-        user = get_object_or_404(User)
-        return render(request, 'src/index.html', {"user": user})
-    return render(request, 'src/index.html')
 
 def signin(request):
     return render(request, 'src/login.html')
