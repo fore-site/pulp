@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="en">
     <head>
+        {% load static %}
+
+        <link rel="stylesheet" href="{% static 'src/styles.css' %}" />
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Pulp</title>
@@ -10,7 +13,11 @@
         <h1>Welcome {{user}}</h1>
         {% endif %}
 
-        <h2>Comic</h2>
+        <h3>Featured</h3>
+        <h3>Trending</h3>
+        <h3>Hot Deals</h3>
+
+        <h3>Comic New Releases</h3>
         <ul>
             {% for comic in comic_list %}
             <li>
@@ -23,7 +30,7 @@
             {% endfor %}
         </ul>
 
-        <h2>Manga</h2>
+        <h3>Manga New Releases</h3>
         <ul>
             {% for manga in manga_list %}
             <li>
@@ -36,5 +43,7 @@
             <p>No manga is available.</p>
             {% endfor %}
         </ul>
+        <h3>Comic Bestselling</h3>
+        <h3>Manga Bestselling</h3>
     </body>
 </html>

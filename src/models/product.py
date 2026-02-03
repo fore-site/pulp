@@ -33,6 +33,8 @@ class Book(models.Model):
     series = models.ForeignKey(Series, null=True, blank=True, on_delete=models.RESTRICT)
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
+    is_featured = models.BooleanField(default=False)
+    published_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
 
@@ -105,3 +107,36 @@ class Sku(models.Model):
     class Meta:
         db_table = 'sku'
         verbose_name_plural = 'Sku'
+
+class BookEvent(models.Model):
+
+    class EventTypes:
+        view = 'view'
+        add_to_cart = 'add_to_cart'
+        purchase = 'purchase'
+
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
+    event_type = models.CharField(max_length=11)
+
+    def __str__(self):
+        return self.event_type
+
+    class Meta:
+        db_table = 'book_events'
+
+class BookAnalyticsDaily(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True)
+    view_count = models.PositiveBigIntegerField()
+    add_to_cart_count = models.PositiveBigIntegerField()
+    purchase_count = models.PositiveBigIntegerField()
+
+    def __str__(self):
+        return f'view_count: {self.view_count}, add_to_cart_count: {self.add_to_cart_count}, purchase_count: {self.purchase_count}'
+
+    class Meta:
+        db_table = 'book_analytics_daily'
+        verbose_name_plural = 'Book Analytics Daily'
