@@ -1,42 +1,41 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.translation import gettext_lazy as _
+from django.conf import settings
+from ..managers import CustomUserManager
 
-class User(models.Model):
-
-    class UserStatus(models.TextChoices):
-        Active = 'Active',
-        Suspended = 'Suspended',
-        Deleted = 'Deleted'
-
-    class UserRole(models.TextChoices):
-        Customer = 'Customer',
-        Admin = 'Admin'
-
-    fullname = models.CharField(max_length=255, blank=True)
-    email = models.EmailField(max_length=255, unique=True)
+class User(AbstractBaseUser, PermissionsMixin):
+    email = models.EmailField(verbose_name=_('email address'),
+                               max_length=255,
+                                unique=True)
     phone_no = models.CharField(max_length=50, blank=True)
-    password_hash = models.CharField(max_length=255, blank=True)
-    user_status = models.CharField(max_length=9, choices=UserStatus, default=UserStatus.Active)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def __str__(self):
-        if self.fullname:
-            return self.fullname
         return self.email
 
     class Meta:
         db_table = 'users'
 
-class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.RESTRICT)
-    city = models.CharField(max_length=255)
+class UserAddress(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
+    recipient_name = models.CharField(max_length=255)
+    recipient_phone_no = models.CharField(max_length=255)
     address_state = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
+    address_city = models.CharField(max_length=255)
+    description = models.CharField(max_length=300, help_text='full address details')
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
         return self.description
 
     class Meta:
-        db_table = 'addresses'
-        verbose_name_plural = 'Addresses'
+        db_table = 'user_addresses'
+        verbose_name_plural = ' User Addresses'

@@ -1,11 +1,10 @@
 from django.db import models
 
 class Genre(models.Model):
-    genre_name = models.CharField(max_length=255)
-    image_url = models.TextField(blank=True)
+    name = models.CharField(max_length=255)
 
     def __str__(self):
-        return self.genre_name
+        return self.name
 
     class Meta:
         db_table = 'genre'
@@ -18,7 +17,7 @@ class Series(models.Model):
 
     title = models.CharField(max_length=255, unique=True)
     series_type = models.CharField(max_length=5, choices=SeriesType.choices)
-    image_url = models.TextField(blank=True)
+    image_url = models.CharField(blank=True, max_length=255)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -28,15 +27,34 @@ class Series(models.Model):
         db_table = 'series'
         verbose_name_plural = 'Series'
 
-class Book(models.Model):
+class Author(models.Model):
+    name = models.CharField(max_length=255)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        db_table = 'authors'
+
+class Publisher(models.Model):
+    name = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'publishers'
+
+class Book(models.Model):
     series = models.ForeignKey(Series, null=True, blank=True, on_delete=models.RESTRICT)
     title = models.CharField(max_length=255)
+    authors = models.ManyToManyField(Author)
     description = models.TextField(blank=True)
+    image_url = models.CharField(blank=True, max_length=255)
+    genres = models.ManyToManyField(Genre)
     is_featured = models.BooleanField(default=False)
-    published_at = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
@@ -44,48 +62,6 @@ class Book(models.Model):
     class Meta:
         db_table = 'books'
 
-class Author(models.Model):
-    author_name = models.CharField(max_length=255)
-    bio = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.author_name
-
-    class Meta:
-        db_table = 'authors'
-
-class Publisher(models.Model):
-    publisher_name = models.CharField(max_length=255)
-    contact = models.CharField(max_length=255)
-    
-    def __str__(self):
-        return self.publisher_name
-
-    class Meta:
-        db_table = 'publishers'
-
-class BookAuthorPivot(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
-    author = models.ForeignKey(Author, on_delete=models.RESTRICT)
-    author_role = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = 'books_authors_pivot'
-
-class BookPublisherPivot(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
-    publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT)
-
-    class Meta:
-        db_table = 'books_publishers_pivot'
-
-class GenreBookPivot(models.Model):
-    genre = models.ForeignKey(Genre, null=True, on_delete=models.SET_NULL)
-    book = models.ForeignKey(Book, on_delete=models.DO_NOTHING)
-
-    class Meta:
-        db_table = 'genre_books_pivot'
-    
 class Sku(models.Model):
 
     class BookFormat(models.TextChoices):
@@ -95,9 +71,18 @@ class Sku(models.Model):
 
     book = models.ForeignKey(Book, on_delete=models.RESTRICT)
     code = models.CharField(max_length=30, unique=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField(null=True, blank=True)
+    publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT)
+    isbn_number = models.CharField(max_length=255, unique=True, help_text='isbn 13 number for the book variant')
+    price_usd = models.DecimalField(max_digits=10, decimal_places=2)
+    quantity = models.PositiveIntegerField()
     format = models.CharField(max_length=9, choices=BookFormat)
+    page_count = models.CharField(max_length=255)
+    dimensions = models.CharField(blank=True, max_length=255, help_text='Dimensions of hardcover or paperback formats, otherwise empty')
+    file_size = models.CharField(blank=True, max_length=50, help_text='Download size of digital format, otherwise empty')
+    language = models.CharField(max_length=255, help_text='Language edition of the book')
+    published_at = models.DateTimeField()
+    is_shipping_free = models.BooleanField(default=False)
+    is_discontinued = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -118,7 +103,7 @@ class BookEvent(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     date = models.DateTimeField(auto_now_add=True)
     sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
-    event_type = models.CharField(max_length=11)
+    event_type = models.CharField(max_length=11, choices=EventTypes)
 
     def __str__(self):
         return self.event_type

@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from .models import Series, Book
+from ..models import Series, Book
 from django.utils.text import slugify
 
 def create_book(series: str, series_type: str, title: str, description: str):
