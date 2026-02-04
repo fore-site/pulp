@@ -30,7 +30,7 @@ class UserAddress(models.Model):
     recipient_phone_no = models.CharField(max_length=255)
     address_state = models.CharField(max_length=255)
     address_city = models.CharField(max_length=255)
-    description = models.CharField(max_length=300, help_text='full address details')
+    address_street = models.CharField(max_length=300)
     is_default = models.BooleanField(default=False)
 
     def __str__(self):

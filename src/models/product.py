@@ -95,7 +95,7 @@ class Sku(models.Model):
 
 class BookEvent(models.Model):
 
-    class EventTypes:
+    class EventTypes(models.TextChoices):
         view = 'view'
         add_to_cart = 'add_to_cart'
         purchase = 'purchase'

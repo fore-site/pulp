@@ -3,6 +3,7 @@ from django.db import models
 
 class PaymentMethod(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE)
+    session_id = models.CharField(max_length=255, blank=True)
     provider = models.CharField(max_length=255)
     method_type = models.CharField(max_length=255)
     token = models.CharField(max_length=255, blank=True)

@@ -8,7 +8,8 @@ class Order(models.Model):
         pickup = 'Local Pickup'
         delivery = 'Delivery'
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, null=True)
+    session_id = models.CharField(max_length=255, blank=True)
     subtotal_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='Total amount of the sku prices')
     shipping_fee_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='shipping fee cost in usd')
     total_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
@@ -47,7 +48,7 @@ class OrderAddress(models.Model):
     recipient_phone_no = models.CharField(max_length=255)
     address_state = models.CharField(max_length=255)
     address_city = models.CharField(max_length=255)
-    description = models.CharField(max_length=300, help_text='full address details')
+    address_street = models.CharField(max_length=300)
 
     def __str__(self):
         return self.description

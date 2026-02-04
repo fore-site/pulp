@@ -7,5 +7,5 @@ from .product import (
                       Series, 
                       Sku, 
                       Genre)
-from .user import User, Address
+from .user import User, UserAddress
 from .shipping import Carrier
