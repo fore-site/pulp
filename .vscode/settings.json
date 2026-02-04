@@ -1,0 +1,11 @@
+{
+    "editor.formatOnSave": true,
+    "[html][django-html]": {
+        "editor.defaultFormatter": "monosans.djlint",
+        "editor.tabSize": 4
+    },
+    "djlint.profile": "django",
+    "djlint.useVenv": true,
+    "djlint.formatCss": true,
+    "djlint.formatJs": true
+}
