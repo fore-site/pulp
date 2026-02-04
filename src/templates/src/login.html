@@ -1,37 +1,31 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Sign In</title>
-    </head>
-    <body>
-        <form action="{% url 'auth_signin' user.id %}" method="post">
-            {% csrf_token %}
-            <fieldset>
-                <legend><h3>Login to continue your purchase</h3></legend>
-                {% if signin_error_message %}
-                <p><strong>{{ signin_error_message }}</strong></p>
-                {% endif %}
-                <label for="email">Email</label><br />
-                <input
-                    type="email"
-                    name="email"
-                    id="signin_email"
-                    autocomplete="off"
-                />
-                <br />
-                <label for="password">Password</label> <br />
-                <input
-                    type="password"
-                    name="password"
-                    id="signin_pass"
-                    minlength="7"
-                />
-            </fieldset>
-            <input type="submit" value="login" />
-        </form>
-        <a href="http://google.com">Sign in with Google</a>
-        <p>New to Pulp? <a href="{% url 'signup' %}">Create Account</a></p>
-    </body>
-</html>
+{% extends "src/base.html" %}
+{% block title %}
+    Sign In
+{% endblock title %}
+{% block content %}
+    <form action="{% url 'auth_signin' user.id %}" method="post">
+        {% csrf_token %}
+        <fieldset>
+            <legend>
+                <h3>Login to continue your purchase</h3>
+            </legend>
+            {% if signin_error_message %}
+                <p>
+                    <strong>{{ signin_error_message }}</strong>
+                </p>
+            {% endif %}
+            <label for="email">Email</label>
+            <br />
+            <input type="email" name="email" id="signin_email" autocomplete="off" />
+            <br />
+            <label for="password">Password</label>
+            <br />
+            <input type="password" name="password" id="signin_pass" minlength="7" />
+        </fieldset>
+        <input type="submit" value="login" />
+    </form>
+    <a href="https://google.com">Sign in with Google</a>
+    <p>
+        New to Pulp? <a href="{% url 'signup' %}">Create Account</a>
+    </p>
+{% endblock content %}

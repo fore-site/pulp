@@ -1,12 +1,8 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Products detail</title>
-    </head>
-    <body>
-        <p>{{book.title}}</p>
-        {{book.description}}
-    </body>
-</html>
+{% extends "src/base.html" %}
+{% block title %}
+    Product details
+{% endblock title %}
+{% block content %}
+    <p>{{ book.title }}</p>
+    {{ book.description }}
+{% endblock content %}
