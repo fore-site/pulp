@@ -10,8 +10,8 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        manga = Sku.objects.filter(book__series__series_type='Manga').order_by('book.series', 'created_at', 'price').distinct('book.series')
-        comic = Sku.objects.filter(book__series__series_type='Comic').order_by('book.series', 'created_at', 'price').distinct('book.series')
+        manga = Sku.objects.filter(book__series__series_type='Manga').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
+        comic = Sku.objects.filter(book__series__series_type='Comic').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
         user_id = self.kwargs.get('user_id')
         
         if user_id:
