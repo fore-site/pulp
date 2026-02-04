@@ -1,0 +1,12 @@
+{% extends "src/base.html" %}
+{% block title %}
+    {{ title }} Series Index
+{% endblock title %}
+{% block content %}
+    <ul>
+        {% for series in series_list %}
+            <li>
+                <a href="{% url 'series_detail' series.id %}">series.title</a>
+            </li>
+        </ul>
+    {% endblock content %}

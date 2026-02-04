@@ -1,7 +1,7 @@
 from .cart import CartItem, Cart
 from .order import OrderItem, Order
 from .payment import PaymentMethod, Payment, TransactionLog
-from .product import ( 
+from .product import (Publisher,
                       Book,    
                       Author, 
                       Series, 

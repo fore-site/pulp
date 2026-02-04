@@ -17,6 +17,7 @@ class Series(models.Model):
 
     title = models.CharField(max_length=255, unique=True)
     series_type = models.CharField(max_length=5, choices=SeriesType.choices)
+    description = models.TextField(blank=True)
     image_url = models.CharField(blank=True, max_length=255)
     is_deleted = models.BooleanField(default=False)
 

@@ -12,9 +12,9 @@
     <h3>Featured</h3>
     <h3>Comic New Releases</h3>
     <ul>
-        {% for comic in comic_list %}
+        {% for comic_sku in comic_sku_list %}
             <li>
-                <a href="{% url 'book_detail' comic.series|slugify comic.id %}">{{ comic.title }}</a>
+                <a href="{% url 'product_detail' comic_sku.book.title|slugify comic_sku.id %}">{{ comic_sku.book.title }} - {{ comic_sku.price }}</a>
             </li>
         {% empty %}
             <p>No comic is available.</p>
@@ -22,9 +22,9 @@
     </ul>
     <h3>Manga New Releases</h3>
     <ul>
-        {% for manga in manga_list %}
+        {% for manga_sku in manga_sku_list %}
             <li>
-                <a href="{% url 'book_detail' pk=manga.id slug=manga.series.title|slugify %}">{{ manga.title }}</a>
+                <a href="{% url 'product_detail' pk=manga_sku.id slug=manga_sku.book.title|slugify %}">{{ manga_sku.book.title }} - USD{{ manga_sku.price }}</a>
             </li>
         {% empty %}
             <p>No manga is available.</p>
