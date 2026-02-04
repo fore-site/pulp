@@ -7,18 +7,18 @@ class CustomUserAdmin(UserAdmin):
     form = CustomUserChangeForm
     add_form = CustomUserCreationForm
 
-    list_display = ["email", "is_active", "is_staff"]
+    list_display = ["email", "fullname", "phone_no", "is_active", "is_staff"]
     list_filter = ["email", "is_active", "is_staff"]
     fieldsets = [
-        (None, {"fields": ["email", "password"]}),
-        ("permissions", {"fields": ["is_active", "is_staff", "groups", "user_permissions"]}),
+        (None, {"fields": ["email", "fullname", "phone_no", "password"]}),
+        ("permissions", {"fields": ["is_active", "is_staff", "user_permissions"]}),
     ]
 
     add_fieldsets = [
         (
             None, {
                 "classes": ["wide"],
-                "fields": ["email", "password1", "password2", "is_active", "is_staff", "groups", "user_permissions"]
+                "fields": ["email", "fullname", "phone_no", "password1", "password2", "is_active", "is_staff", "user_permissions"]
             }
         )
     ]
@@ -27,4 +27,5 @@ class CustomUserAdmin(UserAdmin):
 
 
 # Register your models here.
+
 admin.site.register(User, CustomUserAdmin)
