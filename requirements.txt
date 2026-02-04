@@ -6,3 +6,5 @@ psycopg[pool]
 pytest
 pytest_asyncio
 google-auth
+django-nigerian-states
+django-smart-selects
