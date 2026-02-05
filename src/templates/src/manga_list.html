@@ -1,17 +1,16 @@
 {% extends "src/base.html" %}
 {% block title %}
-    Products listing
+    Manga
 {% endblock title %}
 {% block content %}
-    {% if manga_list %}
-        <ul>
-            {% for manga in manga_list %}
-                <li>
-                    <a href="{% url 'manga_detail' manga.id %}">{{ manga.title }}</a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No manga is available.</p>
-    {% endif %}
+    <ul>
+        {% for manga in mangas %}
+            <a href="{% url 'product_detail' slug=manga.isbn_number pk=manga.id %}?f={{ manga.format|lower }}">
+                <li>{{ manga.book.title }}</li>
+                <li>${{ manga.price_usd }}</li>
+                <li>{{ manga.format }}</li>
+            </a>
+            <hr>
+        {% endfor %}
+    </ul>
 {% endblock content %}

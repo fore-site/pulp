@@ -47,7 +47,7 @@ class Publisher(models.Model):
         db_table = 'publishers'
 
 class Book(models.Model):
-    series = models.ForeignKey(Series, null=True, blank=True, on_delete=models.RESTRICT)
+    series = models.ForeignKey(Series, null=True, blank=True, on_delete=models.RESTRICT, related_name='books')
     title = models.CharField(max_length=255)
     authors = models.ManyToManyField(Author)
     description = models.TextField(blank=True)
@@ -70,10 +70,10 @@ class Sku(models.Model):
         Paperback = 'Paperback',
         Digital = 'Digital'
 
-    book = models.ForeignKey(Book, on_delete=models.RESTRICT)
+    book = models.ForeignKey(Book, on_delete=models.RESTRICT, related_name='sku')
     code = models.CharField(max_length=30, unique=True)
-    publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT)
-    isbn_number = models.CharField(max_length=255, unique=True, help_text='isbn 13 number for the book variant')
+    publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, related_name='sku')
+    isbn_number = models.CharField(max_length=14, unique=True, help_text='isbn 13 number for the book variant')
     price_usd = models.DecimalField(max_digits=10, decimal_places=2)
     quantity = models.PositiveIntegerField()
     format = models.CharField(max_length=9, choices=BookFormat)
@@ -81,7 +81,7 @@ class Sku(models.Model):
     dimensions = models.CharField(blank=True, max_length=255, help_text='Dimensions of hardcover or paperback formats, otherwise empty')
     file_size = models.CharField(blank=True, max_length=50, help_text='Download size of digital format, otherwise empty')
     language = models.CharField(max_length=255, help_text='Language edition of the book')
-    published_at = models.DateTimeField()
+    published_at = models.DateField()
     is_shipping_free = models.BooleanField(default=False)
     is_discontinued = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -21,25 +21,41 @@ class IndexView(generic.TemplateView):
         context['comic_sku_list'] = comic
         return context
 
-class BookListView(generic.ListView):
-    model = Book
-    template_name = 'src/listing.html'
+class ComicListView(generic.ListView):
+    model = Sku
+    template_name = 'src/comic_list.html'
+    context_object_name = 'comics'
 
-class BookDetailView(generic.DetailView):
-    model = Book
-    template_name = 'src/product_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        selected_format = self.request.GET.get('f', 'digital')
-
-        context['format'] = selected_format
-        return context
+    def get_queryset(self):
+        comics = Sku.objects.filter(book__series__series_type='Comic').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
+        return comics
     
+class MangaListView(generic.ListView):
+    model = Sku
+    template_name = 'src/manga_list.html'
+    context_object_name = 'mangas'
+
+    def get_queryset(self):
+        mangas = Sku.objects.filter(book__series__series_type='Manga').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
+        return mangas
+        
+
 class ProductDetailView(generic.DetailView):
     model = Sku
     template_name = 'src/product_detail.html'
     context_object_name = 'sku'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        selected_format = self.request.GET.get('f', 'digital')
+        pk = self.kwargs.get('pk')
+
+        default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), pk=pk).get()
+
+        context['format'] = selected_format
+        context['default_sku'] = default_format_sku
+
+        return context
 
 class SeriesIndexView(generic.ListView):
     model = Series
@@ -51,20 +67,20 @@ class SeriesDetailView(generic.DetailView):
     context_object_name = 'series'
 
     def get_queryset(self):
-        return super().get_queryset().prefetch_related('book')
+        return super().get_queryset().prefetch_related('books__sku')
 
 def series_list(request, series_type):
     if series_type == 'comic':
-        series_list = Series.objects.filter(series_type='comic').order_by('title')
+        series_list = Series.objects.filter(series_type='Comic').order_by('title')
         title = 'Comic'
     elif series_type == 'manga':
-        series_list = Series.objects.filter(series_type='manga').order_by('title')
+        series_list = Series.objects.filter(series_type='Manga').order_by('title')
         title = 'Manga'
     context = {
         "series_list": series_list,
         "title": title
     }
-    return render(request, 'src/series_list.html', context)
+    return render(request, 'src/series_index.html', context)
 
 def signin(request):
     return render(request, 'src/login.html')

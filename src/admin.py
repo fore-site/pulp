@@ -78,7 +78,13 @@ class AdminBookAnalyticsDaily(admin.ModelAdmin):
 
     search_fields = ("book",)
     ordering = ("date",)
-    
+
+class GenreAdmin(admin.ModelAdmin):
+    model = Genre
+    list_display = ("name",)
+
+    ordering = ("name",)
+
 # Register your models here.
 
 admin.site.register(User, CustomUserAdmin)
@@ -89,6 +95,7 @@ admin.site.register(Author, AuthorAdmin)
 admin.site.register(Publisher, PublisherAdmin)
 admin.site.register(BookEvent, BookEventAdmin)
 admin.site.register(BookAnalyticsDaily, AdminBookAnalyticsDaily)
+admin.site.register(Genre, GenreAdmin)
 admin.site.site_header = 'Pulp administration'
 admin.site.site_title = 'Pulp site admin'
 admin.site.index_title = 'Welcome to Pulp admin dashboard'

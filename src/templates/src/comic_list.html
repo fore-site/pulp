@@ -1,0 +1,15 @@
+{% block title %}
+    Comics
+{% endblock title %}
+{% block content %}
+    <ul>
+        {% for comic in comics %}
+            <a href="{% url 'product_detail' slug=comic.isbn_number pk=comic.id %}?f={{ comic.format|lower }}">
+                <li>{{ comic.book.title }}</li>
+                <li>${{ comic.price_usd }}</li>
+                <li>{{ comic.format }}</li>
+            </a>
+            <hr>
+        {% endfor %}
+    </ul>
+{% endblock content %}

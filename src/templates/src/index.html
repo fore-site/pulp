@@ -7,6 +7,20 @@
     {% else %}
         <a href="{% url 'signin' %}">Sign In</a>
     {% endif %}
+    <ul>
+        <li>
+            <a href="{% url 'manga_list' %}">Manga</a>
+        </li>
+        <li>
+            <a href="{% url 'comic_list' %}">Comic</a>
+        </li>
+        <li>
+            <a href="{% url 'series_index' series_type='comic' %}">Comic Series Index</a>
+        </li>
+        <li>
+            <a href="{% url 'series_index' series_type='manga' %}">Manga Series Index</a>
+        </li>
+    </ul>
     <h3>Trending</h3>
     <h3>Hot Deals</h3>
     <h3>Featured</h3>
@@ -14,7 +28,7 @@
     <ul>
         {% for comic_sku in comic_sku_list %}
             <li>
-                <a href="{% url 'product_detail' comic_sku.book.title|slugify comic_sku.id %}">{{ comic_sku.book.title }} - {{ comic_sku.price }}</a>
+                <a href="{% url 'product_detail' comic_sku.isbn_number|slugify comic_sku.id %}?f=digital">{{ comic_sku.book.title }} - USD{{ comic_sku.price_usd }}</a>
             </li>
         {% empty %}
             <p>No comic is available.</p>
@@ -24,7 +38,7 @@
     <ul>
         {% for manga_sku in manga_sku_list %}
             <li>
-                <a href="{% url 'product_detail' pk=manga_sku.id slug=manga_sku.book.title|slugify %}">{{ manga_sku.book.title }} - USD{{ manga_sku.price }}</a>
+                <a href="{% url 'product_detail' pk=manga_sku.id slug=manga_sku.isbn_number|slugify %}?f=digital">{{ manga_sku.book.title }} - USD{{ manga_sku.price_usd }}</a>
             </li>
         {% empty %}
             <p>No manga is available.</p>

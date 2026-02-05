@@ -6,7 +6,8 @@
     <ul>
         {% for series in series_list %}
             <li>
-                <a href="{% url 'series_detail' series.id %}">series.title</a>
+                <a href="{% url 'series_detail' series.id %}">{{ series.title }}</a>
             </li>
-        </ul>
-    {% endblock content %}
+        {% endfor %}
+    </ul>
+{% endblock content %}

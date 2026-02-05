@@ -1,9 +1,22 @@
 {% extends "src/base.html" %}
 {% block title %}
-    {{ sku.book.title }}
+    {{ default_sku.book.title }}
 {% endblock title %}
 {% block content %}
-    <p>{{ sku.book.title }} by {{ sku.book.authors }}</p>
-    {{ sku.book.description }}
-    <p>{{ sku.price }}</p>
-{% endblock content %}
+    <p>{{ default_sku.book.title }} by {{ default_sku.book.authors.all|join:", " }}</p>
+    {{ default_sku.book.description }}
+    <p>${{ default_sku.price_usd }}</p>
+    <ul>
+        {% for book in default_sku.book.all %}
+            {% for sku in book.sku.all %}
+                {% if sku.format == default_sku.format %}
+                    <li>
+                        <a href="{% url request.path %}">{{ default_sku.format }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'product_detail' slug=sku.isbn_number pk=sku.id}?f={{ sku.format }}">sku.format</a></li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% endblock content %}

@@ -1,0 +1,19 @@
+{% extends "src/base.html" %}
+{% block title %}
+    {{ series.title }}
+{% endblock title %}
+{% block content %}
+    <h4>Description</h4>
+    <p>
+        <i>{{ series.description }}</i>
+    </p>
+    <ul>
+        {% for book in series.books.all %}
+            {% for sku in book.sku.all %}
+                <li>
+                    <a href="{% url 'product_detail' slug=sku.isbn_number|slugify pk=sku.id %}?f=digital">{{ book.title }} - ${{ sku.price_usd }}</a>
+                </li>
+            {% endfor %}
+        {% endfor %}
+    </ul>
+{% endblock content %}
