@@ -46,8 +46,9 @@ class BookAdmin(admin.ModelAdmin):
 class SkuAdmin(admin.ModelAdmin):
     model = Sku
     list_display = ["book", "code", "publisher", "isbn_number", "price_usd", "quantity", "format", "page_count", "dimensions", "file_size", "language", "published_at", "is_shipping_free", "is_discontinued", "created_at", "updated_at"]
-    list_filter = ["publisher", "price_usd", "published_at", "is_discontinued", "is_shipping_free", "created_at", "updated_at"]
+    list_filter = ["publisher", "published_at", "is_discontinued", "is_shipping_free", "created_at", "updated_at"]
 
+    sortable_by = ["price_usd"]
     search_fields = ["book", "code"]
     ordering = ["book"]
 

@@ -12,10 +12,6 @@ class IndexView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         manga = Sku.objects.filter(book__series__series_type='Manga').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
         comic = Sku.objects.filter(book__series__series_type='Comic').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
-        user_id = self.kwargs.get('user_id')
-        
-        if user_id:
-            context['user'] = User.objects.filter(pk=user_id)
 
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
@@ -50,7 +46,7 @@ class ProductDetailView(generic.DetailView):
         selected_format = self.request.GET.get('f', 'digital')
         pk = self.kwargs.get('pk')
 
-        default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), pk=pk).get()
+        default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), pk=pk).prefetch_related('book').get()
 
         context['format'] = selected_format
         context['default_sku'] = default_format_sku

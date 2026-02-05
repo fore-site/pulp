@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'src/styles.css' %}" />
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>
@@ -10,6 +12,11 @@
         </title>
     </head>
     <body>
+        <header>
+            <h1>
+                <a href="{% url 'home' %}" id="home">Pulp</a>
+            </h1>
+        </header>
         <main>
             {% block content %}
             {% endblock content %}

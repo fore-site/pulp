@@ -4,11 +4,11 @@
 {% endblock title %}
 {% block content %}
     <ul>
-        {% for manga in mangas %}
-            <a href="{% url 'product_detail' slug=manga.isbn_number pk=manga.id %}?f={{ manga.format|lower }}">
-                <li>{{ manga.book.title }}</li>
-                <li>${{ manga.price_usd }}</li>
-                <li>{{ manga.format }}</li>
+        {% for manga_sku in mangas %}
+            <a href="{% url 'product_detail' slug=manga_sku.isbn_number pk=manga_sku.id %}?f={{ manga_sku.format|lower }}">
+                <li>{{ manga_sku.book.title }}</li>
+                <li>${{ manga_sku.price_usd }}</li>
+                <li>{{ manga_sku.format }}</li>
             </a>
             <hr>
         {% endfor %}

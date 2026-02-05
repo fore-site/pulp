@@ -21,7 +21,6 @@ from src.views import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='home'),
-    path('<int:user_id>/', views.IndexView.as_view(), name='home'),
     path('sign-in/', views.signin, name='signin'),
     path('sign-up/', views.signup, name='signup'),
     path('auth/sign-in/<int:user_id>/', views.auth_signin, name='auth_signin'),

@@ -7,16 +7,16 @@
     {{ default_sku.book.description }}
     <p>${{ default_sku.price_usd }}</p>
     <ul>
-        {% for book in default_sku.book.all %}
-            {% for sku in book.sku.all %}
-                {% if sku.format == default_sku.format %}
-                    <li>
-                        <a href="{% url request.path %}">{{ default_sku.format }}</a>
-                    </li>
-                {% else %}
-                    <li>
-                        <a href="{% url 'product_detail' slug=sku.isbn_number pk=sku.id}?f={{ sku.format }}">sku.format</a></li>
-                {% endif %}
-            {% endfor %}
-        </ul>
-    {% endblock content %}
+        {% for sku in default_sku.book.sku.all %}
+            {% if sku.format == default_sku.format %}
+                <li>
+                    <a href="?{% querystring %}" id="active-sku">{{ default_sku.format }}</a>
+                </li>
+            {% else %}
+                <li>
+                    <a href="{% url 'product_detail' slug=sku.isbn_number pk=sku.id %}?f={{ sku.format|lower }}">{{ sku.format }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock content %}
