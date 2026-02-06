@@ -36,3 +36,8 @@ class UserManagerTest(TestCase):
             User.objects.create_superuser(email='')
         with self.assertRaises(ValueError):
             User.objects.create_superuser(email='', password='testing')
+
+    def test_user_perms(self):
+        User = get_user_model()
+        user = User.objects.create_superuser(email='test@gmail.com',password='Gogoanime')
+        self.assertTrue(user.has_perm('src.view_book'))
