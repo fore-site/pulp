@@ -28,20 +28,21 @@ class CustomUserAdmin(UserAdmin):
 
 class SeriesAdmin(admin.ModelAdmin):
     model = Series
-    list_display = ["title", "series_type", "description", "cover_image", "is_deleted"]
-    list_filter = ["series_type", "is_deleted"]
+    list_display = ["title", "category", "description", "cover_image", "is_deleted"]
+    list_filter = ["is_deleted", "genres"]
 
     search_fields = ["title"]
     ordering = ["title"]
+    filter_horizontal = ("genres",)
 
 class BookAdmin(admin.ModelAdmin):
     model = Book
     list_display = ["series", "title", "description", "cover_image", "is_featured", "is_deleted", "created_at"]
-    list_filter = ["series", "genres", "created_at", "is_deleted", "authors"]
+    list_filter = ["series", "created_at", "is_deleted", "authors"]
 
     search_fields = ["title"]
     ordering = ["title"]
-    filter_horizontal = ["authors", "genres"]
+    filter_horizontal = ["authors"]
 
 class SkuAdmin(admin.ModelAdmin):
     model = Sku
@@ -84,14 +85,12 @@ class GenreAdmin(admin.ModelAdmin):
     model = Genre
     list_display = ("name",)
 
-    ordering = ("name",)
-    filter_horizontal = ('categories')
 
 class CategoryAdmin(admin.ModelAdmin):
     model = Category
     list_display = ("name",)
 
-    filter_horizontal = ("genres")
+    filter_horizontal = ("genres",)
 
 # Register your models here.
 
@@ -104,6 +103,7 @@ admin.site.register(Publisher, PublisherAdmin)
 admin.site.register(BookEvent, BookEventAdmin)
 admin.site.register(BookAnalyticsDaily, AdminBookAnalyticsDaily)
 admin.site.register(Genre, GenreAdmin)
+admin.site.register(Category, CategoryAdmin)
 admin.site.site_header = 'Pulp administration'
 admin.site.site_title = 'Pulp site admin'
 admin.site.index_title = 'Welcome to Pulp admin dashboard'

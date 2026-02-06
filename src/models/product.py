@@ -22,8 +22,10 @@ class Category(models.Model):
 
 class Series(models.Model):
     title = models.CharField(max_length=255, unique=True)
+    category = models.ForeignKey(Category, on_delete=models.RESTRICT, related_name='series', null=True)
+    genres = models.ManyToManyField(Genre, related_name='series')
     description = models.TextField(blank=True)
-    cover_image = models.ImageField(upload_to='src/images')
+    cover_image = models.ImageField(upload_to='src/images', null=True, default=None)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -56,8 +58,7 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     authors = models.ManyToManyField(Author)
     description = models.TextField(blank=True)
-    cover_image = models.ImageField(upload_to='src/images')
-    genres = models.ManyToManyField(Genre)
+    cover_image = models.ImageField(upload_to='src/images', null=True, default=None)
     is_featured = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

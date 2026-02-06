@@ -7,3 +7,4 @@ google-auth
 django-nigerian-states
 django-smart-selects
 djlint
+Pillow
