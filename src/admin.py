@@ -85,12 +85,9 @@ class GenreAdmin(admin.ModelAdmin):
     model = Genre
     list_display = ("name",)
 
-
 class CategoryAdmin(admin.ModelAdmin):
     model = Category
     list_display = ("name",)
-
-    filter_horizontal = ("genres",)
 
 # Register your models here.
 
