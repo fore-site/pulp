@@ -28,7 +28,7 @@ class CustomUserAdmin(UserAdmin):
 
 class SeriesAdmin(admin.ModelAdmin):
     model = Series
-    list_display = ["title", "series_type", "description", "image_url", "is_deleted"]
+    list_display = ["title", "series_type", "description", "cover_image", "is_deleted"]
     list_filter = ["series_type", "is_deleted"]
 
     search_fields = ["title"]
@@ -36,7 +36,7 @@ class SeriesAdmin(admin.ModelAdmin):
 
 class BookAdmin(admin.ModelAdmin):
     model = Book
-    list_display = ["series", "title", "description", "image_url", "is_featured", "is_deleted", "created_at"]
+    list_display = ["series", "title", "description", "cover_image", "is_featured", "is_deleted", "created_at"]
     list_filter = ["series", "genres", "created_at", "is_deleted", "authors"]
 
     search_fields = ["title"]
@@ -85,6 +85,13 @@ class GenreAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
     ordering = ("name",)
+    filter_horizontal = ('categories')
+
+class CategoryAdmin(admin.ModelAdmin):
+    model = Category
+    list_display = ("name",)
+
+    filter_horizontal = ("genres")
 
 # Register your models here.
 

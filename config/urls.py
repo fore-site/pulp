@@ -17,14 +17,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from src.views import views
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='home'),
-    path('sign-in/', views.signin, name='signin'),
+    path('login/', auth_views.LoginView.as_view(template_name="src/login.html"), name='login'),
     path('sign-up/', views.signup, name='signup'),
-    path('auth/sign-in/<int:user_id>/', views.auth_signin, name='auth_signin'),
-    path('auth/sign-up/<int:user_id>/', views.auth_signup, name='auth_signup'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('manga/', views.MangaListView.as_view(), name='manga_list'),
     path('comic/', views.ComicListView.as_view(), name='comic_list'),
     path('series-index/<str:series_type>', views.series_list, name='series_index'),

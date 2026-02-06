@@ -8,6 +8,7 @@ from .product import (Publisher,
                       Sku, 
                       Genre,
                       BookEvent,
-                      BookAnalyticsDaily)
+                      BookAnalyticsDaily,
+                      Category)
 from .user import User, UserAddress
 from .shipping import Carrier

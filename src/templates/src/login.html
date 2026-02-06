@@ -3,26 +3,23 @@
     Sign In
 {% endblock title %}
 {% block content %}
-    <form action="{% url 'auth_signin' user.id %}" method="post">
+    <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
-        <fieldset>
-            <legend>
-                <h3>Login to continue your purchase</h3>
-            </legend>
-            {% if signin_error_message %}
-                <p>
-                    <strong>{{ signin_error_message }}</strong>
-                </p>
-            {% endif %}
-            <label for="email">Email</label>
-            <br />
-            <input type="email" name="email" id="signin_email" autocomplete="off" />
-            <br />
-            <label for="password">Password</label>
-            <br />
-            <input type="password" name="password" id="signin_pass" minlength="7" />
-        </fieldset>
-        <input type="submit" value="login" />
+        <legend>
+            <h3>Login to continue your purchase</h3>
+        </legend>
+        {% if form.errors %}{{ form.errors }}{% endif %}
+        <table>
+            <tr>
+                <td>{{ form.username.label_tag }}</td>
+                <td>{{ form.username }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.password.label_tag }}</td>
+                <td>{{ form.password }}</td>
+            </tr>
+        </table>
+        <input type="submit" value="Login" />
     </form>
     <a href="https://google.com">Sign in with Google</a>
     <p>

@@ -9,16 +9,21 @@ class Genre(models.Model):
     class Meta:
         db_table = 'genre'
 
+class Category(models.Model):
+    name = models.CharField(max_length=255)
+    genres = models.ManyToManyField(Genre, related_name='categories')
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        db_table = 'category'
+        verbose_name_plural = 'categories'
+
 class Series(models.Model):
-
-    class SeriesType(models.TextChoices):
-        Comic = 'Comic'
-        Manga = 'Manga'
-
     title = models.CharField(max_length=255, unique=True)
-    series_type = models.CharField(max_length=5, choices=SeriesType.choices)
     description = models.TextField(blank=True)
-    image_url = models.CharField(blank=True, max_length=255)
+    cover_image = models.ImageField(upload_to='src/images')
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -51,7 +56,7 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     authors = models.ManyToManyField(Author)
     description = models.TextField(blank=True)
-    image_url = models.CharField(blank=True, max_length=255)
+    cover_image = models.ImageField(upload_to='src/images')
     genres = models.ManyToManyField(Genre)
     is_featured = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
