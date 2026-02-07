@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login
-from src.models import Series, Book, Sku
+from src.models import Series, Book, Sku, BookEvent
 from ..forms import CustomUserCreationForm
 from django.conf import settings
 
@@ -53,6 +53,7 @@ class ProductDetailView(generic.DetailView):
         pk = self.kwargs.get('pk')
 
         default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), pk=pk).prefetch_related('book').get()
+        BookEvent.objects.create(book=default_format_sku.book, sku=default_format_sku, event_type='view')
 
         context['format'] = selected_format
         context['default_sku'] = default_format_sku
