@@ -11,7 +11,8 @@ def create_sku(series: str,
                code: str, 
                publisher_name: str,
                format: str,
-               isbn_no: str) -> Sku:
+               isbn_no: str,
+               is_featured: bool = False) -> Sku:
     """
     Create a new issue/volume sku with the given series, title of the book and description of the book
     """
@@ -21,7 +22,7 @@ def create_sku(series: str,
     series_obj = Series.objects.create(title=series, category=series_category)
     series_obj.genres.add(series_genre)
 
-    book = Book.objects.create(title=title, series=series_obj)
+    book = Book.objects.create(title=title, series=series_obj, is_featured=is_featured)
     publisher = Publisher.objects.create(name=publisher_name)
 
     return Sku.objects.create(book=book, 
@@ -37,7 +38,7 @@ def create_sku(series: str,
 class IndexViewTest(TestCase):
     def test_no_comic(self):
         """ If no comic exist, an appropriate message is displayed"""
-        manga = create_sku('Bleach', 'Manga', 'Bleach Volume 3', 'Shonen', 'BCHKUBOVOL3', 'Viz Media', 'Hardcover', '974-1233445')
+        manga = create_sku('Bleach', 'Manga', 'Bleach Volume 3', 'Shonen', 'BCHKUBOVOL3', 'Viz Media', 'Hardcover', '974-1233445', True)
         
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
@@ -48,7 +49,7 @@ class IndexViewTest(TestCase):
 
     def test_no_manga(self):
         """ If no manga exist, an appropriate message is displayed"""
-        comic = create_sku('Superman', 'Comic', 'Superman Issue #4', 'Superhero', 'SUPCOMISS4', 'DC Comics', 'Digital', '974-2290394')
+        comic = create_sku('Superman', 'Comic', 'Superman Issue #4', 'Superhero', 'SUPCOMISS4', 'DC Comics', 'Digital', '974-2290394', True)
         
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
@@ -58,8 +59,8 @@ class IndexViewTest(TestCase):
 
     def test_comic_and_manga_displayed(self):
         "Comic issues and manga volumes are displayed on index page"
-        manga = create_sku('Bleach', 'Manga', 'Bleach Volume 3', 'Shonen', 'BCHKUBOVOL3', 'Viz Media', 'Hardcover', '974-1233445')
-        comic = create_sku('Superman', 'Comic', 'Superman Issue #4', 'Superhero', 'SUPCOMISS4', 'DC Comics', 'Digital', '974-2290394')
+        manga = create_sku('Bleach', 'Manga', 'Bleach Volume 3', 'Shonen', 'BCHKUBOVOL3', 'Viz Media', 'Hardcover', '974-1233445', True)
+        comic = create_sku('Superman', 'Comic', 'Superman Issue #4', 'Superhero', 'SUPCOMISS4', 'DC Comics', 'Digital', '974-2290394', True)
         
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
@@ -68,6 +69,9 @@ class IndexViewTest(TestCase):
     
     def test_no_manga_and_comic_displayed(self):
         "No comic and manga are displayed on index page"
+        create_sku('Bleach', 'Manga', 'Bleach Volume 3', 'Shonen', 'BCHKUBOVOL3', 'Viz Media', 'Hardcover', '974-1233445')
+        create_sku('Superman', 'Comic', 'Superman Issue #4', 'Superhero', 'SUPCOMISS4', 'DC Comics', 'Digital', '974-2290394')
+        
         response = self.client.get(reverse('home'))
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'No manga is available')

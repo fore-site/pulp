@@ -14,8 +14,10 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        manga = Sku.objects.filter(book__series__category__name='Manga').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
-        comic = Sku.objects.filter(book__series__category__name='Comic').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
+        manga = Sku.objects.filter(book__series__category__name='Manga', 
+                                   book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
+        comic = Sku.objects.filter(book__series__category__name='Comic', 
+                                   book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
 
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
