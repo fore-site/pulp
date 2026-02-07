@@ -30,12 +30,17 @@ class CustomUserChangeForm(UserChangeForm):
         fields = ["email"]
 
 class CustomLoginForm(AuthenticationForm):
-    def confirm_login_allowed(self, user):
-        if not user.is_active:
-            raise ValidationError(
-            ("This account is inactive."),
-            code="inactive",
-        )
+
+    def __init__(self, request = ..., *args, **kwargs):
+        super().__init__(request, *args, **kwargs)
+        
+        self.fields["username"].error_messages.update({
+            'required': _('Enter your email to continue')
+        })
+
+        self.fields["password"].error_messages.update({
+            'required': _('Enter your password to continue')
+        })
 
     error_messages = {
         'invalid_login': 'Invalid credentials. Enter a valid email and password.',

@@ -1,23 +1,17 @@
 {% extends "src/base.html" %}
+{% load crispy_forms_tags %}
+{% load daisyui_filters %}
 {% block title %}
     Sign In
 {% endblock title %}
 {% block content %}
-    <form action="{% url 'login' %}" method="post">
+    <legend>
+        <h3>Login to continue your purchase</h3>
+    </legend>
+    <form action="{% url 'login' %}" method="post" novalidate>
         {% csrf_token %}
-        <legend>
-            <h3>Login to continue your purchase</h3>
-        </legend>
-        <table>
-            {% for field in form %}
-                {{ field.errors }}
-                <tr>
-                    <td>{{ field.label_tag }}</td>
-                    <td>{{ field }}</td>
-                </tr>
-            {% endfor %}
-        </table>
-        <input type="submit" value="Login" />
+        {{ form|crispy }}
+        <button class="btn btn-primary">Login</button>
     </form>
     <a href="https://google.com">Sign in with Google</a>
     <p>

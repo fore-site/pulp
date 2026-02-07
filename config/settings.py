@@ -27,7 +27,7 @@ database_name = os.getenv('DATABASE_NAME')
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b7)t=c#td!mesk--ud#*#3#b-o!wi*72+(nq6-%0t8t)+(#vq0'
+SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,8 +45,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'nigerian_states'
+    'nigerian_states',
+    'crispy_forms',
+    'crispy_daisyui',
+    'tailwind',
+    'theme'
 ]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -140,3 +145,11 @@ AUTH_USER_MODEL = 'src.User'
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "daisyui"
+CRISPY_TEMPLATE_PACK = "daisyui"
+
+TAILWIND_APP_NAME = 'theme'
+
+# NPM PATH FOR WINDOWS
+NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
