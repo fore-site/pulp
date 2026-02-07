@@ -18,7 +18,6 @@ class IndexView(generic.TemplateView):
                                    book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
         comic = Sku.objects.filter(book__series__category__name='Comic', 
                                    book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
-
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
         return context
