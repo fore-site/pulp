@@ -18,11 +18,12 @@ from django.contrib import admin
 from django.urls import path
 from src.views import views
 from django.contrib.auth import views as auth_views
+from src.forms import CustomLoginForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.IndexView.as_view(), name='home'),
-    path('login/', auth_views.LoginView.as_view(template_name="src/login.html"), name='login'),
+    path('login/', auth_views.LoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
     path('sign-up/', views.signup, name='signup'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('manga/', views.MangaListView.as_view(), name='manga_list'),

@@ -8,16 +8,14 @@
         <legend>
             <h3>Login to continue your purchase</h3>
         </legend>
-        {% if form.errors %}{{ form.errors }}{% endif %}
         <table>
-            <tr>
-                <td>{{ form.username.label_tag }}</td>
-                <td>{{ form.username }}</td>
-            </tr>
-            <tr>
-                <td>{{ form.password.label_tag }}</td>
-                <td>{{ form.password }}</td>
-            </tr>
+            {% for field in form %}
+                {{ field.errors }}
+                <tr>
+                    <td>{{ field.label_tag }}</td>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
         </table>
         <input type="submit" value="Login" />
     </form>

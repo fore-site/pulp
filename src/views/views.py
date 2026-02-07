@@ -14,8 +14,8 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        manga = Sku.objects.filter(book__series__series_type='Manga').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
-        comic = Sku.objects.filter(book__series__series_type='Comic').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
+        manga = Sku.objects.filter(book__series__category__name='Manga').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
+        comic = Sku.objects.filter(book__series__category__name='Comic').order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
 
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
@@ -27,7 +27,7 @@ class ComicListView(generic.ListView):
     context_object_name = 'comics'
 
     def get_queryset(self):
-        comics = Sku.objects.filter(book__series__series_type='Comic').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
+        comics = Sku.objects.filter(book__series__category__name='Comic').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
         return comics
     
 class MangaListView(generic.ListView):
@@ -36,7 +36,7 @@ class MangaListView(generic.ListView):
     context_object_name = 'mangas'
 
     def get_queryset(self):
-        mangas = Sku.objects.filter(book__series__series_type='Manga').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
+        mangas = Sku.objects.filter(book__series__category__name='Manga').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
         return mangas
         
 
@@ -71,10 +71,10 @@ class SeriesDetailView(generic.DetailView):
 
 def series_list(request, series_type):
     if series_type == 'comic':
-        series_list = Series.objects.filter(series_type='Comic').order_by('title')
+        series_list = Series.objects.filter(category__name='Comic').order_by('title')
         title = 'Comic'
     elif series_type == 'manga':
-        series_list = Series.objects.filter(series_type='Manga').order_by('title')
+        series_list = Series.objects.filter(category__name='Manga').order_by('title')
         title = 'Manga'
     context = {
         "series_list": series_list,
@@ -89,6 +89,8 @@ def signup(request):
             user = form.save(commit=True)
             login(request, user)
             return HttpResponseRedirect(reverse('home'))
+        else:
+            return render(request, 'src/signup.html', {"form": form})
     else:
         form = CustomUserCreationForm()
         return render(request, 'src/signup.html', {"form": form})
