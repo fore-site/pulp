@@ -1,34 +1,20 @@
 {% extends "src/base.html" %}
+{% load crispy_forms_tags %}
+{% load daisyui_filters %}
 {% block title %}
     Sign Up
 {% endblock title %}
 {% block content %}
+    <legend>
+        <h3>
+            New to Pulp? Register and make your first
+            purchase
+        </h3>
+    </legend>
     <form action="{% url 'signup' %}" method="post" novalidate>
         {% csrf_token %}
-        <legend>
-            <h3>
-                New to Pulp? Register with us and make your first
-                purchase
-            </h3>
-        </legend>
-        <table>
-            {% if form.non_field_errors %}
-                {% for err in form.non_field_errors %}
-                {{ err }}
-                {% endfor %}
-            {% endif %}
-            {% for field in form %}
-                {{ field.errors }}
-                <tr>
-                    <td>{{ field.label_tag }}</td>
-                    <td>{{ field }}</td>
-                    <small>
-                        <td>{{ field.help_text|safe }}</td>
-                    </small>
-                </tr>
-            {% endfor %}
-        </table>
-        <input type="submit" value="Sign up" />
+        {{ form|crispy }}
+        <button class="btn btn-primary">Sign Up</button>
     </form>
     <a href="https://google.com">Sign up with Google</a>
     <p>

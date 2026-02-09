@@ -1,4 +1,6 @@
 from django.db import models
+from django.core.validators import MaxValueValidator
+from decimal import Decimal
 
 class Genre(models.Model):
     name = models.CharField(max_length=255)
@@ -81,7 +83,8 @@ class Sku(models.Model):
     publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, related_name='sku')
     isbn_number = models.CharField(max_length=14, unique=True, help_text='isbn 13 number for the book variant')
     price_usd = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.PositiveIntegerField()
+    discount_percent = models.PositiveSmallIntegerField(default=0, blank=True, validators=[MaxValueValidator(100)])
+    quantity = models.PositiveIntegerField(default=0, blank=True)
     format = models.CharField(max_length=9, choices=BookFormat)
     page_count = models.CharField(max_length=255)
     dimensions = models.CharField(blank=True, max_length=255, help_text='Dimensions of hardcover or paperback formats, otherwise empty')
@@ -95,6 +98,18 @@ class Sku(models.Model):
 
     def __str__(self):
         return self.code
+    
+    @property
+    def has_discount(self):
+        return self.discount_percent > 0
+
+    @property
+    def discounted_price(self) -> models.DecimalField:
+        """Calculates and returns discounted price"""
+        if self.has_discount():
+            discount_amount = self.price_usd * (Decimal(self.price_usd) / Decimal(100))
+            return (self.price_usd - discount_amount).quantize(Decimal('0.01'))
+        return self.price_usd
 
     class Meta:
         db_table = 'sku'

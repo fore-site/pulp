@@ -34,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -49,7 +48,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_daisyui',
     'tailwind',
-    'theme'
+    'theme',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +78,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'config.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database
