@@ -6,6 +6,9 @@ from django.contrib.auth import login
 from src.models import Series, Book, Sku, BookEvent
 from ..forms import CustomUserCreationForm
 from django.conf import settings
+from datetime import datetime, timedelta
+import time
+from django.utils import timezone
 
 # Create your views here.
 
@@ -18,6 +21,10 @@ class IndexView(generic.TemplateView):
                                    book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
         comic = Sku.objects.filter(book__series__category__name='Comic', 
                                    book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
+        
+        today = datetime.combine(datetime.now(), time.min)
+        yesterday = today - timedelta(days=1)
+        
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
         return context
@@ -40,7 +47,6 @@ class MangaListView(generic.ListView):
         mangas = Sku.objects.filter(book__series__category__name='Manga').order_by('book__title', 'price_usd').distinct('book__title').prefetch_related('book')
         return mangas
         
-
 class ProductDetailView(generic.DetailView):
     model = Sku
     template_name = 'src/product_detail.html'

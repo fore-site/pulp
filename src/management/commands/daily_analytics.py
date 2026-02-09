@@ -8,4 +8,4 @@ yesterday = today - timedelta(days=1)
 class CustomCommand(BaseCommand):
 
     def handle(self, *args, **options):
-        super().handle(*args, **options)
+        events = BookEvent.objects.filter()

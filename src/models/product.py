@@ -123,7 +123,7 @@ class BookEvent(models.Model):
         purchase = 'purchase'
 
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
     event_type = models.CharField(max_length=11, choices=EventTypes)
 
@@ -136,7 +136,7 @@ class BookEvent(models.Model):
 class BookAnalyticsDaily(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
-    date = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     view_count = models.PositiveBigIntegerField()
     add_to_cart_count = models.PositiveBigIntegerField()
     purchase_count = models.PositiveBigIntegerField()
