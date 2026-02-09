@@ -1,6 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
-from django import forms
-from django.forms import ValidationError
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from .models import User
 
@@ -8,20 +7,19 @@ class CustomUserCreationForm(UserCreationForm):
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['password1'].help_text = 'Password must be minimum 8 characters'
-        self.fields['password2'].help_text = 'Enter password again'
+        self.fields['password1'].help_text = mark_safe(
+            '<ul><li>Password must be minimum 8 characters</li>'
+            '<li>Password cannot consist of only numbers</li></ul>')
+        self.fields['password2'].help_text = mark_safe(
+            '<ul><li>Confirm password</li></ul>')
 
+    error_messages = {
+        'password_mismatch': 'Your passwords do not match'
+        }
+    
     class Meta:
         model = User
         fields = ["email"]
-        error_messages = {
-            'email': {
-                'unique': 'This email already exists'
-            },
-            'password2': {
-                'password_mismatch': 'Your passwords do not match'
-            }
-        }
 
 class CustomUserChangeForm(UserChangeForm):
 
@@ -43,6 +41,6 @@ class CustomLoginForm(AuthenticationForm):
         })
 
     error_messages = {
-        'invalid_login': 'Invalid credentials. Enter a valid email and password.',
-        'inactive': 'This account is currently disabled',
+        'invalid_login': _('Invalid credentials. Enter a valid email and password.'),
+        'inactive': _('This account is currently disabled'),
     }

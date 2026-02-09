@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'nigerian_states',
     'crispy_forms',
-    'crispy_daisyui',
+    'crispy_tailwind',
     'tailwind',
     'theme',
 ]
@@ -145,10 +145,14 @@ AUTH_USER_MODEL = 'src.User'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
 
-CRISPY_ALLOWED_TEMPLATE_PACKS = "daisyui"
-CRISPY_TEMPLATE_PACK = "daisyui"
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 TAILWIND_APP_NAME = 'theme'
 
 # NPM PATH FOR WINDOWS
 NPM_BIN_PATH = "C:\\Program Files\\nodejs\\npm.cmd"
+
+AUTHENTICATION_BACKENDS = [
+    'src.backends.CustomAuthBackend'
+]
