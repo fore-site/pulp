@@ -106,7 +106,7 @@ class Sku(models.Model):
     @property
     def discounted_price(self) -> models.DecimalField:
         """Calculates and returns discounted price"""
-        if self.has_discount():
+        if self.has_discount:
             discount_amount = self.price_usd * (Decimal(self.price_usd) / Decimal(100))
             return (self.price_usd - discount_amount).quantize(Decimal('0.01'))
         return self.price_usd
@@ -133,7 +133,7 @@ class BookEvent(models.Model):
         db_table = 'book_events'
 
 class BookAnalyticsDaily(models.Model):
-    sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
+    sku = models.ForeignKey(Sku, on_delete=models.CASCADE, related_name='book_analytics')
     created_at = models.DateField(help_text='indicates the date/day the analytics is collected for, not the date this row is created.')
     view_count = models.PositiveBigIntegerField()
     add_to_cart_count = models.PositiveBigIntegerField()

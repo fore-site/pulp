@@ -1,15 +1,14 @@
+{% extends "src/base.html" %}
 {% block title %}
     Comics
 {% endblock title %}
 {% block content %}
-    <ul>
+    <h2>Comics</h2>
+    <div class="book-list">
         {% for comic_sku in comics %}
-            <a href="{% url 'product_detail' slug=comic_sku.isbn_number pk=comic_sku.id %}?f={{ comic_sku.format|lower }}">
-                <li>{{ comic_sku.book.title }}</li>
-                <li>${{ comic_sku.price_usd }}</li>
-                <li>{{ comic_sku.format }}</li>
-            </a>
-            <hr>
+            {% include "partials/book_card.html" with book_sku=comic_sku %}
+        {% empty %}
+            <p>No comic available</p>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock content %}

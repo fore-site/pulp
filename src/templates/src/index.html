@@ -24,94 +24,58 @@
             <a href="{% url 'series_index' series_type='manga' %}">Manga Series Index</a>
         </li>
     </ul>
-    <h3>Trending</h3>
-    <ul>
-        {% for each_analytics in trending %}
-            <li>
-                <a href="{% url 'product_detail' each_analytics.sku.isbn_number|slugify each_analytics.sku.id %}?f={{ each_analytics.sku.format|lower }}">
-                    <span>
-                        <p>{{ each_analytics.sku.book.title }} - {{ each_analytics.sku.format }}</p>
-                    </span>
-                    {% if each_analytics.sku.has_discount %}
-                        <span>
-                            <p>{{ each_analytics.sku.discount_percent }}% OFF!</p>
-                        </span>
-                        <span>
-                            <p>Formerly ${{ each_analytics.sku.price_usd }}, Now ${{ each_analytics.sku.discounted_price }}</p>
-                        </span>
-                    {% else %}
-                        <span>
-                            <p>${{ each_analytics.sku.price_usd }}</p>
-                        </span>
-                    {% endif %}
-                    <span>
-                        <p>By {{ each_analytics.sku.book.authors.all|join:", " }}</p>
-                    </span>
-                </a>
-            </li>
+    <hr />
+    <div class="book-category">
+        <h3>Trending</h3>
+        {% for trend_sku in trending %}
+            {% include "partials/book_card.html" with book_sku=trend_sku %}
         {% empty %}
-            <p>No trending books yet</p>
+            <p>No trending book available</p>
         {% endfor %}
-    </ul>
-    <h3>Featured Comic New Releases</h3>
-    <ul>
+    </div>
+    <hr>
+    <div class="book-category">
+        <h3>Featured Comic New Releases</h3>
         {% for comic_sku in comic_sku_list %}
-            <li>
-                <a href="{% url 'product_detail' comic_sku.isbn_number|slugify comic_sku.id %}?f={{ comic_sku.format|lower }}">
-                    <span>
-                        <p>{{ comic_sku.book.title }} - {{ comic_sku.format }}</p>
-                    </span>
-                    {% if comic_sku.has_discount %}
-                        <span>
-                            <p>{{ comic_sku.discount_percent }}% OFF!</p>
-                        </span>
-                        <span>
-                            <p>Formerly ${{ comic_sku.price_usd }}, Now ${{ comic_sku.discounted_price }}</p>
-                        </span>
-                    {% else %}
-                        <span>
-                            <p>${{ comic_sku.price_usd }}</p>
-                        </span>
-                    {% endif %}
-                    <span>
-                        <p>By {{ comic_sku.book.authors.all|join:", " }}</p>
-                    </span>
-                </a>
-            </li>
+            {% include "partials/book_card.html" with book_sku=comic_sku %}
         {% empty %}
-            <p>No comic is available.</p>
+            <p>No new comic available</p>
         {% endfor %}
-    </ul>
-    <h3>Featured Manga New Releases</h3>
-    <ul>
+    </div>
+    <hr>
+    <div class="book-category">
+        <h3>Featured Manga New Releases</h3>
         {% for manga_sku in manga_sku_list %}
-            <li>
-                <a href="{% url 'product_detail' manga_sku.isbn_number|slugify manga_sku.id %}?f={{ manga_sku.format|lower }}">
-                    <span>
-                        <p>{{ manga_sku.book.title }} - {{ manga_.format }}</p>
-                    </span>
-                    {% if manga_sku.has_discount %}
-                        <span>
-                            <p>{{ manga_sku.discount_percent }}% OFF!</p>
-                        </span>
-                        <span>
-                            <p>Formerly ${{ manga_sku.price_usd }}, Now ${{ manga_sku.discounted_price }}</p>
-                        </span>
-                    {% else %}
-                        <span>
-                            <p>${{ manga_sku.price_usd }}</p>
-                        </span>
-                    {% endif %}
-                    <span>
-                        <p>By {{ manga_sku.book.authors.all|join:", " }}</p>
-                    </span>
-                </a>
-            </li>
+            {% include "partials/book_card.html" with book_sku=manga_sku %}
         {% empty %}
-            <p>No manga is available.</p>
+            <p>No new manga available</p>
         {% endfor %}
-    </ul>
-    <h3>Hot Deals</h3>
-    <h3>Comic Bestselling</h3>
-    <h3>Manga Bestselling</h3>
+    </div>
+    <hr>
+    <div class="book-category">
+        <h3>Featured Hot Deals</h3>
+        {% for deal_sku in hot_deals %}
+            {% include "partials/book_card.html" with book_sku=deal_sku %}
+        {% empty %}
+            <p>No featured deal available</p>
+        {% endfor %}
+    </div>
+    <hr>
+    <div class="book-category">
+        <h3>Bestselling Comics</h3>
+        {% for comic_sku_bestselling in comic_bestselling %}
+            {% include "partials/book_card.html" with book_sku=comic_sku_bestselling %}
+        {% empty %}
+            <p>No bestselling comic available yet</p>
+        {% endfor %}
+    </div>
+    <hr>
+    <div class="book-category">
+        <h3>Bestselling Manga</h3>
+        {% for manga_sku_bestselling in manga_bestselling %}
+            {% include "partials/book_card.html" with book_sku=manga_sku_bestselling %}
+        {% empty %}
+            <p>No bestselling manga available yet</p>
+        {% endfor %}
+    </div>
 {% endblock content %}

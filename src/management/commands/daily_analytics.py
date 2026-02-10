@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand
 from src.models import BookAnalyticsDaily, BookEvent, Sku
-from django.db.models import Count, Q, F
+from django.db.models import Count, Q
 from django.db import transaction
 from django.utils import timezone
 from datetime import timedelta
@@ -24,6 +24,10 @@ class Command(BaseCommand):
             )
         )
 
+        # IF SCRIPT IS RUN MORE THAN ONCE A DAY
+        if not daily_stats:
+            return self.stdout.write(self.style.NOTICE("There are no recorded events for yesterday. This may be due to a successful data transfer to the analytics table"))
+        
         # TRANSFER DATA TO ANALYTICS TABLE
         with transaction.atomic():
             for entry in daily_stats:

@@ -3,10 +3,17 @@
     {{ default_sku.book.title }}
 {% endblock title %}
 {% block content %}
-    <p>{{ default_sku.book.title }} by {{ default_sku.book.authors.all|join:", " }}</p>
-    {{ default_sku.book.description }}
-    <p>${{ default_sku.price_usd }}</p>
-    <ul>
+    <div class="book-detail">
+        <p>{{ default_sku.book.title }} by {{ default_sku.book.authors.all|join:", " }}</p>
+        {{ default_sku.book.description }}
+        {% if default_sku.has_discount %}
+            <p>{{ default_sku.discount_percent }}% OFF!</p>
+            <p>
+                <del>${{ default_sku.price_usd }}</del> ${{ default_sku.discounted_price }}
+            </p>
+        {% else %}
+            <p>${{ default_sku.price_usd }}</p>
+        {% endif %}
         {% for sku in default_sku.book.sku.all %}
             {% if sku.format == default_sku.format %}
                 <li>
@@ -19,4 +26,5 @@
             {% endif %}
         {% endfor %}
     </ul>
+</div>
 {% endblock content %}

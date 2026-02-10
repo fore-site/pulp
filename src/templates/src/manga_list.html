@@ -3,14 +3,12 @@
     Manga
 {% endblock title %}
 {% block content %}
-    <ul>
+    <h2>Manga</h2>
+    <div class="book-list">
         {% for manga_sku in mangas %}
-            <a href="{% url 'product_detail' slug=manga_sku.isbn_number pk=manga_sku.id %}?f={{ manga_sku.format|lower }}">
-                <li>{{ manga_sku.book.title }}</li>
-                <li>${{ manga_sku.price_usd }}</li>
-                <li>{{ manga_sku.format }}</li>
-            </a>
-            <hr>
+            {% include "partials/book_card.html" with book_sku=manga_sku %}
+        {% empty %}
+            <p>No manga available</p>
         {% endfor %}
-    </ul>
+    </div>
 {% endblock content %}
