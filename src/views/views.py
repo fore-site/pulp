@@ -1,19 +1,18 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login
-from src.models import Series, Book, Sku, BookEvent
+from src.models import Series, Sku, BookAnalyticsDaily
 from ..forms import CustomUserCreationForm
-from django.conf import settings
-from datetime import datetime, timedelta
-import time
-from django.utils import timezone
+from datetime import date, timedelta
+from django.db.models import F
 
 # Create your views here.
 
 class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
+    yesterday = date.today() - timedelta(days=1)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -21,12 +20,23 @@ class IndexView(generic.TemplateView):
                                    book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
         comic = Sku.objects.filter(book__series__category__name='Comic', 
                                    book__is_featured=True).order_by('book__series', '-published_at', 'price_usd').distinct('book__series')
-        
-        today = datetime.combine(datetime.now(), time.min)
-        yesterday = today - timedelta(days=1)
-        
+        trending = (BookAnalyticsDaily.objects.filter(created_at=self.yesterday)
+                    .select_related('sku__book')
+                    .prefetch_related('sku__book__authors')
+                    .only(
+                        'sku__book__title',
+                        'sku__price_usd',
+                        'sku__format',
+                        'sku__isbn_number',
+                        'sku__book__authors__name'
+                    )
+                    .annotate(
+                                    total_metrics=F('view_count') + F('purchase_count') + F('add_to_cart_count')
+                                    ).order_by('-total_metrics')[:10]
+        )
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
+        context['trending'] = trending
         return context
 
 class ComicListView(generic.ListView):
@@ -58,7 +68,7 @@ class ProductDetailView(generic.DetailView):
         pk = self.kwargs.get('pk')
 
         default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), pk=pk).prefetch_related('book').get()
-        BookEvent.objects.create(book=default_format_sku.book, sku=default_format_sku, event_type='view')
+        BookEvent.objects.create(sku=default_format_sku, event_type='view')
 
         context['format'] = selected_format
         context['default_sku'] = default_format_sku

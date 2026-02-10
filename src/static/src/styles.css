@@ -2,10 +2,6 @@ li a {
     color: green;
 }
 
-body {
-    background: white url('images/wallpaper.jpg') no-repeat;
-}
-
 #active-sku {
     color: blueviolet;
 }

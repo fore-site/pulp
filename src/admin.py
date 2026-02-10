@@ -67,18 +67,18 @@ class PublisherAdmin(admin.ModelAdmin):
 
 class BookEventAdmin(admin.ModelAdmin):
     model = BookEvent
-    list_display = ["book", "created_at", "sku", "event_type"]
+    list_display = ["sku", "created_at", "event_type"]
     list_filter = ("event_type", "created_at")
 
-    search_fields = ("book",)
+    search_fields = ("sku",)
     ordering = ("created_at",)
 
 class AdminBookAnalyticsDaily(admin.ModelAdmin):
     model = BookAnalyticsDaily
-    list_display = ["book", "sku", "created_at", "view_count", "add_to_cart_count", "purchase_count"]
+    list_display = ["sku", "created_at", "view_count", "add_to_cart_count", "purchase_count"]
     list_filter = ["created_at"]
 
-    search_fields = ("book",)
+    search_fields = ("sku",)
     ordering = ("created_at",)
 
 class GenreAdmin(admin.ModelAdmin):

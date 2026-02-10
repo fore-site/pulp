@@ -19,6 +19,8 @@ from django.urls import path
 from src.views import views
 from django.contrib.auth import views as auth_views
 from src.forms import CustomLoginForm
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,3 +35,6 @@ urlpatterns = [
     path('b/<slug:slug>/<int:pk>/', views.ProductDetailView.as_view(), name='product_detail'),
     path('order/<int:id>/', views.order, name='orders')
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

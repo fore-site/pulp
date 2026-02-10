@@ -25,12 +25,58 @@
         </li>
     </ul>
     <h3>Trending</h3>
-    <h3>Hot Deals</h3>
+    <ul>
+        {% for each_analytics in trending %}
+            <li>
+                <a href="{% url 'product_detail' each_analytics.sku.isbn_number|slugify each_analytics.sku.id %}?f={{ each_analytics.sku.format|lower }}">
+                    <span>
+                        <p>{{ each_analytics.sku.book.title }} - {{ each_analytics.sku.format }}</p>
+                    </span>
+                    {% if each_analytics.sku.has_discount %}
+                        <span>
+                            <p>{{ each_analytics.sku.discount_percent }}% OFF!</p>
+                        </span>
+                        <span>
+                            <p>Formerly ${{ each_analytics.sku.price_usd }}, Now ${{ each_analytics.sku.discounted_price }}</p>
+                        </span>
+                    {% else %}
+                        <span>
+                            <p>${{ each_analytics.sku.price_usd }}</p>
+                        </span>
+                    {% endif %}
+                    <span>
+                        <p>By {{ each_analytics.sku.book.authors.all|join:", " }}</p>
+                    </span>
+                </a>
+            </li>
+        {% empty %}
+            <p>No trending books yet</p>
+        {% endfor %}
+    </ul>
     <h3>Featured Comic New Releases</h3>
     <ul>
         {% for comic_sku in comic_sku_list %}
             <li>
-                <a href="{% url 'product_detail' comic_sku.isbn_number|slugify comic_sku.id %}?f=digital">{{ comic_sku.book.title }} - USD{{ comic_sku.price_usd }}</a>
+                <a href="{% url 'product_detail' comic_sku.isbn_number|slugify comic_sku.id %}?f={{ comic_sku.format|lower }}">
+                    <span>
+                        <p>{{ comic_sku.book.title }} - {{ comic_sku.format }}</p>
+                    </span>
+                    {% if comic_sku.has_discount %}
+                        <span>
+                            <p>{{ comic_sku.discount_percent }}% OFF!</p>
+                        </span>
+                        <span>
+                            <p>Formerly ${{ comic_sku.price_usd }}, Now ${{ comic_sku.discounted_price }}</p>
+                        </span>
+                    {% else %}
+                        <span>
+                            <p>${{ comic_sku.price_usd }}</p>
+                        </span>
+                    {% endif %}
+                    <span>
+                        <p>By {{ comic_sku.book.authors.all|join:", " }}</p>
+                    </span>
+                </a>
             </li>
         {% empty %}
             <p>No comic is available.</p>
@@ -40,12 +86,32 @@
     <ul>
         {% for manga_sku in manga_sku_list %}
             <li>
-                <a href="{% url 'product_detail' pk=manga_sku.id slug=manga_sku.isbn_number|slugify %}?f=digital">{{ manga_sku.book.title }} - USD{{ manga_sku.price_usd }}</a>
+                <a href="{% url 'product_detail' manga_sku.isbn_number|slugify manga_sku.id %}?f={{ manga_sku.format|lower }}">
+                    <span>
+                        <p>{{ manga_sku.book.title }} - {{ manga_.format }}</p>
+                    </span>
+                    {% if manga_sku.has_discount %}
+                        <span>
+                            <p>{{ manga_sku.discount_percent }}% OFF!</p>
+                        </span>
+                        <span>
+                            <p>Formerly ${{ manga_sku.price_usd }}, Now ${{ manga_sku.discounted_price }}</p>
+                        </span>
+                    {% else %}
+                        <span>
+                            <p>${{ manga_sku.price_usd }}</p>
+                        </span>
+                    {% endif %}
+                    <span>
+                        <p>By {{ manga_sku.book.authors.all|join:", " }}</p>
+                    </span>
+                </a>
             </li>
         {% empty %}
             <p>No manga is available.</p>
         {% endfor %}
     </ul>
+    <h3>Hot Deals</h3>
     <h3>Comic Bestselling</h3>
     <h3>Manga Bestselling</h3>
 {% endblock content %}

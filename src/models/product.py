@@ -27,7 +27,7 @@ class Series(models.Model):
     category = models.ForeignKey(Category, on_delete=models.RESTRICT, related_name='series', null=True)
     genres = models.ManyToManyField(Genre, related_name='series')
     description = models.TextField(blank=True)
-    cover_image = models.ImageField(upload_to='src/images', null=True, blank=True, default=None)
+    cover_image = models.ImageField(upload_to='covers', null=True, blank=True, default=None)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
@@ -60,7 +60,7 @@ class Book(models.Model):
     title = models.CharField(max_length=255)
     authors = models.ManyToManyField(Author)
     description = models.TextField(blank=True)
-    cover_image = models.ImageField(upload_to='src/images', null=True, blank=True, default=None)
+    cover_image = models.ImageField(upload_to='covers', null=True, blank=True, default=None)
     is_featured = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -122,8 +122,7 @@ class BookEvent(models.Model):
         add_to_cart = 'add_to_cart'
         purchase = 'purchase'
 
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
     event_type = models.CharField(max_length=11, choices=EventTypes)
 
@@ -134,9 +133,8 @@ class BookEvent(models.Model):
         db_table = 'book_events'
 
 class BookAnalyticsDaily(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
     sku = models.ForeignKey(Sku, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateField(help_text='indicates the date/day the analytics is collected for, not the date this row is created.')
     view_count = models.PositiveBigIntegerField()
     add_to_cart_count = models.PositiveBigIntegerField()
     purchase_count = models.PositiveBigIntegerField()
@@ -145,5 +143,9 @@ class BookAnalyticsDaily(models.Model):
         return f'view_count: {self.view_count}, add_to_cart_count: {self.add_to_cart_count}, purchase_count: {self.purchase_count}'
 
     class Meta:
+        indexes = [
+            models.Index(fields=('created_at', 'sku'))
+        ]
         db_table = 'book_analytics_daily'
         verbose_name_plural = 'Book Analytics Daily'
+        unique_together = ('sku', 'created_at')
