@@ -32,7 +32,7 @@ class Command(BaseCommand):
         with transaction.atomic():
             for entry in daily_stats:
                 BookAnalyticsDaily.objects.update_or_create(
-                    sku = Sku.objects.get(entry['sku']),
+                    sku = Sku.objects.get(pk=entry['sku']),
                     created_at = yesterday.date(),
                     defaults= {
                         'view_count': entry['views'],

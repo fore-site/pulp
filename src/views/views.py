@@ -3,10 +3,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.contrib.auth import login
-from src.models import Series, Sku, BookEvent
+from src.models import Series, Sku, Book, BookEvent
 from ..forms import CustomUserCreationForm
 from datetime import date, timedelta
-from django.db.models import F, Sum, Q
+from django.db.models import F, Sum, Q, Count
 
 # Create your views here.
 
@@ -17,7 +17,7 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        base_queryset = (Sku.objects.filter(is_discontinued=False)
+        base_queryset = (Sku.objects.filter(is_discontinued=False, quantity__gt=0)
                          .select_related('book')
                          .prefetch_related('book__authors')
                          .only(
@@ -36,7 +36,7 @@ class IndexView(generic.TemplateView):
         hot_deals = base_queryset.filter(book__is_featured=True, discount_percent__gt=0).order_by('-discount_percent')[:10]
 
         trending = (base_queryset.filter(book_analytics__created_at__gte=self.trending_days).annotate(
-                         total_metrics=F('book_analytics__purchase_count') + F('book_analytics__view_count') + F('book_analytics__add_to_cart_count')
+                         total_metrics=Sum(F('book_analytics__purchase_count') + F('book_analytics__view_count') + F('book_analytics__add_to_cart_count'))
                      ).order_by('-total_metrics')[:10]
                      )
         
@@ -57,7 +57,7 @@ class IndexView(generic.TemplateView):
                                            book_analytics__created_at__gte=self.last_thirty_days)
                               )).filter(total_purchase__gt=0).order_by('-total_purchase')[:10]
                               )
-        
+
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic
         context['trending'] = trending
@@ -107,13 +107,20 @@ class SeriesIndexView(generic.ListView):
     model = Series
     template_name = 'src/series_index.html'
 
-class SeriesDetailView(generic.DetailView):
-    model = Series
+class SeriesDetailView(generic.TemplateView):
     template_name = 'src/series_detail.html'
-    context_object_name = 'series'
 
-    def get_queryset(self):
-        return super().get_queryset().prefetch_related('books__sku')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        series = Series.objects.get(pk=self.kwargs.get('pk'))
+        sku_list = Sku.objects.filter(book__series=self.kwargs.get('pk')).order_by('book', 'book__series__title').distinct('book')
+        book_count = Book.objects.filter(series=self.kwargs.get('pk')).count()
+
+        context['sku_list'] = sku_list
+        context['book_count'] = book_count
+        context['series'] = series
+
+        return context
 
 def series_list(request, series_type):
     if series_type == 'comic':

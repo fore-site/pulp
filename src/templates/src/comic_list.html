@@ -7,8 +7,10 @@
     <div class="book-list">
         {% for comic_sku in comics %}
             {% include "partials/book_card.html" with book_sku=comic_sku %}
+            <hr>
         {% empty %}
             <p>No comic available</p>
+            <hr>
         {% endfor %}
     </div>
 {% endblock content %}

@@ -37,8 +37,8 @@ class SeriesAdmin(admin.ModelAdmin):
 
 class BookAdmin(admin.ModelAdmin):
     model = Book
-    list_display = ["series", "title", "description", "cover_image", "is_featured", "is_deleted", "created_at"]
-    list_filter = ["series", "created_at", "is_deleted", "authors"]
+    list_display = ["series", "title", "description", "cover_image", "trending_score", "bestseller_score", "average_rating", "reviewer_count", "is_featured", "is_deleted",  "is_shipping_free", "created_at"]
+    list_filter = ["series", "created_at",  "is_shipping_free", "is_deleted", "authors"]
 
     search_fields = ["title"]
     ordering = ["title"]
@@ -46,8 +46,8 @@ class BookAdmin(admin.ModelAdmin):
 
 class SkuAdmin(admin.ModelAdmin):
     model = Sku
-    list_display = ["book", "code", "publisher", "isbn_number", "price_usd", "quantity", "format", "page_count", "dimensions", "file_size", "language", "published_at", "is_shipping_free", "is_discontinued", "created_at", "updated_at"]
-    list_filter = ["publisher", "published_at", "is_discontinued", "is_shipping_free", "created_at", "updated_at"]
+    list_display = ["book", "code", "publisher", "isbn_number", "price_usd", "quantity", "format", "page_count", "dimensions", "file_size", "published_at", "is_discontinued", "created_at", "updated_at"]
+    list_filter = ["publisher", "published_at", "is_discontinued", "created_at", "updated_at"]
 
     sortable_by = ["price_usd"]
     search_fields = ["book", "code"]
@@ -89,6 +89,10 @@ class CategoryAdmin(admin.ModelAdmin):
     model = Category
     list_display = ("name",)
 
+class RatingsAdmin(admin.ModelAdmin):
+    model = Ratings
+    list_display = ("book", "user", "rating_value")
+    
 # Register your models here.
 
 admin.site.register(User, CustomUserAdmin)
@@ -101,6 +105,7 @@ admin.site.register(BookEvent, BookEventAdmin)
 admin.site.register(BookAnalyticsDaily, AdminBookAnalyticsDaily)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Ratings, RatingsAdmin)
 admin.site.site_header = 'Pulp administration'
 admin.site.site_title = 'Pulp site admin'
 admin.site.index_title = 'Welcome to Pulp admin dashboard'

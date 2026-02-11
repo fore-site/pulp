@@ -3,17 +3,18 @@
     {{ series.title }}
 {% endblock title %}
 {% block content %}
-    <h4>Description</h4>
+<h3>{{ series.title }}</h3>
     <p>
         <i>{{ series.description }}</i>
     </p>
+    <h4>Books in this series: {{ book_count }} </h4>
+    <hr>
     <ul>
-        {% for book in series.books.all %}
-            {% for sku in book.sku.all %}
-                <li>
-                    <a href="{% url 'product_detail' slug=sku.isbn_number|slugify pk=sku.id %}?f=digital">{{ book.title }} - ${{ sku.price_usd }}</a>
-                </li>
-            {% endfor %}
+        {% for sku in sku_list %}
+            {% include "partials/book_card.html" with book_sku=sku %}
+        <hr>
+        {% empty %}
+            <p>There are no books in this series</p>
         {% endfor %}
     </ul>
 {% endblock content %}

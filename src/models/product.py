@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.core.validators import MaxValueValidator
 from decimal import Decimal
 
@@ -62,14 +63,34 @@ class Book(models.Model):
     description = models.TextField(blank=True)
     cover_image = models.ImageField(upload_to='covers', null=True, blank=True, default=None)
     is_featured = models.BooleanField(default=False)
+    is_shipping_free = models.BooleanField(default=False)
+    trending_score = models.PositiveIntegerField(default=0, blank=True)
+    bestseller_score = models.PositiveIntegerField(default=0, blank=True)
+    average_rating = models.DecimalField(default=0, blank=True, max_digits=2, decimal_places=1)
+    reviewer_count = models.PositiveIntegerField(default=0, blank=True)
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
 
     class Meta:
         db_table = 'books'
+
+class Ratings(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rating')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    rating_value = models.PositiveSmallIntegerField(default=0, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{rating_value}/5 book ID{self.book} rated by user ID {self.user}"
+
+    class Meta:
+        db_table = 'ratings'
+        unique_together = ('book', 'user')
+
 
 class Sku(models.Model):
 
@@ -89,9 +110,7 @@ class Sku(models.Model):
     page_count = models.CharField(max_length=255)
     dimensions = models.CharField(blank=True, max_length=255, help_text='Dimensions of hardcover or paperback formats, otherwise empty')
     file_size = models.CharField(blank=True, max_length=50, help_text='Download size of digital format, otherwise empty')
-    language = models.CharField(max_length=255, help_text='Language edition of the book')
     published_at = models.DateField()
-    is_shipping_free = models.BooleanField(default=False)
     is_discontinued = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
