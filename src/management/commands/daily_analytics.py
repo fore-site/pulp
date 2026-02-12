@@ -69,3 +69,23 @@ class Command(BaseCommand):
             ).delete()
 
             self.stdout.write(self.style.SUCCESS(f'Successfully moved events data for {yesterday.date()} into analytics table. {deleted_events_count} recorded and deleted.'))
+
+def update_bestseller():
+    """Function that calculates aggregated purchase count on analytics table and updates as each book's bestseller_score. Returns total rows updated."""
+
+    bestsellers = BookAnalyticsDaily.objects.filter(created_at__gte=last_thirty_days).values('book').annotate(
+        bestseller_score=Sum('purchase_count')
+    ).order_by('-bestseller_score')
+
+    books_to_update = []
+    books = Book.objects.filter(is_deleted=False)
+
+    for book in books:
+        for bestseller_book in bestsellers:
+            if book.id == bestseller_book['book']:
+                book.bestseller_score = bestseller_book['bestseller_score']
+                books_to_update.append(book)
+                break
+    
+    updated_rows = Book.objects.bulk_update(books_to_update, ['bestseller_score'])
+    return updated_rows
