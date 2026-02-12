@@ -5,15 +5,12 @@ from django.views import generic
 from django.contrib.auth import login
 from src.models import Series, Sku, Book, BookEvent
 from ..forms import CustomUserCreationForm
-from datetime import date, timedelta
 from django.db.models import F, Sum, Q, Count
 
 # Create your views here.
 
 class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
-    trending_days = date.today() - timedelta(days=7)
-    last_thirty_days = date.today() - timedelta(days=30)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -35,28 +32,16 @@ class IndexView(generic.TemplateView):
                  .distinct('book__series'))
         hot_deals = base_queryset.filter(book__is_featured=True, discount_percent__gt=0).order_by('-discount_percent')[:10]
 
-        trending = (base_queryset.filter(book_analytics__created_at__gte=self.trending_days).annotate(
-                         total_metrics=Sum(F('book_analytics__purchase_count') + F('book_analytics__view_count') + F('book_analytics__add_to_cart_count'))
-                     ).order_by('-total_metrics')[:10]
+        trending = (base_queryset.filter(book__trending_score__gt=0).order_by('book', 'book__trending_score').distinct('book')[:10]
                      )
         
         comic_bestselling = (base_queryset
-                              .filter(book__series__category__name='Comic')
-                              .annotate(total_purchase=Sum(
-                                  'book_analytics__purchase_count',
-                                  filter=Q(
-                                           book_analytics__created_at__gte=self.last_thirty_days)
-                              )).filter(total_purchase__gt=0).order_by('-total_purchase')[:10]
-                              )
-                              
+                              .filter(book__series__category__name='Comic', book__bestseller_score__gt=0)
+                              .order_by('book', 'book__bestseller_score').distinct('book')[:10])
+
         manga_bestselling = (base_queryset
-                              .filter(book__series__category__name='Manga')
-                              .annotate(total_purchase=Sum(
-                                  'book_analytics__purchase_count',
-                                  filter=Q(
-                                           book_analytics__created_at__gte=self.last_thirty_days)
-                              )).filter(total_purchase__gt=0).order_by('-total_purchase')[:10]
-                              )
+                              .filter(book__series__category__name='Manga', book__bestseller_score__gt=0)
+                              .order_by('book', 'book__bestseller_score').distinct('book')[:10])
 
         context['manga_sku_list'] = manga
         context['comic_sku_list'] = comic

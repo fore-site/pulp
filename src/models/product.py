@@ -85,7 +85,7 @@ class Ratings(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{rating_value}/5 book ID{self.book} rated by user ID {self.user}"
+        return f"{self.rating_value}/5 book ID{self.book} rated by user ID {self.user}"
 
     class Meta:
         db_table = 'ratings'
@@ -152,14 +152,15 @@ class BookEvent(models.Model):
         db_table = 'book_events'
 
 class BookAnalyticsDaily(models.Model):
+    book = models.ForeignKey(Book, null=True, default=None, on_delete=models.CASCADE, related_name = 'book_analytics')
     sku = models.ForeignKey(Sku, on_delete=models.CASCADE, related_name='book_analytics')
     created_at = models.DateField(help_text='indicates the date/day the analytics is collected for, not the date this row is created.')
-    view_count = models.PositiveBigIntegerField()
-    add_to_cart_count = models.PositiveBigIntegerField()
-    purchase_count = models.PositiveBigIntegerField()
+    view_count = models.PositiveIntegerField()
+    add_to_cart_count = models.PositiveIntegerField()
+    purchase_count = models.PositiveIntegerField()
 
     def __str__(self):
-        return f'view_count: {self.view_count}, add_to_cart_count: {self.add_to_cart_count}, purchase_count: {self.purchase_count}'
+        return f'Analytics ID {self.id}'
 
     class Meta:
         indexes = [
