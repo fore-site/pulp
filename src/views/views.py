@@ -5,7 +5,7 @@ from django.views import generic
 from django.contrib.auth import login
 from src.models import Series, Sku, Book, BookEvent
 from ..forms import CustomUserCreationForm
-from django.db.models import F, Sum, Q, Count
+from django.db.models import F, Q
 
 # Create your views here.
 
