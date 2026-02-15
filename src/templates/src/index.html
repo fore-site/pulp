@@ -10,72 +10,33 @@
         <a href="{% url 'login' %}">Sign In</a>
         <a href="{% url 'signup' %}">Sign Up</a>
     {% endif %}
-    <ul>
-        <li>
-            <a href="{% url 'manga_list' %}">Manga</a>
-        </li>
-        <li>
-            <a href="{% url 'comic_list' %}">Comic</a>
-        </li>
-        <li>
-            <a href="{% url 'series_index' series_type='comic' %}">Comic Series Index</a>
-        </li>
-        <li>
-            <a href="{% url 'series_index' series_type='manga' %}">Manga Series Index</a>
-        </li>
-    </ul>
-    <hr />
     <div class="book-category">
         <h3>Trending</h3>
-        {% for trend_sku in trending %}
-            {% include "partials/book_card.html" with book_sku=trend_sku %}
-        {% empty %}
-            <p>No trending book available</p>
-        {% endfor %}
+        {% include "partials/book_card.html" with books=trending %}
     </div>
     <hr>
     <div class="book-category">
         <h3>Featured Comic New Releases</h3>
-        {% for comic_sku in comic_sku_list %}
-            {% include "partials/book_card.html" with book_sku=comic_sku %}
-        {% empty %}
-            <p>No new comic available</p>
-        {% endfor %}
+        {% include "partials/book_card.html" with books=comic_sku_list %}
     </div>
     <hr>
     <div class="book-category">
         <h3>Featured Manga New Releases</h3>
-        {% for manga_sku in manga_sku_list %}
-            {% include "partials/book_card.html" with book_sku=manga_sku %}
-        {% empty %}
-            <p>No new manga available</p>
-        {% endfor %}
+        {% include "partials/book_card.html" with book_sku=manga_sku_list %}
     </div>
     <hr>
     <div class="book-category">
         <h3>Featured Hot Deals</h3>
-        {% for deal_sku in hot_deals %}
-            {% include "partials/book_card.html" with book_sku=deal_sku %}
-        {% empty %}
-            <p>No featured deal available</p>
-        {% endfor %}
+        {% include "partials/book_card.html" with books=hot_deals %}
     </div>
     <hr>
     <div class="book-category">
         <h3>Bestselling Comics</h3>
-        {% for comic_sku_bestselling in comic_bestselling %}
-            {% include "partials/book_card.html" with book_sku=comic_sku_bestselling %}
-        {% empty %}
-            <p>No bestselling comic available yet</p>
-        {% endfor %}
+        {% include "partials/book_card.html" with books=comic_bestselling %}
     </div>
     <hr>
     <div class="book-category">
         <h3>Bestselling Manga</h3>
-        {% for manga_sku_bestselling in manga_bestselling %}
-            {% include "partials/book_card.html" with book_sku=manga_sku_bestselling %}
-        {% empty %}
-            <p>No bestselling manga available yet</p>
-        {% endfor %}
+        {% include "partials/book_card.html" with books=manga_bestselling %}
     </div>
 {% endblock content %}

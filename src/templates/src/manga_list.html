@@ -4,28 +4,6 @@
 {% endblock title %}
 {% block content %}
     <h2>Manga</h2>
-    <p>Filter by:</p>
-    <ul>
-        <li>Genre</li>
-        <li>Featured</li>
-        <li>Format</li>
-        <li>Publisher</li>
-    </ul>
-    <p>Sort by:</p>
-    <ul>
-        <li>Price: Low to High</li>
-        <li>Price: High to Low</li>
-        <li>Release Date</li>
-        <li>Bestselling</li>
-        <li>Reviews</li>
-    </ul>
-    <div class="book-list">
-        {% for manga_sku in mangas %}
-            {% include "partials/book_card.html" with book_sku=manga_sku %}
-            <hr>
-        {% empty %}
-            <p>No manga available</p>
-            <hr>
-        {% endfor %}
-    </div>
+    {% include "partials/filter_options.html" with genre_list=genres %}
+    <div class="book-list" id="books">{% include "partials/book_card.html" with books=books %}</div>
 {% endblock content %}

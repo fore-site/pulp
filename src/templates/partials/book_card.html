@@ -1,18 +1,25 @@
 {# partials/book_list.html #}
-<a href="{% url 'product_detail' book_sku.isbn_number|slugify book_sku.id %}?f={{ book_sku.format|lower }}">
-    <div class="book-sku-card">
-        <h5>{{ book_sku.book.title }}</h5>
-        <p>by {{ book_sku.book.authors.all|join:", " }}</p>
-        <p>Series: <a href="{% url 'series_detail' book_sku.book.series.id %}">{{ book_sku.book.series.title}}</a></p>
-        <p>{{ book_sku.format }}</p>
-        {% if book_sku.has_discount %}
-            <p>{{ book_sku.discount_percent }}% OFF!</p>
+{% for book_sku in books %}
+    <a href="{% url 'product_detail' book_sku.isbn_number|slugify book_sku.id %}?f={{ book_sku.format|lower }}">
+        <div class="book-sku-card">
+            <h5>{{ book_sku.book.title }}</h5>
+            <p>by {{ book_sku.book.authors.all|join:", " }}</p>
             <p>
-                <del>${{ book_sku.price_usd }}</del> ${{ book_sku.discounted_price }}
+                Series: <a href="{% url 'series_detail' book_sku.book.series.id %}">{{ book_sku.book.series.title }}</a>
             </p>
-        {% else %}
-            <p>${{ book_sku.price_usd }}</p>
-        {% endif %}
-    </div>
-</a>
-<p>Add to cart</p>
+            <p>{{ book_sku.format }}</p>
+            {% if book_sku.has_discount %}
+                <p>{{ book_sku.discount_percent }}% OFF!</p>
+                <p>
+                    <del>${{ book_sku.price_usd }}</del> ${{ book_sku.discounted_price }}
+                </p>
+            {% else %}
+                <p>${{ book_sku.price_usd }}</p>
+            {% endif %}
+        </div>
+    </a>
+    <p>Add to cart</p>
+    <hr>
+{% empty %}
+    <p>No books available</p>
+{% endfor %}

@@ -1,6 +1,5 @@
-{% load static %}
 {% load tailwind_tags %}
-{% load django_htmx %}
+{% load django_htmx static %}
 {% tailwind_css %}
 <!DOCTYPE html>
 <html lang="en">
@@ -13,16 +12,41 @@
                 Pulp
             {% endblock title %}
         </title>
+        <script src="{% static 'src/ext/event_header.js' %}" defer></script>
+        <script src="{% static 'src/app.js' %}" defer></script>
+        {% htmx_script %}
     </head>
-    <body hx-header='{"x-csrftoken": "{{ csrf_token }}"}'>
+    <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+          hx-ext="event_header">
         <header>
-            <h1>
-                <a href="{% url 'home' %}" id="home">Pulp</a>
-            </h1>
+            <nav>
+                <h1>
+                    <a href="{% url 'home' %}" id="home">Pulp</a>
+                </h1>
+                <ul>
+                    <li>
+                        <a href="{% url 'manga_list' %}">Manga</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'comic_list' %}">Comic</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'series_index' series_type='comic' %}">Comic Series Index</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'series_index' series_type='manga' %}">Manga Series Index</a>
+                    </li>
+                </ul>
+                <hr />
+            </nav>
         </header>
-        <main>
+        <main id="main">
             {% block content %}
             {% endblock content %}
         </main>
+        <footer>
+            <p>Placeholder footer</p>
+        </footer>
+        {% django_htmx_script %}
     </body>
 </html>

@@ -4,13 +4,6 @@
 {% endblock title %}
 {% block content %}
     <h2>Comics</h2>
-    <div class="book-list">
-        {% for comic_sku in comics %}
-            {% include "partials/book_card.html" with book_sku=comic_sku %}
-            <hr>
-        {% empty %}
-            <p>No comic available</p>
-            <hr>
-        {% endfor %}
-    </div>
+    {% include "partials/filter_options.html" with genre_list=genres %}
+    <div class="book-list" id="books">{% include "partials/book_card.html" with books=books %}</div>
 {% endblock content %}
