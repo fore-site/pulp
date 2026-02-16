@@ -1,9 +1,0 @@
-{% extends "src/base.html" %}
-{% block title %}
-    Comics
-{% endblock title %}
-{% block content %}
-    <h2>Comics</h2>
-    {% include "partials/filter_options.html" with genre_list=genres %}
-    <div class="book-list" id="books">{% include "partials/book_card.html" with books=books %}</div>
-{% endblock content %}

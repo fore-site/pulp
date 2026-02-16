@@ -95,9 +95,9 @@ class Ratings(models.Model):
 class Sku(models.Model):
 
     class BookFormat(models.TextChoices):
-        Hardcover = 'Hardcover',
-        Paperback = 'Paperback',
-        Digital = 'Digital'
+        hardcover = 'hardcover',
+        paperback = 'paperback',
+        digital = 'digital'
 
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, related_name='sku')
     code = models.CharField(max_length=30, unique=True)

@@ -1,29 +1,44 @@
 {# partials/filter_options.html #}
-<nav hx-target="#books" hx-swap="innerHTML" hx-push-url="true">
-    <p>Genres</p>
-    <ul>
-        {% for genre in genre_list %}
-            <li>
-                <a hx-get="?genre={{ genre|lower }}" href="?genre={{ genre|lower }}">{{ genre }}</a>
-            </li>
-        {% endfor %}
-    </ul>
-    <p>Format</p>
-    <ul>
-        <a hx-get="?format=hardcover" href="?format=hardcover">Hardcover</a>
-        <a hx-get="?format=paperback" href="?format=paperback">Paperback</a>
-        <a hx-get="?format=digital" href="?format=digital">Digital</a>
-    </ul>
-    <p>Featured</p>
-    <ul>
-        <a hx-get="?is_featured=true" href="?is_featured=true">Yes</a>
-        <a hx-get="?is_featured=false" href="?is_featured=false">No</a>
-    </ul>
-    <ul id="sort">
-        <a hx-get="">Price: High to Low</a>
-        <a hx-get="">Price: Low to High</a>
-        <a hx-get="">Release date</a>
-        <a hx-get="">Bestselling</a>
-        <a hx-get="">Reviews</a>
-    </ul>
-</nav>
+<div class="shop-layout">
+    <aside class="filters">
+        <button class="mobile-filter-toggle">Filters</button>
+        <form hx-get="{% url 'book_list' category=category.name %}"
+              hx-target="#books"
+              hx-swap="innerHTML"
+              hx-push-url="true"
+              hx-trigger="change delay:500ms">
+            <h4>Genres</h4>
+            {% for genre in genre_list %}
+                <label>
+                    <input type="checkbox"
+                           name="genre"
+                           value="{{ genre.id }}"
+                           {% if genre.id in selected_genres %}checked{% endif %}>
+                    {{ genre.name }}
+                </label>
+            {% endfor %}
+            <h4>Format</h4>
+            <select name="format">
+                <option value="">All Formats</option>
+                <option value="hardcover">Hardcover</option>
+                <option value="paperback">Paperback</option>
+                <option value="digital">Digital</option>
+            </select>
+            <!-- FEATURED -->
+            <label>
+                <input type="checkbox" name="featured" value="true">
+                Feaured Only
+            </label>
+            <!-- SORT -->
+            <h4>Sort By</h4>
+            <select name="sort">
+                <option value="">Default</option>
+                <option value="price_desc">Price: High to Low</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="release_date">Release Date</option>
+                <option value="bestselling">Bestselling</option>
+                <option value="reviews">Reviews</option>
+            </select>
+        </form>
+    </aside>
+</div>

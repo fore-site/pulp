@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from unicodedata import category
+from django.shortcuts import render, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 from django.contrib.auth import login
-from src.models import Series, Sku, Book, BookEvent, Genre
+from src.models import Series, Sku, Book, BookEvent, Genre, Category
 from ..forms import CustomUserCreationForm
 from django.db.models import F, Q
 from django_htmx.middleware import HtmxDetails
@@ -29,10 +30,10 @@ class IndexView(generic.TemplateView):
                              'isbn_number',
                              'book__authors__name'
                          ))
-        manga = (base_queryset.filter(book__is_featured=True, book__series__category__name='Manga')
+        manga = (base_queryset.filter(book__is_featured=True, book__series__category__name='manga')
                  .order_by('book__series', '-published_at', 'price_usd')
                  .distinct('book__series'))
-        comic = (base_queryset.filter(book__is_featured=True, book__series__category__name='Comic' )
+        comic = (base_queryset.filter(book__is_featured=True, book__series__category__name='comic' )
                  .order_by('book__series', '-published_at', 'price_usd')
                  .distinct('book__series'))
         hot_deals = base_queryset.filter(book__is_featured=True, discount_percent__gt=0).order_by('-discount_percent')[:10]
@@ -41,11 +42,11 @@ class IndexView(generic.TemplateView):
                      )
         
         comic_bestselling = (base_queryset
-                              .filter(book__series__category__name='Comic', book__bestseller_score__gt=0)
+                              .filter(book__series__category__name='comic', book__bestseller_score__gt=0)
                               .order_by('book', 'book__bestseller_score').distinct('book')[:10])
 
         manga_bestselling = (base_queryset
-                              .filter(book__series__category__name='Manga', book__bestseller_score__gt=0)
+                              .filter(book__series__category__name='manga', book__bestseller_score__gt=0)
                               .order_by('book', 'book__bestseller_score').distinct('book')[:10])
 
         context['manga_sku_list'] = manga
@@ -57,16 +58,19 @@ class IndexView(generic.TemplateView):
 
         return context
 
-class ComicListView(generic.TemplateView):
-    template_name = 'src/comic_list.html'
+class BookListView(generic.ListView):
+    model = Sku
+    template_name = 'src/book_list.html'
+    context_object_name = 'books'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        genre_filters = self.request.GET.get('filter')
-        is_featured_list = self.request.GET.get('is_featured')
-        format_list = self.request.GET.get('format')
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
 
-        comics = (Sku.objects.filter(book__series__category__name='Comic', is_discontinued=False, quantity__gt=0)
+        genre_filters = self.request.GET.getlist('genre')
+        featured = self.request.GET.get('featured')
+        format = self.request.GET.getlist('format')
+
+        books = (Sku.objects.filter(book__series__category=self.category, is_discontinued=False, quantity__gt=0)
                   .select_related('book')
                   .prefetch_related('book__authors')
                   .only(
@@ -78,89 +82,28 @@ class ComicListView(generic.TemplateView):
                   )
                   .order_by('book__title').distinct('book__title'))
 
-        genres = Genre.objects.filter(categories__name='Comic')
-
         if genre_filters:
-            if self.request.htmx:
-                self.template_name = "partials/book_card.html"
-                for genre in genre_filters:
-                    comics = comics.filter(book__series__genres__name=genre.capitalize())
-            else:
-                for genre in genre_filters:
-                    comics = comics.filter(book__series__genres__name=genre.capitalize())
-        if is_featured_list:
-            if self.request.htmx:
-                self.template_name = "partials/book_card.html"
-                for is_featured in is_featured_list:
-                    comics = comics.filter(book__series__genres__name=bool(is_featured))
-            else:
-                for genre in genre_filters:
-                    comics = comics.filter(book__series__genres__name=bool(is_featured))
-        if format_list:
-            if self.request.htmx:
-                self.template_name = "partials/book_card.html"
-                for format in format_list:
-                    comics = comics.filter(book__series__genres__name=format.capitalize())
-            else:
-                for genre in genre_filters:
-                    comics = comics.filter(book__series__genres__name=format.capitalize())
+            books = books.filter(book__series__genres__id__in=genre_filters)
+        if featured:
+            books = books.filter(book__is_featured=True)
+        if format:
+            books = books.filter(format=format)
 
-        context['books'] = comics
-        context['genres'] = genres
-        return context
-       
-class MangaListView(generic.TemplateView):
-    template_name = 'src/manga_list.html'
-
+        if self.request.htmx:
+                self.template_name = "partials/book_card.html"
+    
+        return books
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        genre_filters = self.request.GET.getlist("filter")
-        format_list = self.request.GET.getlist("format")
-        is_featured_list = self.request.GET.getlist("is_featured")
+        genres = Genre.objects.filter(categories__name=self.category.name.capitalize())
 
-        mangas = (Sku.objects.filter(book__series__category__name='Manga', is_discontinued=False, quantity__gt=0)
-                  .select_related('book')
-                  .prefetch_related('book__authors')
-                  .only(
-                      'book__title',
-                      'isbn_number',
-                      'price_usd',
-                      'format',
-                      'book__authors__name'
-                  )
-                  .order_by('book__title').distinct('book__title'))
-
-        genres = Genre.objects.filter(categories__name='Manga')
-        
-        if genre_filters:
-            if self.request.htmx:
-                self.template_name = "partials/book_card.html"
-                for genre in genre_filters:
-                    mangas = mangas.filter(book__series__genres__name=genre.capitalize())
-            else:
-                for genre in genre_filters:
-                    mangas = mangas.filter(book__series__genres__name=genre.capitalize())
-        if is_featured_list:
-            if self.request.htmx:
-                self.template_name = "partials/book_card.html"
-                for is_featured in is_featured_list:
-                    mangas = mangas.filter(book__series__genres__name=bool(is_featured))
-            else:
-                for genre in genre_filters:
-                    mangas = mangas.filter(book__series__genres__name=bool(is_featured))
-        if format_list:
-            if self.request.htmx:
-                self.template_name = "partials/book_card.html"
-                for format in format_list:
-                    mangas = mangas.filter(book__series__genres__name=format.capitalize())
-            else:
-                for genre in genre_filters:
-                    mangas = mangas.filter(book__series__genres__name=format.capitalize())
-        
-        context['books'] = mangas
+        context['category'] = self.category
         context['genres'] = genres
+        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
+
         return context
-        
+               
 class ProductDetailView(generic.DetailView):
     model = Sku
     template_name = 'src/product_detail.html'
