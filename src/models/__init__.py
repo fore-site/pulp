@@ -10,6 +10,6 @@ from .product import (Publisher,
                       BookEvent,
                       BookAnalyticsDaily,
                       Category,
-                      Ratings)
+                      Rating)
 from .user import User, UserAddress
 from .shipping import Carrier

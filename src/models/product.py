@@ -78,7 +78,7 @@ class Book(models.Model):
     class Meta:
         db_table = 'books'
 
-class Ratings(models.Model):
+class Rating(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='rating')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
     rating_value = models.PositiveSmallIntegerField(default=0, blank=True)
