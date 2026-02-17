@@ -11,7 +11,7 @@ class CustomUserCreationForm(UserCreationForm):
             '<ul><li>Password must be minimum 8 characters</li>'
             '<li>Password cannot consist of only numbers</li></ul>')
         self.fields['password2'].help_text = mark_safe(
-            '<ul><li>Confirm password</li></ul>')
+            '<ul><li>Enter password again</li></ul>')
 
     error_messages = {
         'password_mismatch': 'Your passwords do not match'

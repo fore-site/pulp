@@ -3,18 +3,14 @@
     {{ series.title }}
 {% endblock title %}
 {% block content %}
-<h3>{{ series.title }}</h3>
+    <h3>{{ series.title }}</h3>
     <p>
         <i>{{ series.description }}</i>
     </p>
-    <h4>Books in this series: {{ book_count }} </h4>
+    <h4>Books in this series: {{ book_count }}</h4>
     <hr>
     <ul>
-        {% for sku in sku_list %}
-            {% include "partials/book_card.html" with book_sku=sku %}
+        {% include "partials/book_card.html" with books=sku_list %}
         <hr>
-        {% empty %}
-            <p>There are no books in this series</p>
-        {% endfor %}
     </ul>
 {% endblock content %}

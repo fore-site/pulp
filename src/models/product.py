@@ -95,9 +95,9 @@ class Rating(models.Model):
 class Sku(models.Model):
 
     class BookFormat(models.TextChoices):
-        hardcover = 'hardcover',
-        paperback = 'paperback',
-        digital = 'digital'
+        hardcover = 'Hardcover',
+        paperback = 'Paperback',
+        digital = 'Digital'
 
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, related_name='sku')
     code = models.CharField(max_length=30, unique=True)
@@ -126,8 +126,8 @@ class Sku(models.Model):
     def discounted_price(self) -> models.DecimalField:
         """Calculates and returns discounted price"""
         if self.has_discount:
-            discount_amount = self.price_usd * (Decimal(self.price_usd) / Decimal(100))
-            return (self.price_usd - discount_amount).quantize(Decimal('0.01'))
+            discount_amount = Decimal(self.price_usd) * (Decimal(self.discount_percent) / Decimal(100))
+            return (Decimal(self.price_usd) - discount_amount).quantize(Decimal('0.01'))
         return self.price_usd
 
     class Meta:

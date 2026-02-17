@@ -3,7 +3,7 @@ from src.models import BookAnalyticsDaily, BookEvent, Sku, Book
 from django.db.models import Count, Q, F, Sum
 from django.db import transaction
 from django.utils import timezone
-from datetime import timedelta, date
+from datetime import timedelta
 
 today = timezone.now().replace(hour=0, second=0, minute=0, microsecond=0)
 yesterday = today - timedelta(days=1)

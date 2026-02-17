@@ -17,12 +17,18 @@
     <hr>
     <div class="book-category">
         <h3>Featured Comic New Releases</h3>
-        {% include "partials/book_card.html" with books=comic_sku_list %}
+        {% include "partials/book_card.html" with books=new_comic_release %}
+        {% if new_comic_release %}
+            <a href="{% url 'book_list' category='comic' %}?r='true'">See more</a>
+        {% endif %}
     </div>
     <hr>
     <div class="book-category">
         <h3>Featured Manga New Releases</h3>
-        {% include "partials/book_card.html" with book_sku=manga_sku_list %}
+        {% include "partials/book_card.html" with book_sku=new_manga_release %}
+        {% if new_manga_release %}
+            <a href="{% url 'book_list' category='manga' %}?r='true'">See more</a>
+        {% endif %}
     </div>
     <hr>
     <div class="book-category">

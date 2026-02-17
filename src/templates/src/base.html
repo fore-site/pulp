@@ -25,10 +25,10 @@
                 </h1>
                 <ul>
                     <li>
-                        <a href="{% url 'manga_list' %}">Manga</a>
+                        <a href="{% url 'book_list' category='manga' %}">Manga</a>
                     </li>
                     <li>
-                        <a href="{% url 'comic_list' %}">Comic</a>
+                        <a href="{% url 'book_list' category='comic' %}">Comic</a>
                     </li>
                     <li>
                         <a href="{% url 'series_index' series_type='comic' %}">Comic Series Index</a>

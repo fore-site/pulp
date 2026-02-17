@@ -5,6 +5,9 @@
 {% block content %}
     <div class="book-detail">
         <p>{{ default_sku.book.title }} by {{ default_sku.book.authors.all|join:", " }}</p>
+        <p>
+            Series: <a href="{% url 'series_detail' default_sku.book.series.id %}">{{ default_sku.book.series.title }}</a>
+        </p>
         {{ default_sku.book.description }}
         {% if default_sku.has_discount %}
             <p>{{ default_sku.discount_percent }}% OFF!</p>
@@ -15,16 +18,23 @@
             <p>${{ default_sku.price_usd }}</p>
         {% endif %}
         {% for sku in default_sku.book.sku.all %}
-            {% if sku.format == default_sku.format %}
-                <li>
-                    <a href="?{% querystring %}" id="active-sku">{{ default_sku.format }}</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{% url 'product_detail' slug=sku.isbn_number pk=sku.id %}?f={{ sku.format|lower }}">{{ sku.format }}</a>
-                </li>
+            {% if not sku.is_discontinued %}
+                {% if sku.format == default_sku.format %}
+                    <li>
+                        <a href="?{% querystring %}" id="active-sku">{{ default_sku.format }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{% url 'product_detail' slug=sku.isbn_number pk=sku.id %}?f={{ sku.format|lower }}">{{ sku.format }}</a>
+                    </li>
+                {% endif %}
             {% endif %}
         {% endfor %}
+        {% if default_sku.quantity > 0 %}
+            <p>In stock</p>
+        {% else %}
+            <p>Out of Stock</p>
+        {% endif %}
     </ul>
     <h6>Customer Ratings</h6>
     <p>Drop a rating for this book</p>
