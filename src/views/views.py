@@ -85,7 +85,7 @@ class BookListView(generic.ListView):
         )).values_list('distinct_id', flat=True))
 
         # Create a base queryset
-        books = (Sku.objects.filter(book__series__category=self.category, is_discontinued=False, quantity__gt=0, book__is_deleted=False, id__in=distinct_skus)
+        books = (Sku.objects.filter(book__series__category=self.category, is_discontinued=False, book__is_deleted=False, id__in=distinct_skus)
                   .select_related('book')
                   .prefetch_related('book__authors')
                   .only(
