@@ -6,9 +6,9 @@ from django.views.decorators.http import require_GET, require_http_methods, requ
 from django.contrib.auth import login
 from src.models import Series, Sku, Book, BookEvent, Genre, Category
 from ..forms import CustomUserCreationForm
-from django.db.models import F, Subquery, OuterRef
+from django.db.models import Q, Subquery, OuterRef
 from django_htmx.middleware import HtmxDetails
-from ..utils.common import FilterSort
+from ..utils.common import FilterSort, base_book_queryset
 from django.utils import timezone
 from datetime import timedelta
 
@@ -23,16 +23,9 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        base_queryset = (Sku.objects.filter(is_discontinued=False, quantity__gt=0, book__is_deleted=False)
-                         .select_related('book')
-                         .prefetch_related('book__authors')
-                         .only(
-                             'book__title',
-                             'price_usd',
-                             'format',
-                             'isbn_number',
-                             'book__authors__name'
-                         ))
+
+        base_queryset = base_book_queryset(Sku)
+        
         manga = (base_queryset.filter(book__is_featured=True, book__series__category__name='manga', published_at__gte=self.seven_days)
                  .order_by('book__series', '-published_at', 'price_usd')
                  .distinct('book__series'))
@@ -85,17 +78,7 @@ class BookListView(generic.ListView):
         )).values_list('distinct_id', flat=True))
 
         # Create a base queryset
-        books = (Sku.objects.filter(book__series__category=self.category, is_discontinued=False, book__is_deleted=False, id__in=distinct_skus)
-                  .select_related('book')
-                  .prefetch_related('book__authors')
-                  .only(
-                      'book__title',
-                      'isbn_number',
-                      'price_usd',
-                      'format',
-                      'book__authors__name'
-                  )
-                  .order_by('book__title'))
+        books = base_book_queryset(Sku).filter(id__in=distinct_skus).order_by('book__title')
         
         # Filter and sort Skus if params exist
         filter_sort = FilterSort(books, sort_by, format, featured, genre_filters, latest_release)
@@ -160,8 +143,8 @@ class SeriesDetailView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         series = Series.objects.get(pk=self.kwargs.get('pk'))
-        sku_list = Sku.objects.filter(book__series=self.kwargs.get('pk'), is_discontinued=False, book__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
-        book_count = Book.objects.filter(series=self.kwargs.get('pk'), sku__is_discontinued=False, is_deleted=False).count()
+        sku_list = Sku.objects.filter(book__series=self.kwargs.get('pk'), is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
+        book_count = Book.objects.filter(series=self.kwargs.get('pk'), sku__is_discontinued=False, is_deleted=False, series__is_deleted=False).count()
 
         context['sku_list'] = sku_list
         context['book_count'] = book_count
@@ -169,6 +152,21 @@ class SeriesDetailView(generic.TemplateView):
 
         return context
 
+@require_GET
+def search_results_view(request):  
+    query = request.GET.get('q')
+    base_queryset = base_book_queryset(Sku)
+
+    try:
+        results = (base_queryset
+                   .filter(Q(book__title__icontains=query) | Q(book__authors__name__icontains=query) | Q(isbn_number__icontains=query))
+                   .distinct('book'))
+    except Sku.DoesNotExist:
+        return render(request, 'src/search_results.html', {"results": None, "query": query})
+    else:
+        return render(request, 'src/search_results.html', {"results": results, "query": query})
+
+@require_http_methods(['GET', 'POST'])
 def signup(request):
     if request.POST:
         form = CustomUserCreationForm(request.POST)
@@ -181,6 +179,20 @@ def signup(request):
     else:
         form = CustomUserCreationForm()
         return render(request, 'src/signup.html', {"form": form})
+
+class HotDealsView(generic.TemplateView):
+    template_name = 'src/deals.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        base_queryset = base_book_queryset(Sku)
+
+        manga_deals = base_queryset.filter(book__series__category__name='manga', discount_percent__gte=50).order_by('discount_percent')
+        comic_deals = base_queryset.filter(book__series__category__name='comic', discount_percent__gte=50).order_by('discount_percent')
+
+        context['manga_deals'] = manga_deals
+        context['comic_deals'] = comic_deals
+        return context
 
 def order(request, id):
     return HttpResponse('You have placed an order on %s.' % id)

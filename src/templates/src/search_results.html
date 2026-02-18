@@ -1,0 +1,12 @@
+{% extends "src/base.html" %}
+{% block title %}
+    Pulp | Search results
+{% endblock title %}
+{% block content %}
+    {% if not results %}
+        <h2>There are no books matching your query '{{ query }}'</h2>
+    {% else %}
+        <h2>Here are the results of your query '{{ query }}'</h2>
+        {% include "partials/book_card.html" with books=results %}
+    {% endif %}
+{% endblock content %}

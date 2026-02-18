@@ -1,0 +1,18 @@
+{% extends "src/base.html" %}
+{% block title %}
+    Hot Deals
+{% endblock title %}
+{% block content %}
+    <h2>Get Comics at bargain prices</h2>
+    {% if not comic_deals %}
+        <p>No hot deals available for comics at the moment</p>
+        {$ else %}
+        {% include "partials/book_card.html" with books=comic_deals %}
+    {% endif %}
+    <h2>Get Manga at bargain prices</h2>
+    {% if not manga_deals %}
+        <p>No hot deals available for manga at the moment</p>
+    {% else %}
+        {% include "partials/book_card.html" with books=manga_deals %}
+    {% endif %}
+{% endblock content %}

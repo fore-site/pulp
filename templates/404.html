@@ -1,0 +1,19 @@
+{% extends "src/base.html" %}
+{% block title %}
+    Not Found
+{% endblock title %}
+{% block content %}
+    {% if exception == 'Resolver404' %}
+        <h2>Sorry,</h2>
+        <h3>Page could not be found</h3>
+        <h4>
+            <a href="{% url 'home' %}">Continue shopping</a>
+        </h4>
+    {% else %}
+        <h2>Sorry,</h2>
+        <h3>This product is not available</h3>
+        <h4>
+            <a href="{% url 'home' %}">Continue shopping</a>
+        </h4>
+    {% endif %}
+{% endblock content %}

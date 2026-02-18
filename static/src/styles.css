@@ -1,0 +1,39 @@
+a {
+    color: green;
+}
+
+#active-sku {
+    color: blueviolet;
+}
+
+#home {
+    color: coral;
+}
+
+/* Desktop */
+.shop-layout {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+}
+
+.mobile-filter-toggle {
+    display: none;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    .mobile-filter-toggle {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .shop-layout {
+        grid-template-columns: 1fr;
+    }
+    .filters form {
+        display: none;
+    }
+    .filters.active form {
+        display: block;
+    }
+}

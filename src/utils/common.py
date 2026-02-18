@@ -43,3 +43,17 @@ class FilterSort:
             books = books.order_by('-book__average_rating')
             
         return books
+
+def base_book_queryset(sku: Sku):
+    """Function that acts as the base queryset for subsequent queries on the Sku model. Fundamental filters have been applied"""
+
+    return (sku.objects.filter(is_discontinued=False, quantity__gt=0, book__is_deleted=False, book__series__is_deleted=False)
+                         .select_related('book')
+                         .prefetch_related('book__authors')
+                         .only(
+                             'book__title',
+                             'price_usd',
+                             'format',
+                             'isbn_number',
+                             'book__authors__name'
+                         ))
