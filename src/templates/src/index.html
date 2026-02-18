@@ -1,14 +1,18 @@
 {% extends "src/base.html" %}
 {% block content %}
     {% if user.is_authenticated %}
-        <h1>Welcome {{ user }}</h1>
-        <form action="{% url 'logout' %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Logout">
-        </form>
+        <div class="welcome">
+            <h1>Welcome {{ user }}</h1>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Logout">
+            </form>
+        </div>
     {% else %}
-        <a href="{% url 'login' %}">Sign In</a>
-        <a href="{% url 'signup' %}">Sign Up</a>
+        <div class="auth-actions">
+            <a href="{% url 'login' %}">Sign In</a>
+            <a href="{% url 'signup' %}">Sign Up</a>
+        </div>
     {% endif %}
     <ul>
         <li>
@@ -34,7 +38,7 @@
         <h3>Featured Comic New Releases</h3>
         {% include "partials/book_card.html" with books=new_comic_release %}
         {% if new_comic_release %}
-            <a href="{% url 'book_list' category='comic' %}?r='true'">See more</a>
+            <a href="{% url 'book_list' category='comic' %}?r=true">See more</a>
         {% endif %}
     </div>
     <hr>
@@ -42,7 +46,7 @@
         <h3>Featured Manga New Releases</h3>
         {% include "partials/book_card.html" with book_sku=new_manga_release %}
         {% if new_manga_release %}
-            <a href="{% url 'book_list' category='manga' %}?r='true'">See more</a>
+            <a href="{% url 'book_list' category='manga' %}?r=true">See more</a>
         {% endif %}
     </div>
     <hr>
@@ -58,7 +62,7 @@
         <h3>Bestselling Comics</h3>
         {% include "partials/book_card.html" with books=comic_bestselling %}
         {% if comic_bestselling %}
-            <a href="{% url 'book_list' category='comic' %}?bestselling='true'">See more</a>
+            <a href="{% url 'book_list' category='comic' %}?sort=bestselling">See more</a>
         {% endif %}
     </div>
     <hr>
@@ -66,7 +70,7 @@
         <h3>Bestselling Manga</h3>
         {% include "partials/book_card.html" with books=manga_bestselling %}
         {% if manga_bestselling %}
-            <a href="{% url 'book_list' category='manga' %}?bestselling='true'">See more</a>
+            <a href="{% url 'book_list' category='manga' %}?sort=bestselling">See more</a>
         {% endif %}
     </div>
 {% endblock content %}
