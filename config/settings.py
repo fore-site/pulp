@@ -30,7 +30,7 @@ database_name = os.getenv('DATABASE_NAME')
 SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 

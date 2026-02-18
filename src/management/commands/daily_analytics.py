@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from src.models import BookAnalyticsDaily, BookEvent, Sku, Book
+from src.models import BookAnalyticsDaily, BookEvent, Sku, Book, Series
 from django.db.models import Count, Q, F, Sum
 from django.db import transaction
 from django.utils import timezone
@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 ).order_by('-total_metrics')
 
             books_to_update = [] 
-            books = Book.objects.filter(is_deleted=False)
+            books = Book.objects.filter(is_deleted=False, series__is_deleted=False)
             for book in books:
                 for book_trend in yesterday_trends:
                     if book.id == book_trend['book']:
@@ -60,7 +60,6 @@ class Command(BaseCommand):
                         pass
 
             rows_updated = Book.objects.bulk_update(books_to_update, ['trending_score'])
-            self.stdout.write(self.style.SUCCESS(f'Updated trending_score on {rows_updated} rows in Book table'))
 
             # DELETE THE RECORDED EVENTS TO KEEP EVENT TABLE CLEAN
             deleted_events_count, _ = BookEvent.objects.filter(
@@ -69,6 +68,7 @@ class Command(BaseCommand):
             ).delete()
 
             self.stdout.write(self.style.SUCCESS(f'Successfully moved events data for {yesterday.date()} into analytics table. {deleted_events_count} recorded and deleted.'))
+            self.stdout.write(self.style.SUCCESS(f'Updated trending_score on {rows_updated} rows in Book table'))
 
 def update_bestseller():
     """Function that calculates aggregated purchase count on analytics table and updates as each book's bestseller_score. Returns total rows updated."""
@@ -78,7 +78,7 @@ def update_bestseller():
     ).order_by('-bestseller_score')
 
     books_to_update = []
-    books = Book.objects.filter(is_deleted=False)
+    books = Book.objects.filter(is_deleted=False, series__is_deleted=False)
 
     for book in books:
         for bestseller_book in bestsellers:
