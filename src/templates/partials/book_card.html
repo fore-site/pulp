@@ -1,3 +1,4 @@
+{% load pulp_tags %}
 {# partials/book_list.html #}
 {% for book_sku in books %}
     <a href="{% url 'product_detail' book_sku.isbn_number|slugify book_sku.id %}?f={{ book_sku.format|lower }}">
@@ -16,7 +17,8 @@
             {% else %}
                 <p>${{ book_sku.price_usd }}</p>
             {% endif %}
-            <p>⭐ {{ book_sku.book.average_rating }}</p>
+            {% to_stars book_sku.book.average_rating %}
+            <span class="text-xs text-gray-500">{{ book_sku.book.reviewer_count }} reviews</span>
         </div>
     </a>
     <p>Add to cart</p>

@@ -70,7 +70,7 @@ class BookListView(generic.ListView):
         latest_release = self.request.GET.get('r')
 
         # Create a distinct queryset, one sku per book
-        distinct_skus = (Sku.objects.all()
+        distinct_skus = (Sku.objects.filter(book__series__category=self.category)
         .distinct('book')
         .annotate(distinct_id=Subquery(
             Sku.objects.filter(book=OuterRef('book')).order_by('price_usd')

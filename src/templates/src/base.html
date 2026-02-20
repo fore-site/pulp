@@ -1,12 +1,11 @@
-{% load tailwind_tags %}
-{% load django_htmx static %}
-{% tailwind_css %}
+{% load django_htmx static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <link rel="stylesheet" href="{% static 'src/style.css' %}" />
+        {% tailwind_css %}
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>
             {% block title %}
                 Pulp
@@ -16,7 +15,8 @@
         <script src="{% static 'src/app.js' %}" defer></script>
         {% htmx_script %}
     </head>
-    <body hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
+    <body class="bg-gray-50 text-black font-serif leading-normal tracking-normal"
+          hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
           hx-ext="event_header">
         <header>
             <nav>
@@ -32,6 +32,20 @@
                        value="Search by title, author name, or isbn number">
                 <input type="submit" value="Go">
             </form>
+            {% if user.is_authenticated %}
+                <div class="welcome">
+                    <h1>{{ user }}</h1>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" value="Logout">
+                    </form>
+                </div>
+            {% else %}
+                <div class="auth-actions">
+                    <a href="{% url 'login' %}">Sign In</a>
+                    <a href="{% url 'signup' %}">Sign Up</a>
+                </div>
+            {% endif %}
         </header>
         <main id="main">
             {% block content %}

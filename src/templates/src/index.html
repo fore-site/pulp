@@ -1,19 +1,5 @@
 {% extends "src/base.html" %}
 {% block content %}
-    {% if user.is_authenticated %}
-        <div class="welcome">
-            <h1>Welcome {{ user }}</h1>
-            <form action="{% url 'logout' %}" method="post">
-                {% csrf_token %}
-                <input type="submit" value="Logout">
-            </form>
-        </div>
-    {% else %}
-        <div class="auth-actions">
-            <a href="{% url 'login' %}">Sign In</a>
-            <a href="{% url 'signup' %}">Sign Up</a>
-        </div>
-    {% endif %}
     <ul>
         <li>
             <a href="{% url 'book_list' category='manga' %}">Manga</a>

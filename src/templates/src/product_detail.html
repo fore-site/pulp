@@ -1,4 +1,5 @@
 {% extends "src/base.html" %}
+{% load pulp_tags %}
 {% block title %}
     {{ default_sku.book.title }}
 {% endblock title %}
@@ -38,6 +39,8 @@
     </ul>
     <p>Add to Cart</p>
     <h6>Customer Ratings</h6>
+    {% to_stars default_sku.book.average_rating %}
+    <span class="text-xs text-gray-500">{{ default_sku.book.reviewer_count }} reviews</span>
     <p>Drop a rating for this book</p>
 </div>
 {% endblock content %}
