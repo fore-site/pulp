@@ -1,0 +1,24 @@
+{% extends "src/base.html" %}
+{% block title %}
+    Pulp - Cart
+{% endblock title %}
+{% block content %}
+    {% if not cart_items %}
+        <p>
+            Your cart is empty. <a href="{% url 'home' %}">Start shopping</a> now to add items to your cart
+        </p>
+    {% else %}
+        {% for item in cart_items %}
+            <p>{{ item.sku.book.title }}</p>
+            <p>{{ item.sku.format }}</p>
+            {% if item.sku.has_discount %}
+                <p>{{ item.sku.discount_percent }}% OFF!</p>
+                <p>
+                    <del>${{ item.sku.price_usd }}</del> ${{ item.sku.discounted_price }}
+                </p>
+            {% else %}
+                <p>${{ item.sku.price_usd }}</p>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endblock content %}

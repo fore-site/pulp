@@ -1,14 +1,16 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 from django.contrib.auth import login
-from src.models import Series, Sku, Book, BookEvent, Genre, Category
+from django.contrib import messages
+from src.models import Series, Sku, Book, BookEvent, Genre, Category, Cart, CartItem
 from ..forms import CustomUserCreationForm
 from django.db.models import Q, Subquery, OuterRef
 from django_htmx.middleware import HtmxDetails
 from ..utils.common import FilterSort, base_book_queryset
+from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from datetime import timedelta
 
@@ -193,6 +195,66 @@ class HotDealsView(generic.TemplateView):
         context['manga_deals'] = manga_deals
         context['comic_deals'] = comic_deals
         return context
+
+class CartView(generic.TemplateView):
+    template_name = 'src/cart.html'
+    http_method_names = ['get', 'post']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user if self.request.user.is_authenticated else None
+        if not self.request.session.session_key:
+            self.request.session.create()
+        session_id = self.request.session.session_key
+
+        try:
+            cart = Cart.objects.get(user=user) if user else Cart.objects.get(session_id=session_id)
+        except Cart.DoesNotExist:
+            context['cart_items'] = []
+        else:
+            try:
+                cart_items = CartItem.objects.filter(cart=cart).select_related('sku')
+            except CartItem.DoesNotExist:
+                context['cart_items'] = []
+            else:
+                context['cart_items'] = cart_items
+        return context
+    
+    def post(self, request, **kwargs):
+        user = request.user if request.user.is_authenticated else None
+        if not request.session.session_key:
+            request.session.create()
+        session_id = request.session.session_key        
+
+        try:
+            cart = Cart.objects.get(user=user) if user else Cart.objects.get(session_id=session_id)
+        except Cart.DoesNotExist:
+            cart = Cart.objects.create(user=user) if user else Cart.objects.create(session_id=session_id)
+
+        sku_id = request.POST.get('sku_id')
+        quantity = request.POST.get('quantity')
+        sku = get_object_or_404(Sku, id=sku_id)
+        
+        CartItem.objects.update_or_create(
+            sku=sku,
+            cart=cart,
+            quantity=int(quantity)
+        )
+        messages.success(request, 'Product added to cart!')
+
+        next_url = request.POST.get('next') or request.META.get('HTTP_REFERER')
+        if next_url:
+            next_url = next_url.strip()
+
+        is_safe = url_has_allowed_host_and_scheme(
+            url=next_url,
+            allowed_hosts=request.get_host(),
+            require_https=False
+        )
+
+        if next_url and is_safe:
+            return redirect(next_url)
+        return redirect('home')
 
 def order(request, id):
     return HttpResponse('You have placed an order on %s.' % id)

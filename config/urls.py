@@ -34,7 +34,8 @@ urlpatterns = [
     path('b/<slug:slug>/<int:pk>/', views.ProductDetailView.as_view(), name='product_detail'),
     path('order/<int:id>/', views.order, name='orders'),
     path('books/p/search', views.search_results_view, name='search_results'),
-    path('books/deals', views.HotDealsView.as_view(), name='deals')
+    path('books/deals', views.HotDealsView.as_view(), name='deals'),
+    path('cart', views.CartView.as_view(), name='cart'),
 ]
 
 if settings.DEBUG:
