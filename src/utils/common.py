@@ -1,8 +1,9 @@
 from django.db.models import Case, When, F, DecimalField
-from ..models import Sku
+from ..models import Sku, Cart
 from django.db.models.manager import BaseManager
 from django.utils import timezone
 from datetime import timedelta
+from django.http import HttpRequest
 
 class FilterSort:
     def __init__(self, books: Sku, sort_by: str, format: str, featured: str, genres: list[str], latest_release: str):
@@ -57,3 +58,19 @@ def base_book_queryset(sku: Sku):
                              'isbn_number',
                              'book__authors__name'
                          ))
+
+def get_user_and_session(request: HttpRequest):
+    """Get user object and session key from the request object"""
+
+    user = request.user if request.user.is_authenticated else None
+    if not request.session.session_key:
+        request.session.create()
+    session_id = request.session.session_key    
+    return user, session_id
+
+def get_cart(user, session_id):
+    try:
+        cart = Cart.objects.get(user=user) if user else Cart.objects.get(session_id=session_id)
+    except Cart.DoesNotExist:
+        cart = Cart.objects.create(user=user) if user else Cart.objects.create(session_id=session_id)
+    return cart

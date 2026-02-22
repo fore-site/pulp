@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm, Authenti
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from .models import User
+from django import forms
 
 class CustomUserCreationForm(UserCreationForm):
     
@@ -44,3 +45,10 @@ class CustomLoginForm(AuthenticationForm):
         'invalid_login': _('Invalid credentials. Enter a valid email and password.'),
         'inactive': _('This account is currently disabled'),
     }
+
+class CartUpdateForm(forms.Form):
+    quantity = forms.IntegerField(
+        max_value=100,
+        min_value=1,
+        widget=forms.NumberInput(attrs={'class': 'quantity-input'})
+    )

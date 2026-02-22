@@ -36,6 +36,7 @@ urlpatterns = [
     path('books/p/search', views.search_results_view, name='search_results'),
     path('books/deals', views.HotDealsView.as_view(), name='deals'),
     path('cart', views.CartView.as_view(), name='cart'),
+    path('cart/update', views.update_and_delete_cart, name='cart_update'),
 ]
 
 if settings.DEBUG:

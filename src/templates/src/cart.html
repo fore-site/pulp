@@ -1,24 +1,63 @@
 {% extends "src/base.html" %}
+{% load crispy_forms_tags %}
 {% block title %}
     Pulp - Cart
 {% endblock title %}
 {% block content %}
-    {% if not cart_items %}
-        <p>
-            Your cart is empty. <a href="{% url 'home' %}">Start shopping</a> now to add items to your cart
-        </p>
-    {% else %}
-        {% for item in cart_items %}
-            <p>{{ item.sku.book.title }}</p>
-            <p>{{ item.sku.format }}</p>
-            {% if item.sku.has_discount %}
-                <p>{{ item.sku.discount_percent }}% OFF!</p>
-                <p>
-                    <del>${{ item.sku.price_usd }}</del> ${{ item.sku.discounted_price }}
-                </p>
-            {% else %}
-                <p>${{ item.sku.price_usd }}</p>
-            {% endif %}
-        {% endfor %}
-    {% endif %}
+    <div id="class-container">
+        {% if not cart_items_and_forms %}
+            <p>
+                Your cart is empty. <a href="{% url 'home' %}">Start shopping</a> now to add items to your cart
+            </p>
+        {% else %}
+            <form action="{% url 'cart_update' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="clear">Clear cart</button>
+            </form>
+            {% for item, form in cart_items_and_forms %}
+                <a href="{% url 'product_detail' item.sku.isbn_number|slugify item.sku.id %}?f={{ item.sku.format|lower }}">
+                    <p>{{ item.sku.book.title }}</p>
+                    <p>By {{ item.sku.book.authors.all|join:", " }}</p>
+                    <p>{{ item.sku.format }}</p>
+                </a>
+                <form action="{% url 'cart_update' %}"
+                      method="post"
+                      hx-post="{% url 'cart_update' %}"
+                      hx-target="#cart-container"
+                      novalidate>
+                    {% csrf_token %}
+                    <input type="hidden" name="sku_id" value="{{ item.sku.id }}">
+                    {% if item.quantity > 1 %}
+                        <button type="button" hx-vals='{"action": "subtract"}'>-</button>
+                    {% else %}
+                        <button type="button" hx-vals='{"action": "delete"}'>-</button>
+                    {% endif %}
+                    {{ form.quantity }}
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="button" name="action" hx-vals='{"action": "add"}'>+</button>
+                    {% if item.quantity > item.sku.quantity %}Copies have exceeded stock quantity!{% endif %}
+                    <button type="button" hx-vals='{"action": "delete"}'>Delete</button>
+                </form>
+                {% if item.sku.has_discount %}
+                    <p>{{ item.sku.discount_percent }}% OFF!</p>
+                    <p>
+                        <del>${{ item.sku.price_usd }}</del> ${{ item.sku.discounted_price }}
+                    </p>
+                {% else %}
+                    <p>${{ item.sku.price_usd }}</p>
+                {% endif %}
+                <hr>
+            {% endfor %}
+        {% endif %}
+    </div>
 {% endblock content %}
+{% block scripts %}
+    <script>
+        document.querySelectorAll('.quantity-input').forEach(input => {
+            // submit when clicking away
+            input.addEventListener('blur', function() {
+                this.form.submit();
+            });
+        });
+    </script>
+{% endblock scripts %}

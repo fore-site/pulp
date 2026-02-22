@@ -37,7 +37,12 @@
             <p>Out of Stock</p>
         {% endif %}
     </ul>
-    <p>Add to Cart</p>
+    <form action="{% url 'cart' %}" method="post">
+        {% csrf_token %}
+        <input type="hidden" name="sku_id" value="{{ default_sku.id }}">
+        <input type="hidden" name="next" value="{{ request.path }}">
+        <button type="submit">Add to Cart</button>
+    </form>
     <h6>Customer Ratings</h6>
     {% to_stars default_sku.book.average_rating %}
     <span class="text-xs text-gray-500">{{ default_sku.book.reviewer_count }} reviews</span>

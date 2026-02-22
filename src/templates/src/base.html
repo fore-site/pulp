@@ -50,7 +50,7 @@
                 <a href="{% url 'cart' %}">Cart</a>
             </h2>
             {% block cart_quantity %}
-                <span id="cart-quantity">0</span>
+                <span id="cart-quantity">{{ request.session.item_count }}</span>
             {% endblock cart_quantity %}
         </header>
         <main id="main">
