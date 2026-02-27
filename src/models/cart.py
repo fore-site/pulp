@@ -19,6 +19,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     sku = models.ForeignKey('Sku', on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField(validators=[MaxValueValidator(100)])
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
 
     def __str__(self):
         return self.cart

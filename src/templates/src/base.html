@@ -49,16 +49,11 @@
             <h2>
                 <a href="{% url 'cart' %}">Cart</a>
             </h2>
-            {% block cart_quantity %}
-                <span id="cart-quantity">{{ request.session.item_count }}</span>
-            {% endblock cart_quantity %}
+            <span id="cart-count"
+                  hx-swap-oob="true"
+                  {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
         </header>
         <main id="main">
-            {% if messages %}
-                <div class="messages">
-                    {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
-                </div>
-            {% endif %}
             {% block content %}
             {% endblock content %}
         </main>
@@ -68,5 +63,8 @@
         {% block scripts %}
         {% endblock scripts %}
         {% django_htmx_script %}
+        <div id="page-loader" class="loader-overlay">
+            <div class="spinner"></div>
+        </div>
     </body>
 </html>

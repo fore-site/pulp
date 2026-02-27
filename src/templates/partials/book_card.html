@@ -25,7 +25,11 @@
         {% csrf_token %}
         <input type="hidden" name="sku_id" value="{{ book_sku.id }}">
         <input type="hidden" name="next" value="{{ request.path }}">
-        <button type="submit">Add to Cart</button>
+        <button type="submit"
+                hx-post="{% url 'cart' %}"
+                hx-target="#cart-count"
+                hx-swap="innerHTML"
+                hx-indicator="#page-loader">Add to Cart</button>
     </form>
     <hr>
 {% empty %}

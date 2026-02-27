@@ -32,7 +32,6 @@ urlpatterns = [
     path('series-index/<str:series_type>', views.SeriesIndexView.as_view(), name='series_index'),
     path('series/<int:pk>', views.SeriesDetailView.as_view(), name='series_detail'),
     path('b/<slug:slug>/<int:pk>/', views.ProductDetailView.as_view(), name='product_detail'),
-    path('order/<int:id>/', views.order, name='orders'),
     path('books/p/search', views.search_results_view, name='search_results'),
     path('books/deals', views.HotDealsView.as_view(), name='deals'),
     path('cart', views.CartView.as_view(), name='cart'),

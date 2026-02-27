@@ -7,9 +7,10 @@ from django.contrib.auth import login
 from django.contrib import messages
 from src.models import Series, Sku, Book, BookEvent, Genre, Category, Cart, CartItem
 from ..forms import CustomUserCreationForm, CartUpdateForm
-from django.db.models import Q, Subquery, OuterRef, F, Sum
+from django.db.models import Q, Subquery, OuterRef, F
+from django.template.loader import render_to_string
 from django_htmx.middleware import HtmxDetails
-from ..utils.common import FilterSort, base_book_queryset, get_user_and_session, get_cart
+from ..utils.common import FilterSort, base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from datetime import timedelta
@@ -208,21 +209,7 @@ class CartView(generic.TemplateView):
             self.request.session.create()
         session_id = self.request.session.session_key
 
-        try:
-            # Get cart related to user or session_id, return empty cart if it doesn't exist
-            cart = Cart.objects.get(user=user) if user else Cart.objects.get(session_id=session_id)
-        except Cart.DoesNotExist:
-            context['cart_items'] = []
-        else:
-            try:
-                # Get cart items related to cart, return empty cart if it doesn't exist
-                cart_items = CartItem.objects.filter(cart=cart).prefetch_related('sku__book__authors')
-            except CartItem.DoesNotExist:
-                context['cart_items'] = []
-            else:
-                # create django forms for each cart item
-                forms = [CartUpdateForm(initial={'quantity': item.quantity}) for item in cart_items]
-                context['cart_items_and_forms'] = zip(cart_items, forms)
+        context['cart_items_and_forms'] = get_cart_items_and_forms(user, session_id)
         return context
     
     def post(self, request, **kwargs):
@@ -242,15 +229,10 @@ class CartView(generic.TemplateView):
             cart=cart).update(quantity=F('quantity') + 1)
         
         if not updated:
-            created = CartItem.objects.create(sku=sku, cart=cart, quantity=1)
+            CartItem.objects.create(sku=sku, cart=cart, quantity=1)
 
         # Get total item count in a cart and store it in user session
-        cart_items = CartItem.objects.filter(cart=cart).values('cart').annotate(
-            item_count=Sum(F('quantity'))
-        ).get()
-        request.session['item_count'] = cart_items['item_count']
-
-        messages.success(request, f'{sku.book.title} added to cart!')
+        store_price_and_count(request, cart)
 
         next_url = request.POST.get('next') or request.META.get('HTTP_REFERER')
         if next_url:
@@ -262,69 +244,60 @@ class CartView(generic.TemplateView):
             allowed_hosts=request.get_host(),
             require_https=False
         )
+        if request.htmx:
+            return HttpResponse(request.session['item_count'])
 
         if next_url and is_safe:
             return redirect(next_url)
         return redirect('home')
 
 @require_POST
-def update_and_delete_cart(request: HttpRequest):
+def update_and_delete_cart(request: HtmxHttpRequest):
     """View to update cart contents or clear cart"""
 
     user, session_id = get_user_and_session(request)
     cart = get_cart(user, session_id)
 
     action = request.POST.get('action')
-    print(action)
     sku_id = request.POST.get('sku_id')
-    sku = get_object_or_404(Sku, id=sku_id)
+    if sku_id:
+        sku = get_object_or_404(Sku, id=sku_id)
     
     form = CartUpdateForm({'quantity': request.POST.get('quantity')})
-    if form.is_valid():
+    if action == 'clear':
+        CartItem.objects.filter(cart=cart).delete()
+    elif form.is_valid():
         quantity = int(form.cleaned_data.get('quantity'))
-        if action == 'add' or action == 'subtract':
-            if action == 'add':
-                new_qty = quantity + 1
-                messages.success(request, f'{sku.book.title} added to cart')
-            elif action == 'subtract':
-                new_qty = quantity - 1
-                messages.success(request, f'{sku.book.title} removed from cart')
-
+        if action == 'add':
+            new_qty = quantity + 1
             CartItem.objects.filter(sku=sku, cart=cart).update(quantity=new_qty)
-        elif action == 'clear':
-            CartItem.objects.filter(cart=cart).delete()
+        elif action == 'subtract':
+            new_qty = quantity - 1
+            CartItem.objects.filter(sku=sku, cart=cart).update(quantity=new_qty)
         elif action == 'delete':
             CartItem.objects.filter(sku=sku, cart=cart).delete()
-            messages.success(request, f'{sku.book.title} removed from cart')
         else:
             CartItem.objects.filter(sku=sku, cart=cart).update(quantity=quantity)
-            messages.success(request, f'{sku.book.title} added to cart')
-            
-            # Get total item count in a cart and store it in user session
-        cart_items = CartItem.objects.filter(cart=cart).values('cart').annotate(
-            item_count=Sum(F('quantity'))
-        ).get()
-        request.session['item_count'] = cart_items['item_count']
-    
     else:
         pass
     
+    # Get total item count in a cart and store it in user session
+    store_price_and_count(request, cart)
 
+    if request.htmx and action != 'delete':
+        context = {"cart_items_and_forms": get_cart_items_and_forms(user, session_id)}
+        cart_main_target = render(request, 'src/cart.html#cart_items', context).content.decode()
+        cart_count_oob = f'<span id="cart-count" hx-swap-oob="true">{request.session['item_count']}</span>'
+        return HttpResponse(cart_main_target + cart_count_oob)
+        # return render(request, 'src/cart.html#cart_items', context)
+    elif request.htmx and action == 'delete':
+        response = HttpResponse()
+        response['HX-Redirect'] = reverse('cart')
+        return response
+    return redirect('cart')
 
-    next_url = request.POST.get('next') or request.META.get('HTTP_REFERER')
-    if next_url:
-        next_url = next_url.strip()
+class OrderCheckoutView(generic.FormView):
+    pass
 
-    # validate the next parameter and ensure user has not tampered with it
-    is_safe = url_has_allowed_host_and_scheme(
-        url=next_url,
-        allowed_hosts=request.get_host(),
-        require_https=False
-    )
-
-    if next_url and is_safe:
-        return redirect(next_url)
-    return redirect('home')
-
-def order(request, id):
+def order_checkout(request, id):
     return HttpResponse('You have placed an order on %s.' % id)
