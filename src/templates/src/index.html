@@ -70,17 +70,7 @@
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Trending Now</h2>
                     </div>
                 </div>
-                <div class="relative group">
-                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                        {% include "partials/book_card.html" with books=trending %}
-                    </div>
-                </div>
+                {% include "partials/book_card.html" with books=trending %}
             </section>
             <section class="mb-24">
                 <div class="flex items-end justify-between mb-12">
@@ -91,22 +81,12 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='comic' %}?r=true">
+                       href="{% url 'book_list' category='comic' %}?r=true">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
-                <div class="relative group">
-                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                        {% include "partials/book_card.html" with books=new_comic_release %}
-                    </div>
-                </div>
+                {% include "partials/book_card.html" with books=new_comic_release %}
             </section>
             <section class="mb-24">
                 <div class="flex items-end justify-between mb-12">
@@ -117,22 +97,12 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='manga' %}?r=true">
+                       href="{% url 'book_list' category='manga' %}?r=true">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
-                <div class="relative group">
-                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                        {% include "partials/book_card.html" with books=new_manga_release %}
-                    </div>
-                </div>
+                {% include "partials/book_card.html" with books=new_manga_release %}
             </section>
             <section class="mb-24">
                 <div class="flex items-end justify-between mb-12">
@@ -141,22 +111,12 @@
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Hot Deals</h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'deals' %}">
+                       href="{% url 'deals' %}">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
-                <div class="relative group">
-                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                        {% include "partials/book_card.html" with books=hot_deals %}
-                    </div>
-                </div>
+                {% include "partials/book_card.html" with books=hot_deals %}
             </section>
             <section class="mb-24">
                 <div class="flex items-end justify-between mb-12">
@@ -167,22 +127,12 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='comic' %}?sort=bestselling">
+                       href="{% url 'book_list' category='comic' %}?sort=bestselling">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
-                <div class="relative group">
-                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                        {% include "partials/book_card.html" with books=comic_bestselling %}
-                    </div>
-                </div>
+                {% include "partials/book_card.html" with books=comic_bestselling %}
             </section>
             <section class="mb-24">
                 <div class="flex items-end justify-between mb-12">
@@ -193,42 +143,38 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='manga' %}?sort=bestselling">
+                       href="{% url 'book_list' category='manga' %}?sort=bestselling">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
                 </div>
-                <div class="relative group">
-                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
-                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                        {% include "partials/book_card.html" with books=manga_bestselling %}
-                    </div>
-                </div>
+                {% include "partials/book_card.html" with books=manga_bestselling %}
             </section>
         </div>
     </main>
 {% endblock content %}
 {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.querySelector('.scroll-container');
-  const leftBtn = document.querySelector('.scroll-left');
-  const rightBtn = document.querySelector('.scroll-right');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.scroll-container');
+            const leftBtn = document.querySelector('.scroll-left');
+            const rightBtn = document.querySelector('.scroll-right');
 
-  const scrollAmount = 300; // adjust per card width
+            const scrollAmount = 300; // adjust per card width
 
-  leftBtn.addEventListener('click', () => {
-    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-  });
+            leftBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
 
-  rightBtn.addEventListener('click', () => {
-    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-  });
-});
-</script>
+            rightBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 {% endblock scripts %}

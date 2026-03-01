@@ -26,41 +26,43 @@
         <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
             <header class="sticky top-0 z-50 w-full bg-surface-light/95 backdrop-blur supports-[backdrop-filter]:bg-surface-light/80 border-b border-gray-100 dark:border-surface-dark/50">
                 <div class="px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
-                    <a class="flex items-center gap-2 group shrink-0" href="{% url 'home' %}">
+                    <a class="flex items-center gap-2 group shrink-0"
+                       href="{% url 'home' %}">
                         <div class="size-8 text-primary group-hover:rotate-12 transition-transform duration-300">
-                            <svg fill="currentColor"
-                                 viewBox="0 0 24 24"
+                            <svg class="w-50 h-50"
+                                 viewBox="0 0 600 250"
                                  xmlns="http://www.w3.org/2000/svg">
-                                <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3ZM5 5H9V19H5V5ZM19 19H11V5H19V19Z" fill="currentColor">
-                                </path>
+                                <!-- Speech Bubble -->
+                                <path d=" M90 40 H480 Q520 40 520 80 V130 Q520 170 480 170 H250 L200 210 L215 170 H90 Q60 170 60 140 V80 Q60 40 90 40 Z" fill="#9F1239" />
+                                <!-- Top Burst Accent -->
+                                <polygon points="500,25 520,45 550,35 525,60 545,85 515,70 490,95 500,65 470,55 500,50" fill="#9F1239" />
+                                <!-- Inner White Panel -->
+                                <path d=" M105 55 H465 Q495 55 495 85 V125 Q495 155 465 155 H235 L210 175 L220 155 H105 Q85 155 85 135 V85 Q85 55 105 55 Z" fill="#FFFFFF" />
+                                <!-- PULP Text -->
+                                <text x="200" y="135" font-family="Space Grotesk, Satoshi" font-size="90" font-weight="900" fill="#000000" transform="skewX(-10)">
+                                PULP
+                                </text>
                             </svg>
                         </div>
-                        <h1 class="font-display text-2xl font-bold tracking-tight text-text-main-light">PULP</h1>
                     </a>
                     <div class="hidden md:flex flex-1 max-w-2xl mx-auto">
                         <form action="{% url 'search_results' %}" method="get" class="flex w-full">
                             {% csrf_token %}
-                            <input
-                                class="flex-1 h-11 px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-sm placeholder:text-text-muted-light transition-all"
-                                placeholder="Search titles, authors, isbn number..."
-                                type="search"
-                                name="q"
-                                id="search-bar"
-                            />
-                            <button
-                                type="submit"
-                                class="h-11 px-4 rounded-r-full bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center border border-primary border-l-0"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="w-5 h-5"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                >
+                            <input class="flex-1 h-11 px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-sm placeholder:text-text-muted-light transition-all"
+                                   placeholder="Search titles, authors, isbn number..."
+                                   type="search"
+                                   name="q"
+                                   id="search-bar" />
+                            <button type="submit"
+                                    class="h-11 px-4 rounded-r-full bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center border border-primary border-l-0">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     class="w-5 h-5"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
                                     <circle cx="11" cy="11" r="8"></circle>
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
@@ -77,9 +79,9 @@
                         <button class="relative p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
                             <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
                             <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark"
-                                id="cart-count"
-                                hx-swap-oob="true"
-                                {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
+                                  id="cart-count"
+                                  hx-swap-oob="true"
+                                  {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
                         </button>
                         <button class="md:hidden p-2 text-text-main-light">
                             <span class="material-symbols-outlined">menu</span>
@@ -91,7 +93,7 @@
                        href="{% url 'book_list' category='comic' %}">Comics</a>
                     <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'book_list' category='manga' %}">Manga</a>
-                       <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                    <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'deals' %}">Sales</a>
                 </nav>
             </header>
