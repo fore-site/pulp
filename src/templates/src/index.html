@@ -1,8 +1,8 @@
 {% extends "src/base.html" %}
 {% block content %}
-    <section class="relative w-full overflow-hidden bg-background-dark py-16 md:py-24">
+    <section class="relative w-full overflow-hidden py-6 md:py-8 bg-white">
         <div class="absolute inset-0 hero-pattern pointer-events-none"></div>
-        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-12 relative z-10 bg-background-dark">
             <div class="grid md:grid-cols-2 gap-12 items-center">
                 <div class="space-y-8 text-center md:text-left">
                     <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
@@ -19,12 +19,8 @@
                     <p class="text-lg md:text-xl text-text-muted-dark max-w-lg mx-auto md:mx-0 leading-relaxed">
                         Discover the raw energy of independent comics and the timeless art of manga. Curated for the obsessed.
                     </p>
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
-                        <a class="px-8 py-4 bg-primary hover:bg-primary-dark text-white font-bold rounded transition-all hover:-translate-y-1"
-                           href="#">Shop Now</a>
-                    </div>
                 </div>
-                <div class="relative hidden md:grid grid-cols-3 gap-4 h-[500px] overflow-hidden mask-image-b">
+                <div class="relative hidden md:grid grid-cols-3 gap-4 h-[650px] overflow-hidden mask-image-b">
                     <div class="space-y-4 pt-12 animate-scroll-up">
                         <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
                             <img alt="Manga Cover"
@@ -65,103 +61,174 @@
             </div>
         </div>
     </section>
-    <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 py-12">
-        <section class="mb-24">
-            <div class="flex items-end justify-between mb-12">
-                <div class="space-y-2">
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Popular</span>
-                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Trending Now</h2>
+    <main class="flex-1 w-full py-12">
+        <div class="max-w-7xl mx-auto">
+            <section class="mb-24">
+                <div class="flex items-end justify-between mb-12">
+                    <div class="space-y-2">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Popular</span>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Trending Now</h2>
+                    </div>
                 </div>
-                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                   href="#">
-                    View All
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
-            <div class="group relative px-4">
-                <button class="absolute left-6 top-1/3 -translate-y-1/2 z-20 w-12 h-12 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
-                    <span class="material-symbols-outlined">chevron_left</span>
-                </button>
-                {% include "partials/book_card.html" with books=trending %}
-            </div>
-        </section>
-        <section class="mb-24">
-            <div class="flex items-end justify-between mb-12">
-                <div class="space-y-2">
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Fresh Ink</span>
-                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
-                        Comic New Releases
-                    </h2>
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card.html" with books=trending %}
+                    </div>
                 </div>
-                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                   href="{% url 'book_list' category='comic' %}?r=true">
-                    View All
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
-            {% include "partials/book_card.html" with book_sku=new_comic_release %}
-        </section>
-        <section class="mb-24">
-            <div class="flex items-end justify-between mb-12">
-                <div class="space-y-2">
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">From Japan</span>
-                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
-                        Manga New Releases
-                    </h2>
+            </section>
+            <section class="mb-24">
+                <div class="flex items-end justify-between mb-12">
+                    <div class="space-y-2">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Fresh Ink</span>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                            Comic New Releases
+                        </h2>
+                    </div>
+                    <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                    href="{% url 'book_list' category='comic' %}?r=true">
+                        View All
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
                 </div>
-                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                   href="{% url 'book_list' category='manga' %}?r=true">
-                    View All
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
-            {% include "partials/book_card.html" with book_sku=new_manga_release %}
-        </section>
-        <section class="mb-24">
-            <div class="flex items-end justify-between mb-12">
-                <div class="space-y-2">
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Limited Time</span>
-                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Hot Deals</h2>
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card.html" with books=new_comic_release %}
+                    </div>
                 </div>
-                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                   href="{% url 'deals' %}">
-                    View All
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
-            {% include "partials/book_card.html" with books=hot_deals %}
-        </section>
-        <section class="mb-24">
-            <div class="flex items-end justify-between mb-12">
-                <div class="space-y-2">
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Top Charts</span>
-                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
-                        Comic Best Seller
-                    </h2>
+            </section>
+            <section class="mb-24">
+                <div class="flex items-end justify-between mb-12">
+                    <div class="space-y-2">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">From Japan</span>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                            Manga New Releases
+                        </h2>
+                    </div>
+                    <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                    href="{% url 'book_list' category='manga' %}?r=true">
+                        View All
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
                 </div>
-                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                   href="{% url 'book_list' category='comic' %}?sort=bestselling">
-                    View All
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
-            {% include "partials/book_card.html" with books=comic_bestselling %}
-        </section>
-        <section class="mb-24">
-            <div class="flex items-end justify-between mb-12">
-                <div class="space-y-2">
-                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Read</span>
-                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
-                        Manga Best Seller
-                    </h2>
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card.html" with books=new_manga_release %}
+                    </div>
                 </div>
-                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                   href="{% url 'book_list' category='manga' %}?sort=bestselling">
-                    View All
-                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-                </a>
-            </div>
-            {% include "partials/book_card.html" with books=manga_bestselling %}
-        </section>
+            </section>
+            <section class="mb-24">
+                <div class="flex items-end justify-between mb-12">
+                    <div class="space-y-2">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Limited Time</span>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Hot Deals</h2>
+                    </div>
+                    <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                    href="{% url 'deals' %}">
+                        View All
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card.html" with books=hot_deals %}
+                    </div>
+                </div>
+            </section>
+            <section class="mb-24">
+                <div class="flex items-end justify-between mb-12">
+                    <div class="space-y-2">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Top Charts</span>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                            Comic Best Seller
+                        </h2>
+                    </div>
+                    <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                    href="{% url 'book_list' category='comic' %}?sort=bestselling">
+                        View All
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card.html" with books=comic_bestselling %}
+                    </div>
+                </div>
+            </section>
+            <section class="mb-24">
+                <div class="flex items-end justify-between mb-12">
+                    <div class="space-y-2">
+                        <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Read</span>
+                        <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                            Manga Best Seller
+                        </h2>
+                    </div>
+                    <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                    href="{% url 'book_list' category='manga' %}?sort=bestselling">
+                        View All
+                        <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                    </a>
+                </div>
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card.html" with books=manga_bestselling %}
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 {% endblock content %}
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const container = document.querySelector('.scroll-container');
+  const leftBtn = document.querySelector('.scroll-left');
+  const rightBtn = document.querySelector('.scroll-right');
+
+  const scrollAmount = 300; // adjust per card width
+
+  leftBtn.addEventListener('click', () => {
+    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  });
+
+  rightBtn.addEventListener('click', () => {
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  });
+});
+</script>
+{% endblock scripts %}

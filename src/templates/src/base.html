@@ -20,11 +20,11 @@
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
               rel="stylesheet" />
     </head>
-    <body class="bg-background-light dark:bg-background-dark font-body antialiased text-text-main-light dark:text-text-main-dark selection:bg-primary selection:text-white"
+    <body class="bg-background-light font-body antialiased text-text-main-light selection:bg-primary selection:text-white"
           hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
           hx-ext="event_header">
         <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-            <header class="sticky top-0 z-50 w-full bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur supports-[backdrop-filter]:bg-surface-light/80 border-b border-gray-100 dark:border-surface-dark/50">
+            <header class="sticky top-0 z-50 w-full bg-surface-light/95 backdrop-blur supports-[backdrop-filter]:bg-surface-light/80 border-b border-gray-100 dark:border-surface-dark/50">
                 <div class="px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
                     <a class="flex items-center gap-2 group shrink-0" href="{% url 'home' %}">
                         <div class="size-8 text-primary group-hover:rotate-12 transition-transform duration-300">
@@ -35,51 +35,68 @@
                                 </path>
                             </svg>
                         </div>
-                        <h1 class="font-display text-2xl font-bold tracking-tight text-text-main-light dark:text-text-main-dark">PULP</h1>
+                        <h1 class="font-display text-2xl font-bold tracking-tight text-text-main-light">PULP</h1>
                     </a>
-                    <div class="hidden md:flex flex-1 max-w-2xl relative mx-auto">
-                        <form action="{% url 'search_results' %}" method="get" class="w-full relative">
+                    <div class="hidden md:flex flex-1 max-w-2xl mx-auto">
+                        <form action="{% url 'search_results' %}" method="get" class="flex w-full">
                             {% csrf_token %}
-                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted-light dark:text-text-muted-dark material-symbols-outlined"
-                              style="font-size: 20px">search</span>
-                            <input class="w-full h-11 pl-10 pr-4 rounded-full bg-background-light dark:bg-background-dark border border-transparent focus:border-primary focus:ring-0 text-sm placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark transition-all"
-                                   placeholder="Search titles, authors, isbn number..."
-                                   type="search"
-                                   name="q"
-                                   id="search-bar" />
+                            <input
+                                class="flex-1 h-11 px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-sm placeholder:text-text-muted-light transition-all"
+                                placeholder="Search titles, authors, isbn number..."
+                                type="search"
+                                name="q"
+                                id="search-bar"
+                            />
+                            <button
+                                type="submit"
+                                class="h-11 px-4 rounded-r-full bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center border border-primary border-l-0"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    class="w-5 h-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                >
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                </svg>
+                            </button>
                         </form>
                     </div>
                     <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                        <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
                             <span class="material-symbols-outlined">person</span>
                         </button>
-                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                        <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
                             <span class="material-symbols-outlined">favorite</span>
                         </button>
-                        <button class="relative p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
+                        <button class="relative p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
                             <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
                             <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark"
                                 id="cart-count"
                                 hx-swap-oob="true"
                                 {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
                         </button>
-                        <button class="md:hidden p-2 text-text-main-light dark:text-text-main-dark">
+                        <button class="md:hidden p-2 text-text-main-light">
                             <span class="material-symbols-outlined">menu</span>
                         </button>
                     </div>
                 </div>
                 <nav class="hidden md:flex items-center justify-center gap-8 py-3 border-t border-gray-100 dark:border-white/5">
-                    <a class="text-sm font-medium text-text-muted-light hover:text-primary transition-colors uppercase tracking-wide"
+                    <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'book_list' category='comic' %}">Comics</a>
-                    <a class="text-sm font-medium text-text-muted-light hover:text-primary transition-colors uppercase tracking-wide"
+                    <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'book_list' category='manga' %}">Manga</a>
-                       <a class="text-sm font-medium text-text-muted-light hover:text-primary transition-colors uppercase tracking-wide"
-                       href="{% url 'deals' %}">Sale</a>
-                    </nav>
-                </header>
-                {% block content %}
-                {% endblock content %}
-            </div>
+                       <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                       href="{% url 'deals' %}">Sales</a>
+                </nav>
+            </header>
+            {% block content %}
+            {% endblock content %}
             <footer class="bg-black text-white py-16 border-t border-white/10">
                 <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -144,5 +161,6 @@
             {% block scripts %}
             {% endblock scripts %}
             {% django_htmx_script %}
+        </div>
     </body>
 </html>
