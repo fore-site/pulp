@@ -3,68 +3,146 @@
 <html lang="en">
     <head>
         {% tailwind_css %}
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <meta charset="utf-8" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
         <title>
             {% block title %}
-                Pulp
+                Pulp - Comics &amp; Manga Store
             {% endblock title %}
         </title>
         <script src="{% static 'src/ext/event_header.js' %}" defer></script>
         <script src="{% static 'src/app.js' %}" defer></script>
         {% htmx_script %}
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
+              rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700;900&amp;display=swap"
+              rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+              rel="stylesheet" />
     </head>
-    <body class="bg-gray-50 text-black font-serif leading-normal tracking-normal"
+    <body class="bg-background-light dark:bg-background-dark font-body antialiased text-text-main-light dark:text-text-main-dark selection:bg-primary selection:text-white"
           hx-headers='{"x-csrftoken": "{{ csrf_token }}"}'
           hx-ext="event_header">
-        <header>
-            <nav>
-                <h1>
-                    <a href="{% url 'home' %}" id="home">Pulp</a>
-                </h1>
-                <hr />
-            </nav>
-            <form action="{% url 'search_results' %}" method="get">
-                <input type="search"
-                       name="q"
-                       id="search-bar"
-                       value="Search by title, author name, or isbn number">
-                <input type="submit" value="Go">
-            </form>
-            {% if user.is_authenticated %}
-                <div class="welcome">
-                    <h1>{{ user }}</h1>
-                    <form action="{% url 'logout' %}" method="post">
-                        {% csrf_token %}
-                        <input type="submit" value="Logout">
-                    </form>
+        <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+            <header class="sticky top-0 z-50 w-full bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur supports-[backdrop-filter]:bg-surface-light/80 border-b border-gray-100 dark:border-surface-dark/50">
+                <div class="px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
+                    <a class="flex items-center gap-2 group shrink-0" href="{% url 'home' %}">
+                        <div class="size-8 text-primary group-hover:rotate-12 transition-transform duration-300">
+                            <svg fill="currentColor"
+                                 viewBox="0 0 24 24"
+                                 xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3ZM5 5H9V19H5V5ZM19 19H11V5H19V19Z" fill="currentColor">
+                                </path>
+                            </svg>
+                        </div>
+                        <h1 class="font-display text-2xl font-bold tracking-tight text-text-main-light dark:text-text-main-dark">PULP</h1>
+                    </a>
+                    <div class="hidden md:flex flex-1 max-w-2xl relative mx-auto">
+                        <form action="{% url 'search_results' %}" method="get" class="w-full relative">
+                            {% csrf_token %}
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted-light dark:text-text-muted-dark material-symbols-outlined"
+                              style="font-size: 20px">search</span>
+                            <input class="w-full h-11 pl-10 pr-4 rounded-full bg-background-light dark:bg-background-dark border border-transparent focus:border-primary focus:ring-0 text-sm placeholder:text-text-muted-light dark:placeholder:text-text-muted-dark transition-all"
+                                   placeholder="Search titles, authors, isbn number..."
+                                   type="search"
+                                   name="q"
+                                   id="search-bar" />
+                        </form>
+                    </div>
+                    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                            <span class="material-symbols-outlined">person</span>
+                        </button>
+                        <button class="p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                            <span class="material-symbols-outlined">favorite</span>
+                        </button>
+                        <button class="relative p-2 hover:bg-gray-100 dark:hover:bg-white/5 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
+                            <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
+                            <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark"
+                                id="cart-count"
+                                hx-swap-oob="true"
+                                {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
+                        </button>
+                        <button class="md:hidden p-2 text-text-main-light dark:text-text-main-dark">
+                            <span class="material-symbols-outlined">menu</span>
+                        </button>
+                    </div>
                 </div>
-            {% else %}
-                <div class="auth-actions">
-                    <a href="{% url 'login' %}">Sign In</a>
-                    <a href="{% url 'signup' %}">Sign Up</a>
+                <nav class="hidden md:flex items-center justify-center gap-8 py-3 border-t border-gray-100 dark:border-white/5">
+                    <a class="text-sm font-medium text-text-muted-light hover:text-primary transition-colors uppercase tracking-wide"
+                       href="{% url 'book_list' category='comic' %}">Comics</a>
+                    <a class="text-sm font-medium text-text-muted-light hover:text-primary transition-colors uppercase tracking-wide"
+                       href="{% url 'book_list' category='manga' %}">Manga</a>
+                       <a class="text-sm font-medium text-text-muted-light hover:text-primary transition-colors uppercase tracking-wide"
+                       href="{% url 'deals' %}">Sale</a>
+                    </nav>
+                </header>
+                {% block content %}
+                {% endblock content %}
+            </div>
+            <footer class="bg-black text-white py-16 border-t border-white/10">
+                <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                        <div class="space-y-6">
+                            <div class="flex items-center gap-2">
+                                <div class="size-8 text-white">
+                                    <svg fill="currentColor"
+                                         viewBox="0 0 24 24"
+                                         xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3ZM5 5H9V19H5V5ZM19 19H11V5H19V19Z" fill="currentColor">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <span class="font-display font-bold text-2xl tracking-tight">PULP</span>
+                            </div>
+                            <p class="font-body text-sm text-gray-400 leading-relaxed max-w-xs">
+                                Your premier destination for the best in manga, comics, and graphic novels. We bleed ink so you can read.
+                            </p>
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-lg mb-6">Explore</h4>
+                            <ul class="space-y-4 font-body text-sm text-gray-400">
+                                <li>
+                                    <a class="hover:text-primary transition-colors" href="{% url 'home' %}">Browse All</a>
+                                </li>
+                                <li>
+                                    <a class="hover:text-primary transition-colors" href="#">New Releases</a>
+                                </li>
+                                <li>
+                                    <a class="hover:text-primary transition-colors" href="{% url 'deals' %}">Hot Deals</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-display font-bold text-lg mb-6">Support</h4>
+                            <ul class="space-y-4 font-body text-sm text-gray-400">
+                                <li>
+                                    <a class="hover:text-primary transition-colors"
+                                       href="mailto:ogunsanu17@gmail.com">Contact Us</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                        <p class="font-body text-xs text-gray-500">© 2026 Pulp Comics &amp; Manga. All rights reserved.</p>
+                        <div class="flex gap-6">
+                            <a aria-label="Twitter"
+                               class="text-gray-400 hover:text-white transition-colors"
+                               href="https://x.com/fore-site">
+                                <svg class="size-5"
+                                     fill="currentColor"
+                                     viewBox="0 0 24 24"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z">
+                                    </path>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            {% endif %}
-            <h2>
-                <a href="{% url 'cart' %}">Cart</a>
-            </h2>
-            <span id="cart-count"
-                  hx-swap-oob="true"
-                  {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
-        </header>
-        <main id="main">
-            {% block content %}
-            {% endblock content %}
-        </main>
-        <footer>
-            <p>Placeholder footer</p>
-        </footer>
-        {% block scripts %}
-        {% endblock scripts %}
-        {% django_htmx_script %}
-        <div id="page-loader" class="loader-overlay">
-            <div class="spinner"></div>
-        </div>
+            </footer>
+            {% block scripts %}
+            {% endblock scripts %}
+            {% django_htmx_script %}
     </body>
 </html>

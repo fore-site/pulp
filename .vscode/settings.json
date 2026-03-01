@@ -7,5 +7,8 @@
     "djlint.profile": "django",
     "djlint.useVenv": true,
     "djlint.formatCss": true,
-    "djlint.formatJs": true
+    "djlint.formatJs": true,
+    "python.testing.pytestArgs": ["src"],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }

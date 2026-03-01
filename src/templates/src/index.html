@@ -1,67 +1,167 @@
 {% extends "src/base.html" %}
 {% block content %}
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}<div class="alert">{{ message }}</div>{% endfor %}
+    <section class="relative w-full overflow-hidden bg-background-dark py-16 md:py-24">
+        <div class="absolute inset-0 hero-pattern pointer-events-none"></div>
+        <div class="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-8 text-center md:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+                        <span class="size-2 rounded-full bg-primary animate-pulse"></span>
+                        New Collection
+                    </div>
+                    <h1 class="font-display text-5xl md:text-7xl font-bold leading-[0.95] tracking-tight text-text-main-dark">
+                        STORIES
+                        <br />
+                        THAT <span class="text-primary">BLEED</span>
+                        <br />
+                        INK.
+                    </h1>
+                    <p class="text-lg md:text-xl text-text-muted-dark max-w-lg mx-auto md:mx-0 leading-relaxed">
+                        Discover the raw energy of independent comics and the timeless art of manga. Curated for the obsessed.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start pt-4">
+                        <a class="px-8 py-4 bg-primary hover:bg-primary-dark text-white font-bold rounded transition-all hover:-translate-y-1"
+                           href="#">Shop Now</a>
+                    </div>
+                </div>
+                <div class="relative hidden md:grid grid-cols-3 gap-4 h-[500px] overflow-hidden mask-image-b">
+                    <div class="space-y-4 pt-12 animate-scroll-up">
+                        <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
+                            <img alt="Manga Cover"
+                                 class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEgnQzzaKXWzIcJUuoL7NbvKcFLQbGOAWVXYaoaBzHBqybOpFuPgvjxl9s209ySlKgMcRFR04FCsLe_cxvonHrQqAp2ayGYy74WGXXsdTf2m6Io5FaRmTa_PwY8_TIQ3VUI2dL9jAlD0JUVc9tmmXLgaqhxYfGYy8FcP8DdQKDPh2oz7r7-mR0HkmiIlMZ1MN3DuuZngFxOUXVb_-TS7dBIObnQo2OlZfiDk8aU6eWaT4S2zZ1jctP6K2rAnO1IS2YzaJRMVALuerY" />
+                        </div>
+                        <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
+                            <img alt="Manga Cover"
+                                 class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS2leeQljXTbO4dJFjSuo3rX-krn8zNdiZAPVhe3kEux8iRrCzxvjxy-0fLv8UcXDHlsSt5nq1WUjyUo7IeLE2BrC-wTWNcG-9Qa4ZpyI4ZE7wx3ucw20eOKwV27l_KVecoVfEumepQFTiAMffxj9VP_cnHdr0Q41AZFGu7qWvxu8Mtv0YM0vw-bazZaxid5FxJQrPi04B5AfmQB20F-H-0xiPXDaIlRGcH4Qj2P4KMd308gum2E8FsXarP04PE74r0-K_gYn4r3kR" />
+                        </div>
+                    </div>
+                    <div class="space-y-4 animate-scroll-down">
+                        <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
+                            <img alt="Manga Cover"
+                                 class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbC3qXguoNN5LXsYCmiP4UIw-wTG4c-nhWZrJtvBmklcSdDbq_03VQv6HE4ZNVv8MHOJt3BDu1o6NaVHzl8hsi97VcRyEipbBzfwEtAHHE2c3U20VXKI9NI7AZc-HUO-15mbOGf4FKFWmqJK0lkGsvCG4W6Gp_59TMBRp80uw2SHb_pSV1HE3thU2WLN1hI2-L9nntqJq6tO-B6k3UP-sR_w8RuDxPAnDUUaR_Zao1YTL4qQSogVXNyDIqafbIiRtlrqBJddLUAluL" />
+                        </div>
+                        <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
+                            <img alt="Manga Cover"
+                                 class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNB-_DwzmNFOWbXzl4wdblGMXW_waOVY3fB0NQCMk6TWY0A9qN_GR6WVO2hPKdiQ1bM1WFNfVgiBepTku20vjLAuh7lYAfFTZ86ATFz-c1XJxY4q0csP-rRvlvSs875t1GhBwxgXAclSUOF9ck5bU_3rwv3jvh_id2O0Q-UPQDnf_TyIBLCX5BiPZ2X9pGCpHNAuT2SKrecVDmQ-9ya1LyZINCXoWiZoziBEac1cFJ98jyTlCaXF-f9P2pw7QUFgCuAk0W1Qzcuj1_" />
+                        </div>
+                    </div>
+                    <div class="space-y-4 pt-24 animate-scroll-up-delayed">
+                        <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
+                            <img alt="Comic Cover"
+                                 class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBheN-KHw03RzWrdNd7Ku1prM3MPntFluFtu0Z-vnmWcYZr5Ehz_jdfs3X6AH0FQXB2cPacKnzbTqy60PJpuaE3oOyskXp4NvjRvSSUIj9_gNcK1UVUhM21zmWPm7W4RvvKfJYSvft24HBkqupIdxMmNgBiJTlQhO2vM4nJr39a717NwbTqb3IKNq0bTb1WmjWttxdu49ryyUSQnZA3_K-GJp5vDgj40n0VUGzXq877Cu6whnKYAA8ElvTcgwRuYDu36KhmJBYB3zpk" />
+                        </div>
+                        <div class="w-full aspect-[2/3] bg-gray-200 rounded overflow-hidden shadow-md">
+                            <img alt="Graphic Novel Cover"
+                                 class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-500"
+                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuBiDmGYl_mEWbSfWtf_6dBpfWY0kt2vtX9VPI0lq7RCzOq2GUrzU2aBgf3IaIFS6kfB7_78LXxA0X-LiZlBkexDksSijhNhmrBwQO_mcJb5YKpPYXYupRqueSitpRcBoYC8zF19aXl8AIOhsZwAsFgXYOaE7avTChdaqkQZzcCmxlI5mBrDHaIL15b2Tmt46hXHaIAIoKlcMTnOgUrYK0YmPneL-dzIP8CqNHBa5nyEu-D0BMezjXEX7Vl5vqJ34Owi12mYlyakReFa" />
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    {% endif %}
-    <ul>
-        <li>
-            <a href="{% url 'book_list' category='manga' %}">Manga</a>
-        </li>
-        <li>
-            <a href="{% url 'book_list' category='comic' %}">Comic</a>
-        </li>
-        <li>
-            <a href="{% url 'series_index' series_type='comic' %}">Comic Series Index</a>
-        </li>
-        <li>
-            <a href="{% url 'series_index' series_type='manga' %}">Manga Series Index</a>
-        </li>
-    </ul>
-    <hr>
-    <div class="book-category">
-        <h3>Trending</h3>
-        {% include "partials/book_card.html" with books=trending %}
-    </div>
-    <hr>
-    <div class="book-category">
-        <h3>Featured Comic New Releases</h3>
-        {% include "partials/book_card.html" with books=new_comic_release %}
-        {% if new_comic_release %}
-            <a href="{% url 'book_list' category='comic' %}?r=true">See more</a>
-        {% endif %}
-    </div>
-    <hr>
-    <div class="book-category">
-        <h3>Featured Manga New Releases</h3>
-        {% include "partials/book_card.html" with book_sku=new_manga_release %}
-        {% if new_manga_release %}
-            <a href="{% url 'book_list' category='manga' %}?r=true">See more</a>
-        {% endif %}
-    </div>
-    <hr>
-    <div class="book-category">
-        <h3>Featured Hot Deals</h3>
-        {% include "partials/book_card.html" with books=hot_deals %}
-        {% if hot_deals %}
-            <a href="{% url 'deals' %}">See more</a>
-        {% endif %}
-    </div>
-    <hr>
-    <div class="book-category">
-        <h3>Bestselling Comics</h3>
-        {% include "partials/book_card.html" with books=comic_bestselling %}
-        {% if comic_bestselling %}
-            <a href="{% url 'book_list' category='comic' %}?sort=bestselling">See more</a>
-        {% endif %}
-    </div>
-    <hr>
-    <div class="book-category">
-        <h3>Bestselling Manga</h3>
-        {% include "partials/book_card.html" with books=manga_bestselling %}
-        {% if manga_bestselling %}
-            <a href="{% url 'book_list' category='manga' %}?sort=bestselling">See more</a>
-        {% endif %}
-    </div>
+    </section>
+    <main class="flex-1 w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 py-12">
+        <section class="mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div class="space-y-2">
+                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Popular</span>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Trending Now</h2>
+                </div>
+                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                   href="#">
+                    View All
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            <div class="group relative px-4">
+                <button class="absolute left-6 top-1/3 -translate-y-1/2 z-20 w-12 h-12 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                {% include "partials/book_card.html" with books=trending %}
+            </div>
+        </section>
+        <section class="mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div class="space-y-2">
+                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Fresh Ink</span>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                        Comic New Releases
+                    </h2>
+                </div>
+                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                   href="{% url 'book_list' category='comic' %}?r=true">
+                    View All
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            {% include "partials/book_card.html" with book_sku=new_comic_release %}
+        </section>
+        <section class="mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div class="space-y-2">
+                    <span class="text-primary font-bold tracking-widest uppercase text-sm">From Japan</span>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                        Manga New Releases
+                    </h2>
+                </div>
+                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                   href="{% url 'book_list' category='manga' %}?r=true">
+                    View All
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            {% include "partials/book_card.html" with book_sku=new_manga_release %}
+        </section>
+        <section class="mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div class="space-y-2">
+                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Limited Time</span>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Hot Deals</h2>
+                </div>
+                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                   href="{% url 'deals' %}">
+                    View All
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            {% include "partials/book_card.html" with books=hot_deals %}
+        </section>
+        <section class="mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div class="space-y-2">
+                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Top Charts</span>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                        Comic Best Seller
+                    </h2>
+                </div>
+                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                   href="{% url 'book_list' category='comic' %}?sort=bestselling">
+                    View All
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            {% include "partials/book_card.html" with books=comic_bestselling %}
+        </section>
+        <section class="mb-24">
+            <div class="flex items-end justify-between mb-12">
+                <div class="space-y-2">
+                    <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Read</span>
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
+                        Manga Best Seller
+                    </h2>
+                </div>
+                <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
+                   href="{% url 'book_list' category='manga' %}?sort=bestselling">
+                    View All
+                    <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </a>
+            </div>
+            {% include "partials/book_card.html" with books=manga_bestselling %}
+        </section>
+    </main>
 {% endblock content %}
