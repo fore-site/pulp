@@ -3,8 +3,10 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from ..managers import CustomUserManager
+import uuid
 
 class User(AbstractBaseUser, PermissionsMixin):
+    public_id = models.UUIDField(unique=True, blank=True, default=uuid.uuid4, null=True)
     email = models.EmailField(verbose_name=_('email address'),
                                max_length=255,
                                 unique=True)

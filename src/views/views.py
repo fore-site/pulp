@@ -114,9 +114,9 @@ class ProductDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_format = self.request.GET.get('f', 'digital')
-        pk = self.kwargs.get('pk')
+        public_id = self.kwargs.get('uuid')
 
-        default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), pk=pk, is_discontinued=False, book__is_deleted=False).select_related('book__series').get()
+        default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), public_id=public_id, is_discontinued=False, book__is_deleted=False).select_related('book__series').get()
         BookEvent.objects.create(sku=default_format_sku, event_type='view')
 
         context['format'] = selected_format
@@ -145,9 +145,9 @@ class SeriesDetailView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        series = Series.objects.get(pk=self.kwargs.get('pk'))
-        sku_list = Sku.objects.filter(book__series=self.kwargs.get('pk'), is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
-        book_count = Book.objects.filter(series=self.kwargs.get('pk'), sku__is_discontinued=False, is_deleted=False, series__is_deleted=False).count()
+        series = get_object_or_404(Series, public_id=self.kwargs.get('uuid'))
+        sku_list = Sku.objects.filter(book__series=series, is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
+        book_count = Book.objects.filter(series=series, sku__is_discontinued=False, is_deleted=False, series__is_deleted=False).count()
 
         context['sku_list'] = sku_list
         context['book_count'] = book_count

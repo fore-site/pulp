@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.core.validators import MaxValueValidator
 from decimal import Decimal
+import uuid
 
 class Genre(models.Model):
     name = models.CharField(max_length=255)
@@ -24,6 +25,7 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
 class Series(models.Model):
+    public_id = models.UUIDField(unique=True, blank=True, default=uuid.uuid4, null=True)
     title = models.CharField(max_length=255, unique=True)
     category = models.ForeignKey(Category, on_delete=models.RESTRICT, related_name='series', null=True)
     genres = models.ManyToManyField(Genre, related_name='series')
@@ -99,6 +101,7 @@ class Sku(models.Model):
         paperback = 'Paperback',
         digital = 'Digital'
 
+    public_id = models.UUIDField(unique=True, blank=True, default=uuid.uuid4, null=True)
     book = models.ForeignKey(Book, on_delete=models.RESTRICT, related_name='sku')
     code = models.CharField(max_length=30, unique=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, related_name='sku')

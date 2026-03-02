@@ -1,13 +1,105 @@
 {% extends "src/base.html" %}
 {% block title %}
-    {{ title }} Series Index
+    Pulp - {{ title }} Series
 {% endblock title %}
 {% block content %}
-    <ul>
-        {% for series in series_list %}
-            <li>
-                <a href="{% url 'series_detail' series.id %}">{{ series.title }}</a>
-            </li>
+    <!-- Category Header -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 pb-8 border-b border-gray-200 dark:border-gray-800">
+        <div class="max-w-2xl">
+            <h1 class="text-5xl md:text-6xl font-black tracking-tight mb-4 text-text-main dark:text-white uppercase">Manga</h1>
+            <p class="text-lg md:text-xl text-text-subtle dark:text-gray-300 leading-relaxed max-w-xl">
+                Discover narratives and themes in our curated collection of manga, targeting young adult audiences with depth and nuance.
+            </p>
+        </div>
+        <!-- Filters -->
+        <div class="flex flex-wrap gap-2">
+            <button class="px-5 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary bg-white dark:bg-gray-900 text-sm font-medium transition-all">
+                Bestsellers
+            </button>
+            <button class="px-5 py-2 rounded-full bg-primary text-white border border-primary text-sm font-medium shadow-md">
+                Newest
+            </button>
+            <button class="px-5 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary bg-white dark:bg-gray-900 text-sm font-medium transition-all">
+                A-Z
+            </button>
+        </div>
+    </div>
+    <!-- Content Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+        {% for series in series_list[:3] %}
+            <a class="group flex flex-col gap-4"
+               href="{% url 'series_detail' uuid=series.public_id}">
+                <div class="relative w-full aspect-[3/4] overflow-hidden rounded border border-gray-900 dark:border-gray-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                         data-alt="Dark moody manga cover art abstract"
+                         style="background-image: url('{{ series.cover_image }}')"></div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors truncate">{{ series.title }}</h3>
+                    <div class="flex justify-between items-center border-t border-dashed border-gray-300 dark:border-gray-700 pt-2 mt-1">
+                        <p class="text-sm font-bold text-primary">41 Volumes</p>
+                    </div>
+                </div>
+            </a>
         {% endfor %}
-    </ul>
-{% endblock content %}
+        <!-- Promotional Banner (Inset in Grid) -->
+        <div class="col-span-1 lg:col-span-2 relative overflow-hidden rounded border border-gray-900 dark:border-gray-700 bg-gray-900 flex items-center justify-between p-8 group">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/90 to-black/80 z-10"></div>
+            <div class="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-overlay"
+                 data-alt="Abstract red ink texture background"
+                 style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAiqBtkbqtS0n2CAjTqkycPwP3udW8IHwaZ4nS6G_oxfNbDj6wcOBia-dpEIJhNt2QRoGl3SGW3Tb7Z016VQ-EWDLR5q8GexVAPbc57ggCw0VY5YLc3DgY4eTe1VGShjKB65euU5QSpk7snQMI5keZPLKg-TePhtXB5dbpEbx_PdWlrd_vX2NxtA4-S-s_VfOFAD_JECouQb8XeqNpS54-goPk3C7HSfKJ09SwceRNvS5D3cSZ32DmP6HYzXnyeX2VFDVzw9HRHeMpk")'>
+            </div>
+            <div class="relative z-20 flex flex-col gap-4 max-w-md">
+                <span class="text-primary font-bold tracking-widest text-xs bg-black/30 w-fit px-2 py-1 rounded backdrop-blur-sm border border-white/10">EDITOR'S CHOICE</span>
+                <h3 class="text-3xl font-black text-white leading-none">THE MASTER OF SUSPENSE</h3>
+                <p class="text-gray-200 text-sm">
+                    Dive into the complete works of Naoki Urasawa, featuring special edition covers available only this week.
+                </p>
+                <button class="w-fit mt-2 px-6 py-2 bg-white text-black font-bold text-sm hover:bg-gray-100 transition-colors rounded">
+                    Explore Collection
+                </button>
+            </div>
+            <!-- Decorative Icon -->
+            <div class="relative z-20 hidden sm:block text-white/10 transform rotate-12 scale-150">
+                <span class="material-symbols-outlined text-9xl">menu_book</span>
+            </div>
+        </div>
+        {% for series in series_list[4:]}
+            <a class="group flex flex-col gap-4"
+               href="{% url 'series_detail' uuid=series.public_id}">
+                <div class="relative w-full aspect-[3/4] overflow-hidden rounded border border-gray-900 dark:border-gray-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] transition-all">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                         data-alt="Mystery thriller dark silhouette abstract"
+                         style='background-image: url("{{ series.cover_image }}")'></div>
+                </div>
+                <div class="flex flex-col gap-1">
+                    <h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors truncate">{{ series.title }}</h3>
+                    <div class="flex justify-between items-center border-t border-dashed border-gray-300 dark:border-gray-700 pt-2 mt-1">
+                        <p class="text-sm font-bold text-primary">18 Volumes</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <!-- Pagination -->
+        <div class="mt-16 flex justify-center items-center gap-4">
+            <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 text-gray-400 hover:text-primary hover:border-primary transition-all">
+                <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <div class="flex items-center gap-2">
+                <button class="flex items-center justify-center size-10 rounded bg-primary text-white font-bold">1</button>
+                <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+                    2
+                </button>
+                <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+                    3
+                </button>
+                <span class="text-gray-400">...</span>
+                <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
+                    12
+                </button>
+            </div>
+            <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-200 hover:text-primary hover:border-primary transition-all">
+                <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+        </div>
+    {% endblock content %}

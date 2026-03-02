@@ -63,8 +63,8 @@
     </section>
     <main class="flex-1 w-full py-12">
         <div class="max-w-7xl mx-auto">
-            <section class="mb-24">
-                <div class="flex items-end justify-between mb-12">
+            <section class="mb-12">
+                <div class="flex items-end justify-between mb-8">
                     <div class="space-y-2">
                         <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Popular</span>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Trending Now</h2>
@@ -82,8 +82,8 @@
                     </div>
                 </div>
             </section>
-            <section class="mb-24">
-                <div class="flex items-end justify-between mb-12">
+            <section class="mb-12">
+                <div class="flex items-end justify-between mb-8">
                     <div class="space-y-2">
                         <span class="text-primary font-bold tracking-widest uppercase text-sm">Fresh Ink</span>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
@@ -91,7 +91,7 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='comic' %}?r=true">
+                       href="{% url 'book_list' category='comic' %}?r=true">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
@@ -108,8 +108,8 @@
                     </div>
                 </div>
             </section>
-            <section class="mb-24">
-                <div class="flex items-end justify-between mb-12">
+            <section class="mb-12">
+                <div class="flex items-end justify-between mb-8">
                     <div class="space-y-2">
                         <span class="text-primary font-bold tracking-widest uppercase text-sm">From Japan</span>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
@@ -117,7 +117,7 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='manga' %}?r=true">
+                       href="{% url 'book_list' category='manga' %}?r=true">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
@@ -134,14 +134,14 @@
                     </div>
                 </div>
             </section>
-            <section class="mb-24">
-                <div class="flex items-end justify-between mb-12">
+            <section class="mb-12">
+                <div class="flex items-end justify-between mb-8">
                     <div class="space-y-2">
                         <span class="text-primary font-bold tracking-widest uppercase text-sm">Limited Time</span>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">Hot Deals</h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'deals' %}">
+                       href="{% url 'deals' %}">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
@@ -158,8 +158,8 @@
                     </div>
                 </div>
             </section>
-            <section class="mb-24">
-                <div class="flex items-end justify-between mb-12">
+            <section class="mb-12">
+                <div class="flex items-end justify-between mb-8">
                     <div class="space-y-2">
                         <span class="text-primary font-bold tracking-widest uppercase text-sm">Top Charts</span>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
@@ -167,7 +167,7 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='comic' %}?sort=bestselling">
+                       href="{% url 'book_list' category='comic' %}?sort=bestselling">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
@@ -184,8 +184,8 @@
                     </div>
                 </div>
             </section>
-            <section class="mb-24">
-                <div class="flex items-end justify-between mb-12">
+            <section class="mb-12">
+                <div class="flex items-end justify-between mb-8">
                     <div class="space-y-2">
                         <span class="text-primary font-bold tracking-widest uppercase text-sm">Most Read</span>
                         <h2 class="text-3xl md:text-4xl font-display font-bold text-text-main-light dark:text-text-main-dark">
@@ -193,7 +193,7 @@
                         </h2>
                     </div>
                     <a class="hidden sm:flex items-center text-sm font-bold text-primary hover:text-primary-dark transition-colors gap-1 group"
-                    href="{% url 'book_list' category='manga' %}?sort=bestselling">
+                       href="{% url 'book_list' category='manga' %}?sort=bestselling">
                         View All
                         <span class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
                     </a>
@@ -214,21 +214,27 @@
     </main>
 {% endblock content %}
 {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.querySelector('.scroll-container');
-  const leftBtn = document.querySelector('.scroll-left');
-  const rightBtn = document.querySelector('.scroll-right');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.querySelector('.scroll-container');
+            const leftBtn = document.querySelector('.scroll-left');
+            const rightBtn = document.querySelector('.scroll-right');
 
-  const scrollAmount = 300; // adjust per card width
+            const scrollAmount = 300; // adjust per card width
 
-  leftBtn.addEventListener('click', () => {
-    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-  });
+            leftBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: -scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
 
-  rightBtn.addEventListener('click', () => {
-    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-  });
-});
-</script>
+            rightBtn.addEventListener('click', () => {
+                container.scrollBy({
+                    left: scrollAmount,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 {% endblock scripts %}
