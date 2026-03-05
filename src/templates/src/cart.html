@@ -17,14 +17,14 @@
                 <button type="submit" name="action" value="clear">Clear cart</button>
             </form>
             {% for item, form in cart_items_and_forms %}
-                <a href="{% url 'product_detail' item.sku.isbn_number|slugify item.sku.id %}?f={{ item.sku.format|lower }}">
+                <a href="{% url 'product_detail' item.sku.public_id %}?f={{ item.sku.format|lower }}">
                     <p>{{ item.sku.book.title }}</p>
                     <p>By {{ item.sku.book.authors.all|join:", " }}</p>
                     <p>{{ item.sku.format }}</p>
                 </a>
                 <form action="{% url 'cart_update' %}" method="post" novalidate>
                     {% csrf_token %}
-                    <input type="hidden" name="sku_id" value="{{ item.sku.id }}">
+                    <input type="hidden" name="sku_id" value="{{ item.sku.public_id }}">
                     {% if item.quantity > 1 %}
                         <button type="button"
                                 name="action"

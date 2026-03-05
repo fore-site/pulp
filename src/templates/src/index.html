@@ -213,28 +213,3 @@
         </div>
     </main>
 {% endblock content %}
-{% block scripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const container = document.querySelector('.scroll-container');
-            const leftBtn = document.querySelector('.scroll-left');
-            const rightBtn = document.querySelector('.scroll-right');
-
-            const scrollAmount = 300; // adjust per card width
-
-            leftBtn.addEventListener('click', () => {
-                container.scrollBy({
-                    left: -scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-
-            rightBtn.addEventListener('click', () => {
-                container.scrollBy({
-                    left: scrollAmount,
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
-{% endblock scripts %}

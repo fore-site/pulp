@@ -4,13 +4,11 @@ from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_GET, require_http_methods, require_POST
 from django.contrib.auth import login
-from django.contrib import messages
 from src.models import Series, Sku, Book, BookEvent, Genre, Category, Cart, CartItem
 from ..forms import CustomUserCreationForm, CartUpdateForm
-from django.db.models import Q, Subquery, OuterRef, F
-from django.template.loader import render_to_string
+from django.db.models import Q, Subquery, OuterRef, F, Count
 from django_htmx.middleware import HtmxDetails
-from ..utils.common import FilterSort, base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count
+from ..utils.common import FilterSort, base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
 from datetime import timedelta
@@ -30,23 +28,23 @@ class IndexView(generic.TemplateView):
         base_queryset = base_book_queryset(Sku)
         
         manga = (base_queryset.filter(book__is_featured=True, book__series__category__name='manga', published_at__gte=self.seven_days)
-                 .order_by('book__series', '-published_at', 'price_usd')
-                 .distinct('book__series'))
+                 .order_by('book')
+                 .distinct('book'))
         comic = (base_queryset.filter(book__is_featured=True, book__series__category__name='comic', published_at__gte=self.seven_days)
-                 .order_by('book__series', '-published_at', 'price_usd')
-                 .distinct('book__series'))
+                 .order_by('book')
+                 .distinct('book'))
         hot_deals = base_queryset.filter(book__is_featured=True, discount_percent__gt=0).order_by('-discount_percent')[:10]
 
-        trending = (base_queryset.filter(book__trending_score__gt=0).order_by('book', 'book__trending_score').distinct('book')[:10]
+        trending = (base_queryset.filter(book__trending_score__gt=0).order_by('book').distinct('book')[:10]
                      )
         
         comic_bestselling = (base_queryset
                               .filter(book__series__category__name='comic', book__bestseller_score__gt=0)
-                              .order_by('book', 'book__bestseller_score').distinct('book')[:10])
+                              .order_by('book').distinct('book')[:10])
 
         manga_bestselling = (base_queryset
                               .filter(book__series__category__name='manga', book__bestseller_score__gt=0)
-                              .order_by('book', 'book__bestseller_score').distinct('book')[:10])
+                              .order_by('book').distinct('book')[:10])
 
         context['new_manga_release'] = manga
         context['new_comic_release'] = comic
@@ -106,7 +104,7 @@ class BookListView(generic.ListView):
 
         return context
                
-class ProductDetailView(generic.DetailView):
+class ProductDetailView(generic.TemplateView):
     model = Sku
     template_name = 'src/product_detail.html'
     context_object_name = 'sku'
@@ -114,13 +112,27 @@ class ProductDetailView(generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         selected_format = self.request.GET.get('f', 'digital')
-        public_id = self.kwargs.get('uuid')
+        public_id = self.kwargs.get('public_id')
 
-        default_format_sku = Sku.objects.filter(format=selected_format.capitalize(), public_id=public_id, is_discontinued=False, book__is_deleted=False).select_related('book__series').get()
+        default_format_sku = base_book_queryset(Sku).filter(format=selected_format.capitalize(), public_id=public_id).get()
         BookEvent.objects.create(sku=default_format_sku, event_type='view')
+        
+        # More books in the series
+        books_in_series = Book.objects.filter(series=default_format_sku.book.series, is_deleted=False).exclude(sku=default_format_sku)[:5]
+
+        # Related books/sku - Filter by category        
+        base_queryset = (base_book_queryset(Sku).filter(
+            book__series__category=default_format_sku.book.series.category
+            ).exclude(id=default_format_sku.id, book=default_format_sku.book, book__series=default_format_sku.book.series))
+
+        genre_ids = default_format_sku.book.series.genres.values_list('id', flat=True)
+        
+        related_titles_sku = get_related_books(default_format_sku, base_queryset, genre_ids=genre_ids) 
 
         context['format'] = selected_format
         context['default_sku'] = default_format_sku
+        context['books_in_series'] = books_in_series
+        context['related_sku'] = related_titles_sku
 
         return context
 
@@ -132,7 +144,9 @@ class SeriesIndexView(generic.ListView):
     def get_queryset(self):
         series_type = self.kwargs.get('series_type')
         category = get_object_or_404(Category, name__iexact=series_type)
-        series = (Series.objects.filter(category=category))
+        series = (Series.objects.filter(category=category).annotate(
+            book_count=Count('books')
+        ))
         return series
     
     def get_context_data(self, **kwargs):
@@ -145,10 +159,9 @@ class SeriesDetailView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        series = get_object_or_404(Series, public_id=self.kwargs.get('uuid'))
-        sku_list = Sku.objects.filter(book__series=series, is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
-        book_count = Book.objects.filter(series=series, sku__is_discontinued=False, is_deleted=False, series__is_deleted=False).count()
-
+        series = get_object_or_404(Series, public_id=self.kwargs.get('public_id'), is_deleted=False)
+        sku_list = Sku.objects.filter(book__series=series, is_discontinued=False, book__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
+        book_count = Book.objects.filter(series=series, sku__in=sku_list, is_deleted=False).count()
         context['sku_list'] = sku_list
         context['book_count'] = book_count
         context['series'] = series
@@ -221,7 +234,7 @@ class CartView(generic.TemplateView):
 
         # Get and validate form data
         sku_id = request.POST.get('sku_id')
-        sku = get_object_or_404(Sku, id=sku_id)
+        sku = get_object_or_404(Sku, public_id=sku_id)
         
         # Create or update cart item table
         updated = CartItem.objects.filter(
@@ -261,7 +274,7 @@ def update_and_delete_cart(request: HtmxHttpRequest):
     action = request.POST.get('action')
     sku_id = request.POST.get('sku_id')
     if sku_id:
-        sku = get_object_or_404(Sku, id=sku_id)
+        sku = get_object_or_404(Sku, public_id=sku_id)
     
     form = CartUpdateForm({'quantity': request.POST.get('quantity')})
     if action == 'clear':
@@ -301,3 +314,6 @@ class OrderCheckoutView(generic.FormView):
 
 def order_checkout(request, id):
     return HttpResponse('You have placed an order on %s.' % id)
+
+class UserProfileView(generic.DetailView):
+    pass

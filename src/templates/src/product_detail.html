@@ -4,46 +4,17 @@
     {{ default_sku.book.title }}
 {% endblock title %}
 {% block content %}
-    <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-8">
-        <a class="hover:text-primary transition-colors" href="#">Home</a>
-        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-        <a class="hover:text-primary transition-colors" href="#">Comics</a>
-        <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-        <span class="text-slate-900 dark:text-white font-medium">The Sandman</span>
-    </div>
     <!-- Product Hero Section -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
         <!-- Left Column: Image -->
         <div class="lg:col-span-5 xl:col-span-4">
-            <div class="relative group cursor-zoom-in">
-                <div class="aspect-[2/3] w-full rounded-sm overflow-hidden border-[8px] border-slate-900 dark:border-slate-800 shadow-xl relative">
-                    <img alt="The Sandman Volume 1 Comic Book Cover Art"
-                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                         data-alt="The Sandman Volume 1 Comic Book Cover Art showing dreamy abstract dark visuals"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuApmV6B8QTpno-nbuoy1AxDSEfTIXxm2zN2IZmMUtKDn_hZsyNm4qhx67U-Yzoc3K5eF1JsSi25spuhy1Yhgrzns8ThtSSNjb4CJi15-b6Wzx5wv-0tXatAFYJvCC60AHiQeMglzawnRpOMjRXR-C5ury81yASPc6yy4pKvHlD3pHxxEhlHkuYu73u03Vj0tIe53bAPjo_k-vzXFncpEf4qjxETNZgZw1AjNBCxYqpUrBNAvEDXcKZNv4TI1YUCj_FUWJpw3um8tQYZ" />
-                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300"></div>
-                    <!-- Zoom Icon Badge -->
-                    <div class="absolute bottom-4 right-4 bg-white/90 dark:bg-black/80 p-2 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <span class="material-symbols-outlined text-slate-900 dark:text-white">zoom_in</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Thumbnails (Optional hint of interactivity) -->
-            <div class="flex gap-4 mt-6 overflow-x-auto pb-2 scrollbar-hide">
-                <div class="w-20 aspect-[2/3] rounded border-2 border-primary cursor-pointer overflow-hidden">
-                    <img class="w-full h-full object-cover"
-                         data-alt="Cover Thumbnail"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0vxi-2QLn4wP8BPXRqestbsnK-4o1qbjcIF-T3MT5LgcFQgU9ba1dIjFSqABF5cUkcJ_i0jtkun1DFq_UA8D5ZxOlKSeTmHg_tc-wU0siZjT5pAVuCo1RuKs4Srg5uLFh-ME1PHcffIeHR8zrIayd6EH4i4AEamF5ie5Mp7MNZSeOdXwAKQ4DDtykCd-hcZc2zPKaMaFB1E_-cd9euz1wDZWYdDYoS3l1fTPc5Te23iDjYoYiuNsrZiRURtUlX7pPx0c9hnGaXFo1" />
-                </div>
-                <div class="w-20 aspect-[2/3] rounded border border-transparent hover:border-slate-300 cursor-pointer overflow-hidden opacity-60 hover:opacity-100 transition-all">
-                    <img class="w-full h-full object-cover"
-                         data-alt="Back Cover Thumbnail"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm65eWaU6LbzXd1WH8pGjkRcHy1ERYM2z8JsR9EYZBz81KOTLX6nQ93pFKlZBaDWBBvsBSk9ogipOrSw3m2raiweunxN68Rw0pvrTGyk-UlhDW-bhIuGrUKE4kw-hRg9E0L1H__qWmpwa36z87NEq5PxwSoSStqNhwWGdsrJA-LQTHAO_KZA3dvW6QdJeiTUYYy5BfaT58eW-ydehsfHLqOgupxnhHj4Gx-ArHtHBn6uruX1i2iGMxZ5GMPrReWtlmWpcMTPqk-_w2" />
-                </div>
-                <div class="w-20 aspect-[2/3] rounded border border-transparent hover:border-slate-300 cursor-pointer overflow-hidden opacity-60 hover:opacity-100 transition-all">
-                    <img class="w-full h-full object-cover"
-                         data-alt="Inside Page Thumbnail"
-                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyvUtJa6ACLHflfKRzwAymZJ3-jYIISFjUDRYNDkNx3HHXZL5y0WqCRKOJRGdwpl_xHtePPBh0sOX3U8maBvkZ0ogjYeOflL3Xq2pk8UsU9-oyMaLTWZi8tDdG4wUKrAa-3Zj1lOcRU2lKX7nbYs4NAP0K337EzhYIqoxvgTkV-s0HQoTuc_CpNAHuA5_kl1K8iLd203JLye9UTH75wUZ02I6sQjvUjrSeLPieq39KEZAKJWzQk7bdWg6PSuJO36u7MxxTbGUfn1P0" />
+            <div class="relative group">
+                <div class="aspect-[2/3] w-full rounded-sm overflow-hidden border-[8px] border-slate-900 shadow-xl relative">
+                    <img alt="{{ default_sku.book.title }} Image Cover"
+                         class="w-full h-full object-cover transition-transform duration-500"
+                         data-alt="{{ default_sku.book.title }} Image Cover"
+                         src="{{ default_sku.book.cover_image }}" />
+                    <div class="absolute inset-0 bg-black/0 transition-colors duration-300"></div>
                 </div>
             </div>
         </div>
@@ -52,36 +23,31 @@
             <!-- Title & Author -->
             <div class="mb-6">
                 <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">
-                    The Sandman Vol. 1:
-                    <br />
-                    Preludes &amp; Nocturnes
+                    {{ default_sku.book.title }}
                 </h1>
                 <div class="flex flex-wrap items-center gap-2 text-lg">
                     <span class="text-slate-500 dark:text-slate-400">By</span>
-                    <a class="text-primary font-semibold hover:underline decoration-primary underline-offset-4"
-                       href="#">Neil Gaiman</a>
+                    <p class="text-primary decoration-primary underline-offset-4">{{ default_sku.book.authors.all|join:", " }}</p>
                     <span class="text-slate-300 dark:text-slate-600">|</span>
                     <span class="text-slate-500 dark:text-slate-400">Series:</span>
                     <a class="text-primary font-semibold hover:underline decoration-primary underline-offset-4"
-                       href="#">The Sandman</a>
+                       href="{% url 'series_detail' default_sku.book.series.public_id %}">{{ default_sku.book.series.title }}</a>
                 </div>
             </div>
             <!-- Reviews -->
             <div class="flex items-center gap-4 mb-8">
-                <div class="flex items-center text-primary">
-                    <span class="material-symbols-outlined text-[20px] fill-current">star</span>
-                    <span class="material-symbols-outlined text-[20px] fill-current">star</span>
-                    <span class="material-symbols-outlined text-[20px] fill-current">star</span>
-                    <span class="material-symbols-outlined text-[20px] fill-current">star</span>
-                    <span class="material-symbols-outlined text-[20px] fill-current">star_half</span>
-                </div>
-                <span class="text-sm font-medium text-slate-600 dark:text-slate-400 border-b border-dashed border-slate-400 pb-0.5 cursor-pointer hover:text-primary hover:border-primary transition-colors">4.8 (1,240 Reviews)</span>
+                {% to_stars default_sku.book.average_rating %}
+                <span class="text-sm font-medium text-slate-600 dark:text-slate-400 border-b border-dashed border-slate-400 pb-0.5">({{ default_sku.book.reviewer_count }} Reviews)</span>
             </div>
             <!-- Price -->
             <div class="flex items-end gap-3 mb-8">
-                <span class="text-4xl font-bold text-primary">$19.99</span>
-                <span class="text-xl text-slate-400 line-through mb-1.5">$24.99</span>
-                <span class="text-xs font-bold text-white bg-primary px-2 py-1 rounded mb-2 ml-2">20% OFF</span>
+                {% if default_sku.has_discount %}
+                    <span class="text-4xl font-bold text-primary">${{ default_sku.discounted_price }}</span>
+                    <span class="text-xl text-slate-400 line-through mb-1.5">${{ default_sku.price_usd }}</span>
+                    <span class="text-xs font-bold text-white bg-primary px-2 py-1 rounded mb-2 ml-2">{{ default_sku.discount_percent }}% OFF</span>
+                {% else %}
+                    <span class="text-4xl font-bold text-primary">${{ default_sku.price_usd }}</span>
+                {% endif %}
             </div>
             <!-- Format Selection -->
             <div class="mb-8">
@@ -89,266 +55,105 @@
                     Select Format
                 </label>
                 <div class="flex flex-wrap gap-4">
-                    <button class="flex flex-col items-start p-4 rounded border-2 border-slate-900 dark:border-white bg-white dark:bg-slate-800 min-w-[160px] relative group hover:shadow-lg transition-all">
-                        <div class="absolute top-2 right-2 text-primary">
-                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                        </div>
-                        <span class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Paperback</span>
-                        <span class="text-lg font-bold text-slate-900 dark:text-white">$19.99</span>
-                        <span class="text-xs text-green-600 font-medium mt-1">In Stock</span>
-                    </button>
-                    <button class="flex flex-col items-start p-4 rounded border border-slate-300 dark:border-slate-600 bg-transparent hover:border-slate-900 dark:hover:border-white min-w-[160px] transition-all opacity-70 hover:opacity-100">
-                        <span class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Digital (ePub)</span>
-                        <span class="text-lg font-bold text-slate-900 dark:text-white">$12.99</span>
-                        <span class="text-xs text-slate-500 font-medium mt-1">Instant Download</span>
-                    </button>
+                    {% for sku in default_sku.book.sku.all %}
+                        {% if not sku.is_discontinued %}
+                            <a href="{% url 'product_detail' sku.public_id %}?f={{ sku.format|lower }}"
+                               class="flex flex-col items-start p-4 rounded border-2 min-w-[160px] relative group hover:shadow-lg transition-all border-slate-500 bg-white dark:bg-slate-800">
+                                {% if sku.format == default_sku.format %}
+                                    <div class="absolute top-2 right-2 text-primary">
+                                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                    </div>
+                                {% endif %}
+                                <span class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{{ sku.format }}</span>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
             <!-- Actions -->
-            <div class="flex flex-col sm:flex-row gap-4 mb-10 w-full lg:max-w-md">
-                <button class="flex-1 bg-primary hover:bg-red-800 text-white font-bold py-4 px-8 rounded shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-all flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined">shopping_cart</span>
-                    Add to Cart
-                </button>
-                <button class="flex-none bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 font-bold py-4 px-6 rounded transition-all flex items-center justify-center gap-2"
-                        title="Add to Wishlist">
-                    <span class="material-symbols-outlined">favorite</span>
-                </button>
-            </div>
+            <form action="{% url 'cart' %}" method="post">
+                {% csrf_token %}
+                <div class="flex flex-col sm:flex-row gap-4 mb-10 w-full lg:max-w-md">
+                    <input type="hidden" name="sku_id" value="{{ default_sku.public_id }}">
+                    <input type="hidden" name="next" value="{{ request.path }}">
+                    <button type="submit"
+                            hx-post="{% url 'cart' %}"
+                            hx-target="#cart-count"
+                            hx-swap="innerHTML"
+                            class="flex-1 bg-primary text-white font-bold py-4 px-8 rounded shadow-lg hover:bg-primary-dark transition-all flex items-center justify-center gap-2 add-to-cart-btn">
+                        <span class="material-symbols-outlined">shopping_cart</span>
+                        Add to Cart
+                    </button>
+                </div>
+            </form>
             <hr class="border-slate-200 dark:border-slate-800 mb-8" />
             <!-- Synopsis -->
             <div class="mb-10">
                 <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Synopsis</h3>
                 <div class="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed">
-                    <p class="mb-4">
-                        An occultist attempting to capture the physical personification of Death to bargain for eternal life traps her younger brother Dream instead. After his seventy-year imprisonment and eventual escape, Dream, also known as Morpheus, goes on a quest for his lost objects of power.
-                    </p>
-                    <p>
-                        On his arduous journey Morpheus encounters Lucifer, John Constantine, and an all-powerful madman. This book also includes the story "The Sound of Her Wings," which introduces us to the pragmatic and perky goth girl Death.
-                    </p>
+                    <p class="mb-4">{{ default_sku.book.description }}</p>
                 </div>
             </div>
             <!-- Details -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-8 py-6">
                 <div>
                     <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Publisher</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">Dark Horse</span>
+                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.publisher }}</span>
                 </div>
                 <div>
                     <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Release Date</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">Feb 27, 2019</span>
+                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.published_at }}</span>
                 </div>
                 <div>
                     <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Pages</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">696</span>
+                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.page_count }}</span>
                 </div>
                 <div>
                     <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">ISBN</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">9781506711980</span>
+                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.isbn_number }}</span>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!-- Volume List -->
-<div>
-    <div class="flex items-center justify-between mb-4">
-        <h3 class="text-xl font-bold text-slate-900 dark:text-white">Volumes in Series</h3>
-        <a class="text-sm text-primary font-medium hover:underline" href="#">View All</a>
+    <!-- Volume List -->
+    <div>
+        <div class="flex items-center justify-between mb-4">
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white">More Books in this Series</h3>
+            <a class="text-sm text-primary font-medium hover:underline"
+               href="{% url 'series_detail' default_sku.book.series.public_id %}">View All</a>
+        </div>
+        <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
+            {% for book in books_in_series %}
+                <div class="flex-none w-32 group">
+                    <div class="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded mb-2 overflow-hidden">
+                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                             data-alt="{{ book.title }} Cover"
+                             src="{{ book.cover_image }}" />
+                    </div>
+                    <h4 class="text-sm font-bold truncate">{{ book.title }}</h4>
+                    <p class="text-xs text-slate-500">{{ book.authors.all|join:", " }}</p>
+                </div>
+            {% empty %}
+                <p class="mb-4">No other book in this series</p>
+            {% endfor %}
+        </div>
+        <!-- Related Titles Section -->
+        <section class="mt-20 mb-12">
+            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-primary pl-4">
+                You May Also Like
+            </h2>
+            <!-- Product Cards -->
+            <div class="relative group">
+                <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                    {% include "partials/book_card.html" with books=related_sku %}
+                </div>
+            </div>
+        </section>
     </div>
-    <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
-        <div class="flex-none w-32 group">
-            <div class="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded mb-2 overflow-hidden">
-                <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                     data-alt="The Sandman Volume 2 Doll House Cover"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuACtpykDKklvdHy7jiYwWEDTbwnCUnVxK1wtELe5h0cLURlFSKMOiwrAQwEVTcNAZXlTI_-IAMSraMEtEPCmic7wHb6Z6plx5nWbp67i9UMQx7kiToptR3_11PfIah9VAdFEVItG8LgKOdE1oQNMuuixo-FbHqbqvslhcA7EI-Koz1hIf6-nT8k4GkffUP0w0Cjz0hQq3O_MyyldG2hTCvsry89so0RMX8FUj_kCdbE5Es1_ep4QFCIkhDfjUf_e8nhXJB4JPNI44ej" />
-            </div>
-            <h4 class="text-sm font-bold truncate">Vol. 2: Doll's House</h4>
-            <p class="text-xs text-slate-500">$19.99</p>
-        </div>
-        <div class="flex-none w-32 group">
-            <div class="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded mb-2 overflow-hidden">
-                <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                     data-alt="The Sandman Volume 3 Dream Country Cover"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMKvRUOpu3HehufZ0P6sZ8zSl1uxYxdvm57GkuFh10PYQLauEex7TkEEos46uvNY-x-frk3t9GuBsAB-XFTDhBu4LHvj06i7KQvHv7AduJHUWz1vudKaKgezGtCfs_KfCt4YD0RxLW1qxLmamp_ENpaImO2ci_hP0krIbHCWKmQIZaVxrU5kVylAPomzFqby1ZmBLhKhrfGJ-wFoMSJWIoEEWFftRSqqwQ5WxzuJT9DrnuMBBlcN7vWkx-p21QuS4Td8r4vW_xHES-" />
-            </div>
-            <h4 class="text-sm font-bold truncate">Vol. 3: Dream Country</h4>
-            <p class="text-xs text-slate-500">$19.99</p>
-        </div>
-        <div class="flex-none w-32 group">
-            <div class="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded mb-2 overflow-hidden">
-                <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                     data-alt="The Sandman Volume 4 Season of Mists Cover"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSjo-6kg0u4Ts0PpqkRBCS2KxmiT7cMoeJSm0gwV4P2TXVQdbUT9WBKWNDJbpzbAkXgPLjgENn9PzUxgfJ32gqJqdt3VzywL1FTz47g8vxg4kAWoiv5RJAvTa81WxrAdRLUU94Eoqmn4Hwvu-PY2kb18rqrfnKcOXHkVHQah0EdbbzUnZD6aWkRLpYO7CPYPPbyIYea_A9hEzu5-FMipTXVUL4JrykHwXco7Wrb329XOsQfbZrYDCVz8YLXYg_9zB5riHsZmDZScAZ" />
-            </div>
-            <h4 class="text-sm font-bold truncate">Vol. 4: Season of Mists</h4>
-            <p class="text-xs text-slate-500">$19.99</p>
-        </div>
-        <div class="flex-none w-32 group">
-            <div class="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded mb-2 overflow-hidden">
-                <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                     data-alt="The Sandman Volume 5 A Game of You Cover"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxHAlG-kyKcruPWIHEFz2Bu_lkE76WpR7zs_ErPGadWGIQLphRJ8bROfClSAyEs_h4aVJiveAp03MX5FE-Z2XTtZ7Vr1tvEPVDlgGkGVb6qo-txHYHAsU77UPbNaU1rCO--fqPGigazkOtvcBJTWGJdkQcvAE9fYGmiSHFW1h9_oSETNBowmKn3d0dpPyYylTIUNhfIeLgZHKSafLVjeA3FMf7OySBSPOQmFDijLxcXWp_eBw_yQUGD8rvnl2fRmtbZ3dZvXxSbb0b" />
-            </div>
-            <h4 class="text-sm font-bold truncate">Vol. 5: A Game of You</h4>
-            <p class="text-xs text-slate-500">$19.99</p>
-        </div>
-    </div>
-</div>
-</div>
-</div>
-<!-- Related Titles Section -->
-<section class="mt-20 mb-12">
-    <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-primary pl-4">Related Titles</h2>
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        <!-- Product Card 1 -->
-        <div class="group flex flex-col h-full bg-white dark:bg-slate-800/50 rounded-lg p-3 hover:shadow-xl hover:shadow-slate-200 dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer">
-            <div class="relative aspect-[2/3] w-full rounded overflow-hidden mb-3">
-                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     data-alt="Watchmen Comic Cover Art"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCV-K-TIhsfNLWJVFu4JnMeJuFOLAZDss3u6TiNw_FgEZYgFNfH-eqcCvpOEGuCGfq50WMxHO_hH-3mRXUpOYqJ4wYgSY3QkjSvYabdRjhkkYt8oBJUsWoJCXp-ZT4i7oF10NhErNPP_QqWfSYxnqcZIeTlm712135GMRBKsIPzMLtcPSVy7IikMY9VUCuGP0LbCQWSZZNsl1HNmf-gZf_Le0Wr2Jp7kpz4JWPEeK47WP1EYlHVN49PaklGr_NeF-_mGElA51MiRdXv" />
-                <div class="absolute top-2 right-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded shadow">
-                    BESTSELLER
-                </div>
-            </div>
-            <div class="flex flex-col flex-grow">
-                <h3 class="font-bold text-slate-900 dark:text-white leading-snug mb-1 group-hover:text-primary transition-colors">
-                    Watchmen
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Alan Moore</p>
-                <div class="mt-auto flex items-center justify-between">
-                    <span class="font-bold text-primary">$22.99</span>
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-primary hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">add</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Product Card 2 -->
-        <div class="group flex flex-col h-full bg-white dark:bg-slate-800/50 rounded-lg p-3 hover:shadow-xl hover:shadow-slate-200 dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer">
-            <div class="relative aspect-[2/3] w-full rounded overflow-hidden mb-3">
-                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     data-alt="V for Vendetta Comic Cover Art"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZtsZ08GLM1SuxMjvcLObhq7bUVeKU-NFYPSU25PXDUkALx9utTn3rulfFk-MUDUSMsryZVypkrG-bGcRiyQ6CvB0pKWO0V0lZTsfNTBw5pPNqZUujwIxIYTeC72arpN1iGVXbFyDovOclVlasjvxf1xk3Xu_Ra7Gkuf0S1lmuB4iVyQxfz-9NnrJ2fdAZSqT8ZKCS2CNEeP2ZT_CipdzS9T5ea7NWETOWKzsvtEs0Hlt9DcrCav4uwi7isCAk7zShKMQV2vgcIUBm" />
-            </div>
-            <div class="flex flex-col flex-grow">
-                <h3 class="font-bold text-slate-900 dark:text-white leading-snug mb-1 group-hover:text-primary transition-colors">
-                    V for Vendetta
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Alan Moore</p>
-                <div class="mt-auto flex items-center justify-between">
-                    <span class="font-bold text-primary">$18.99</span>
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-primary hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">add</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Product Card 3 -->
-        <div class="group flex flex-col h-full bg-white dark:bg-slate-800/50 rounded-lg p-3 hover:shadow-xl hover:shadow-slate-200 dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer">
-            <div class="relative aspect-[2/3] w-full rounded overflow-hidden mb-3">
-                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     data-alt="Batman Year One Comic Cover Art"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0zUDh0cnyQvOvxsd2-EcnSd3gK0UJm-eQpUy8AGHSwf5Ed0-YTZencqUTEhAbXSdAHDi_JuZFxhvH1o2OHFC9SdQZ-JKsHvrGPndBeBKDgtgekm2FJQCNoXcPSlyHgPUvrSCUskEKV_WyhC-O8ImwEWZ5JaVFzb51-wOarX9JvBwd4NsWtKW2jQQOZ-wGNDNU8I4wGVgnHdOJzVZC_d7AsCeqcqGa_gAQFM0fCV9ecw-P1axjkA7nrjp7bYq9S1NWG5EM-P2FFTZ5" />
-            </div>
-            <div class="flex flex-col flex-grow">
-                <h3 class="font-bold text-slate-900 dark:text-white leading-snug mb-1 group-hover:text-primary transition-colors">
-                    Batman: Year One
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Frank Miller</p>
-                <div class="mt-auto flex items-center justify-between">
-                    <span class="font-bold text-primary">$15.99</span>
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-primary hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">add</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Product Card 4 -->
-        <div class="group flex flex-col h-full bg-white dark:bg-slate-800/50 rounded-lg p-3 hover:shadow-xl hover:shadow-slate-200 dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer">
-            <div class="relative aspect-[2/3] w-full rounded overflow-hidden mb-3">
-                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     data-alt="Hellblazer Vol 1 Comic Cover Art"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWwRJsKTpGhAQi9WIhG96UyRy40TbSBFK4_Jwa8gB4W5I9JRXLQY7RZtKZqtQnThqDlPiyP9mdLZaWwjWrcoE_ZCo8kAmPQrH2MsaArhJLiHRkDvi_d4UhZgx27sUD8nPIaDVzSKM2Cj_L4kTGUDWRztY-AAvyehmHMAeemRlpQe46YbTK2roodS-xSEwzixkgsv9m_O2b8wh--mLYuqV1fOTH8tDXrofCMIbUtIny-Ag1zFhLjf69s64BDpzdp6iClXFyqPwG0pIt" />
-            </div>
-            <div class="flex flex-col flex-grow">
-                <h3 class="font-bold text-slate-900 dark:text-white leading-snug mb-1 group-hover:text-primary transition-colors">
-                    Hellblazer Vol. 1
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Jamie Delano</p>
-                <div class="mt-auto flex items-center justify-between">
-                    <span class="font-bold text-primary">$19.99</span>
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-primary hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">add</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-        <!-- Product Card 5 -->
-        <div class="group flex flex-col h-full bg-white dark:bg-slate-800/50 rounded-lg p-3 hover:shadow-xl hover:shadow-slate-200 dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer">
-            <div class="relative aspect-[2/3] w-full rounded overflow-hidden mb-3">
-                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                     data-alt="Saga Volume 1 Comic Cover Art"
-                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-YMHn6_Mx29C_k3z-DYCzUZb_KMruG_benYuIR4WLKUmHkomEQfqeGBL52QGXV6je67UreVjl53E58inurXZ6QZUIdILCklXbyEGIb5zITjgTQOGUiz4B49If6rWmAMJbZunY3QUtgfXJa5LPgbQgWwACLaFPUI7c-sGTjpLglsbVvC-kXV-LBT5ouwTPZ12x4kQb1io0oKKjUAZbbGB6dBDHj5cpLbXHxGl_g9JVWCzd9_8ujuGqHv9AXaEI9n9C3j10XW0Fa3as" />
-                <div class="absolute top-2 right-2 bg-slate-900 text-white text-[10px] font-bold px-2 py-1 rounded shadow">NEW</div>
-            </div>
-            <div class="flex flex-col flex-grow">
-                <h3 class="font-bold text-slate-900 dark:text-white leading-snug mb-1 group-hover:text-primary transition-colors">
-                    Saga Volume 1
-                </h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">Brian K. Vaughan</p>
-                <div class="mt-auto flex items-center justify-between">
-                    <span class="font-bold text-primary">$9.99</span>
-                    <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-700 text-slate-900 dark:text-white hover:bg-primary hover:text-white transition-colors">
-                        <span class="material-symbols-outlined text-[16px]">add</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-<div class="book-detail">
-    <p>{{ default_sku.book.title }} by {{ default_sku.book.authors.all|join:", " }}</p>
-    <p>
-        Series: <a href="{% url 'series_detail' default_sku.book.series.id %}">{{ default_sku.book.series.title }}</a>
-    </p>
-    {{ default_sku.book.description }}
-    {% if default_sku.has_discount %}
-        <p>{{ default_sku.discount_percent }}% OFF!</p>
-        <p>
-            <del>${{ default_sku.price_usd }}</del> ${{ default_sku.discounted_price }}
-        </p>
-    {% else %}
-        <p>${{ default_sku.price_usd }}</p>
-    {% endif %}
-    {% for sku in default_sku.book.sku.all %}
-        {% if not sku.is_discontinued %}
-            {% if sku.format == default_sku.format %}
-                <li>
-                    <a href="?{% querystring %}" id="active-sku">{{ default_sku.format }}</a>
-                </li>
-            {% else %}
-                <li>
-                    <a href="{% url 'product_detail' slug=sku.isbn_number pk=sku.id %}?f={{ sku.format|lower }}">{{ sku.format }}</a>
-                </li>
-            {% endif %}
-        {% endif %}
-    {% endfor %}
-    {% if default_sku.quantity > 0 %}
-        <p>In stock</p>
-    {% else %}
-        <p>Out of Stock</p>
-    {% endif %}
-</ul>
-<form action="{% url 'cart' %}" method="post">
-    {% csrf_token %}
-    <input type="hidden" name="sku_id" value="{{ default_sku.id }}">
-    <input type="hidden" name="next" value="{{ request.path }}">
-    <button type="submit">Add to Cart</button>
-</form>
-<h6>Customer Ratings</h6>
-{% to_stars default_sku.book.average_rating %}
-<span class="text-xs text-gray-500">{{ default_sku.book.reviewer_count }} reviews</span>
-<p>Drop a rating for this book</p>
-</div>
 {% endblock content %}

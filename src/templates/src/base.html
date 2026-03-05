@@ -70,18 +70,15 @@
                         </form>
                     </div>
                     <div class="flex items-center gap-1 sm:gap-2 shrink-0">
-                        <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
-                            <span class="material-symbols-outlined">person</span>
-                        </button>
-                        <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
-                            <span class="material-symbols-outlined">favorite</span>
-                        </button>
-                        <button class="relative p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
+                        <a href="{% url 'cart' %}"
+                           class="relative p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
                             <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
                             <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark"
                                   id="cart-count"
-                                  hx-swap-oob="true"
-                                  {% if request.session.item_count %}style="opacity: 1;"{% else %}style="opacity:0"{% endif %}>{{ request.session.item_count }}</span>
+                                  hx-swap-oob="true">{{ request.session.item_count }}</span>
+                        </a>
+                        <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                            <span class="material-symbols-outlined">person</span>
                         </button>
                         <button class="md:hidden p-2 text-text-main-light">
                             <span class="material-symbols-outlined">menu</span>
@@ -163,6 +160,29 @@
                     </div>
                 </div>
             </footer>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const container = document.querySelector('.scroll-container');
+                    const leftBtn = document.querySelector('.scroll-left');
+                    const rightBtn = document.querySelector('.scroll-right');
+
+                    const scrollAmount = 300; // adjust per card width
+
+                    leftBtn.addEventListener('click', () => {
+                        container.scrollBy({
+                            left: -scrollAmount,
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    rightBtn.addEventListener('click', () => {
+                        container.scrollBy({
+                            left: scrollAmount,
+                            behavior: 'smooth'
+                        });
+                    });
+                });
+            </script>
             {% block scripts %}
             {% endblock scripts %}
             {% django_htmx_script %}

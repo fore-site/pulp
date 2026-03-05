@@ -1,4 +1,4 @@
-from django.db.models import Case, When, F, DecimalField, Sum
+from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef
 from ..models import Sku, Cart, CartItem
 from django.db.models.manager import BaseManager
 from django.utils import timezone
@@ -51,14 +51,15 @@ def base_book_queryset(sku: Sku):
     """Function that acts as the base queryset for subsequent queries on the Sku model. Fundamental filters have been applied"""
 
     return (sku.objects.filter(is_discontinued=False, quantity__gt=0, book__is_deleted=False, book__series__is_deleted=False)
-                         .select_related('book')
+                         .select_related('book__series')
                          .prefetch_related('book__authors')
                          .only(
                              'book__title',
                              'price_usd',
                              'format',
                              'isbn_number',
-                             'book__authors__name'
+                             'book__authors__name',
+                             'book__series'
                          ))
 
 def get_user_and_session(request: HttpRequest):
@@ -114,3 +115,79 @@ def store_price_and_count(request, cart):
         request.session['subtotal_price'] = str(cart_items['subtotal'].quantize(Decimal('0.01')))
     except CartItem.DoesNotExist:
         request.session['item_count'] = 0
+
+def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids, limit=6):
+    """Function to get sku related to a current book/sku"""
+    related = []
+    used_ids = {book_sku.id}
+
+    
+    # Create a distinct queryset, one sku per book
+    distinct_skus = (Sku.objects.filter(book__series__category=book_sku.book.series.category)
+        .exclude(book=book_sku.book)
+        .distinct('book')
+        .annotate(distinct_id=Subquery(
+            Sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+            .values('id')[:1]
+        )).values_list('distinct_id', flat=True))
+
+    # Layer 1: Same Genre
+    layer1 = (
+        base_queryset
+        .filter(book__series__genres__in=genre_ids, id__in=distinct_skus)
+        .exclude(id__in=used_ids)
+        .order_by('?')[:limit]
+    )
+
+    for item in layer1:
+        if len(related) >= limit:
+            break
+        related.append(item)
+        used_ids.add(item.id)
+
+    # Layer 2: Same Author
+    if len(related) < limit:
+        layer2 = (
+            base_queryset
+            .filter(book__authors__name=book_sku.book.authors.first().name, 
+            id__in=distinct_skus)
+            .exclude(id__in=used_ids)
+            .order_by('?')[:limit]
+        )
+
+        for item in layer2:
+            if len(related) >= limit:
+                break
+            related.append(item)
+            used_ids.add(item.id)
+
+    # Layer 3: Same Publisher
+    if len(related) < limit:
+        layer3 = (
+            base_queryset
+            .filter(publisher__name=book_sku.publisher.name, id__in=distinct_skus)
+            .exclude(id__in=used_ids)
+            .order_by('?')[:limit]
+        )
+
+        for item in layer3:
+            if len(related) >= limit:
+                break
+            related.append(item)
+            used_ids.add(item.id)
+
+    # Layer 4: Trending in Category
+    if len(related) < limit:
+        layer4 = (
+            base_queryset
+            .filter(book__trending_score__gt=0, id__in=distinct_skus)
+            .exclude(id__in=used_ids)[:limit]
+        )
+
+        for item in layer4:
+            if len(related) >= limit:
+                break
+            related.append(item)
+            used_ids.add(item.id)
+
+    return related
