@@ -1,8 +1,5 @@
 {% load pulp_tags %}
-{# partials/book_list.html #}
-{% for book_sku in books %}
-    <div class="flex-shrink-0 snap-start w-36 md:w-40 lg:w-44 space-y-2 relative">
-        <div class="group relative flex flex-col gap-2">
+<div class="group relative flex flex-col gap-2">
             <!-- Image Container -->
             <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-sm shadow-sm ring-1 ring-black/5 dark:ring-white/10 group-hover:ring-primary/50 transition-all duration-300">
                 <!-- Background Image -->
@@ -58,7 +55,3 @@
                 {% endif %}
             </div>
         </div>
-    </div>
-{% empty %}
-    <p class="text-center text-text-muted-light dark:text-text-muted-dark">No books available</p>
-{% endfor %}

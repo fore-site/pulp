@@ -80,35 +80,11 @@
             <div class="flex-1">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     <!-- Product Card 1 -->
-                    {% for book_sku in bestselling_books %}
-                        <div class="group flex flex-col gap-3">
-                            <div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
-                                <span class="absolute left-2 top-2 z-10 bg-primary text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded-sm uppercase">Bestseller</span>
-                                <img alt="Comic Cover"
-                                     class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
-                                     data-alt="Comic book cover featuring a superhero in a dynamic pose with vibrant colors"
-                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcBbWn4zw5REIOUHfl09fdC0fZBmoQ69XqCE3X_IedM4gOOnWmX9eFrjpgbxq2lP9bqIwrhsTHkQFz3LaQyOg-VJHEGH7zzjzety72r60UFLagL3AGmET6C7sfQKuSgogVzyxpNgDtlILdomIiKMQ7HAE-VP-Tw3G9gzomx4_EGhd2VW3xA9F3t0WV41gJCJGuBa9YSkiMJ9yfZ16cVm4Lzgs9DT_3jTBAeCyHsNzAIpZHJm0UKFGjRQhLTcP9p7aN8VfWWime7Hp-" />
-                                <button class="absolute bottom-3 right-3 flex size-10 items-center justify-center rounded-full bg-white text-slate-900 shadow-md opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:bg-slate-100">
-                                    <span class="material-symbols-outlined fill-1">shopping_bag</span>
-                                </button>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <div class="flex items-center gap-0.5 text-primary text-xs">{% to_stars book_sku.book.average_rating %}</div>
-                                <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 font-display leading-tight truncate">
-                                    {{ book_sku.book.title }}
-                                </h3>
-                                <p class="text-sm text-[#88636d] truncate">{{ book_sku.book.authors.all|join:", " }}</p>
-                                <div class="flex items-center gap-2 text-sm mt-1">
-                                    {% if book_sku.has_discount %}
-                                        <span class="line-through text-text-muted-light dark:text-text-muted-dark">${{ book_sku.price_usd }}</span>
-                                        <span class="font-bold text-text-main-light dark:text-text-main-dark">${{ book_sku.discounted_price }}</span>
-                                    {% else %}
-                                        <span class="font-bold text-text-main-light dark:text-text-main-dark">${{ book_sku.price_usd }}</span>
-                                    {% endif %}
-                                </div>
-                            </div>
+                    <div class="group flex flex-col gap-3">
+                            {% for book_sku in bestselling_books %}
+                            {% include 'partials/base_book_card.html' with book_sku=book_sku %}
+                            {% endfor %}
                         </div>
-                    {% endfor %}
                 </div>
                 <!-- Pagination -->
                 <div class="flex items-center justify-center gap-2 mt-12">

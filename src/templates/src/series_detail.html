@@ -348,7 +348,7 @@
     <h4>Books in this series: {{ book_count }}</h4>
     <hr>
     <ul>
-        {% include "partials/book_card.html" with books=sku_list %}
+        {% include "partials/book_card_scroll.html" with books=sku_list %}
         <hr>
     </ul>
 {% endblock content %}
