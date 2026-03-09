@@ -4,6 +4,171 @@
     Pulp - Cart
 {% endblock title %}
 {% block content %}
+<!-- Main Content -->
+<main class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-10 w-full">
+<div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1">
+<!-- Page Title -->
+<div class="flex flex-col gap-3 pb-8">
+<h1 class="text-text-main dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] uppercase">Your Collection</h1>
+<p class="text-text-muted text-base font-normal leading-normal">Review your 3 items before proceeding to checkout.</p>
+</div>
+<div class="flex flex-col lg:flex-row gap-12">
+<!-- Left Column: Cart Items -->
+<div class="w-full lg:w-3/4 flex flex-col gap-6">
+<!-- Header Row (Hidden on mobile) -->
+<div class="hidden md:grid grid-cols-12 gap-4 pb-4 border-b border-slate-200 dark:border-slate-800 text-xs font-bold uppercase tracking-wider text-text-muted">
+<div class="col-span-6">Product</div>
+<div class="col-span-3 text-center">Quantity</div>
+<div class="col-span-2 text-right">Total</div>
+<div class="col-span-1 text-right"></div>
+</div>
+<!-- Cart Item 1 -->
+<div class="flex flex-col md:grid md:grid-cols-12 gap-4 items-center py-6 border-b border-slate-100 dark:border-slate-800/50">
+<div class="col-span-6 w-full flex items-start gap-6">
+<div class="shrink-0 relative group">
+<div class="bg-center bg-no-repeat aspect-[2/3] bg-cover rounded border border-black dark:border-slate-600 w-[100px] shadow-sm" data-alt="Cover of The Sandman Vol 1 comic book" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDxfu4gfSrRk8xTuzO5OmEdct-2qiaNEvu8P8ftCs7_lH3weapUk0FxNtHyQKTLvDbkeF5x_IBskG_wXZouGDbNb5tMs5cJRL3RXz2SqObCEFhG2VvWHxwCusV5BszSDxBfQBuV1YAvwq9pYmAZML7Wc7L30cqd4gYIu6vi5ljElS7mPw4nqLUSf-YMHKL3V9hc8t8LTst2ytlk_c3c5hw5jwJDWMwj4RYtNzi6mWwydvpH1ULoBexZh6UYu9B_74_Z-ATWPCX5zEKZ");'></div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-text-main dark:text-white text-xl font-bold leading-tight font-display">The Sandman Vol. 1</h3>
+<p class="text-text-muted text-sm">Preludes &amp; Nocturnes</p>
+<p class="text-text-muted text-sm mt-1">Neil Gaiman | Hardcover</p>
+<p class="text-text-main dark:text-white font-medium md:hidden mt-2">$19.99</p>
+</div>
+</div>
+<div class="col-span-3 w-full md:w-auto flex justify-start md:justify-center items-center mt-4 md:mt-0">
+<div class="flex items-center border border-black dark:border-slate-600 rounded overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<input class="w-10 h-8 text-center bg-transparent border-none text-text-main dark:text-white font-medium focus:ring-0 p-0 text-sm" min="1" type="number" value="1"/>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<div class="col-span-2 w-full md:w-auto text-left md:text-right mt-2 md:mt-0">
+<span class="md:hidden text-text-muted text-sm mr-2">Subtotal:</span>
+<span class="text-primary font-bold text-lg font-display">$19.99</span>
+</div>
+<div class="col-span-1 w-full md:w-auto flex justify-end">
+<button class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/10">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Cart Item 2 -->
+<div class="flex flex-col md:grid md:grid-cols-12 gap-4 items-center py-6 border-b border-slate-100 dark:border-slate-800/50">
+<div class="col-span-6 w-full flex items-start gap-6">
+<div class="shrink-0">
+<div class="bg-center bg-no-repeat aspect-[2/3] bg-cover rounded border border-black dark:border-slate-600 w-[100px] shadow-sm" data-alt="Cover of Watchmen comic book" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCmXmRB27GPBox6gyagNqRMIsy23rr0J8UU74iwyq05DvaaUq1eQufcngeZoeJtON4ZWtQSJs9dU0hzqju3lgHc-QLKM9B1ppYzR_Q2o5yygh7cVFhKcbnBxzANq_ZkjgqD8Wg0dq9jbjpF9BkeoWErI1nHgmzLI2xu4UjWWuYYdIONkdOqvRyKJa8ovyeA5sHMKvitnbqcA59MWCJbskIi-F7D4dnvqXrRBXzm2Tl30Q-iAgQW2y38GRc_o1veODVRzoOm4LWH_zh");'></div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-text-main dark:text-white text-xl font-bold leading-tight font-display">Watchmen</h3>
+<p class="text-text-muted text-sm">International Edition</p>
+<p class="text-text-muted text-sm mt-1">Alan Moore | Paperback</p>
+<p class="text-text-main dark:text-white font-medium md:hidden mt-2">$24.99</p>
+</div>
+</div>
+<div class="col-span-3 w-full md:w-auto flex justify-start md:justify-center items-center mt-4 md:mt-0">
+<div class="flex items-center border border-black dark:border-slate-600 rounded overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<input class="w-10 h-8 text-center bg-transparent border-none text-text-main dark:text-white font-medium focus:ring-0 p-0 text-sm" min="1" type="number" value="1"/>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<div class="col-span-2 w-full md:w-auto text-left md:text-right mt-2 md:mt-0">
+<span class="md:hidden text-text-muted text-sm mr-2">Subtotal:</span>
+<span class="text-primary font-bold text-lg font-display">$24.99</span>
+</div>
+<div class="col-span-1 w-full md:w-auto flex justify-end">
+<button class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/10">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+<!-- Cart Item 3 -->
+<div class="flex flex-col md:grid md:grid-cols-12 gap-4 items-center py-6 border-b border-slate-100 dark:border-slate-800/50">
+<div class="col-span-6 w-full flex items-start gap-6">
+<div class="shrink-0">
+<div class="bg-center bg-no-repeat aspect-[2/3] bg-cover rounded border border-black dark:border-slate-600 w-[100px] shadow-sm" data-alt="Cover of Saga comic book compendium" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC4kRMxA-g4OmzxdiaMLVPaY3zayodJtldlg77JN723Ez6BE3tWBgHl_X0_faA5aM7RNDOAuSe8iPvgNAOg4uZoq-Onq8jpfa1tx_BW7VmdSw4eoPakwbAte5eRBr0DXU4e3OY5sHPLEmo92jIoXzoIBII-5YS5XiEL-Z6GIxKBmeKA_2LXum0eqjO6vDcJAtcVb36ELym3929CRtEoatfX_219fxwh4GHGhs5G5KuiESEXyWXyRKV_q0-Sc7Ds04YV5bWImRKpG9ar");'></div>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="text-text-main dark:text-white text-xl font-bold leading-tight font-display">Saga: Compendium One</h3>
+<p class="text-text-muted text-sm">Chapters 1-54</p>
+<p class="text-text-muted text-sm mt-1">Brian K. Vaughan | Softcover</p>
+<p class="text-text-main dark:text-white font-medium md:hidden mt-2">$59.99</p>
+</div>
+</div>
+<div class="col-span-3 w-full md:w-auto flex justify-start md:justify-center items-center mt-4 md:mt-0">
+<div class="flex items-center border border-black dark:border-slate-600 rounded overflow-hidden">
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<input class="w-10 h-8 text-center bg-transparent border-none text-text-main dark:text-white font-medium focus:ring-0 p-0 text-sm" min="1" type="number" value="1"/>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-text-main dark:text-white">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+<div class="col-span-2 w-full md:w-auto text-left md:text-right mt-2 md:mt-0">
+<span class="md:hidden text-text-muted text-sm mr-2">Subtotal:</span>
+<span class="text-primary font-bold text-lg font-display">$59.99</span>
+</div>
+<div class="col-span-1 w-full md:w-auto flex justify-end">
+<button class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/10">
+<span class="material-symbols-outlined">delete</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Right Column: Order Summary -->
+<div class="w-full lg:w-1/4">
+<div class="sticky top-28 bg-white dark:bg-[#1a0e11] border border-black dark:border-slate-600 p-6 rounded-lg flex flex-col gap-6 shadow-sm">
+<h3 class="text-xl font-bold font-display text-text-main dark:text-white uppercase tracking-tight">Order Summary</h3>
+<div class="flex flex-col gap-3 pb-6 border-b border-dashed border-slate-300 dark:border-slate-700">
+<div class="flex justify-between items-center text-sm">
+<span class="text-text-muted">Subtotal (3 items)</span>
+<span class="font-medium text-text-main dark:text-white">$104.97</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-text-muted">Shipping</span>
+<span class="font-medium text-text-main dark:text-white">Calculated at next step</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-text-muted">Tax</span>
+<span class="font-medium text-text-main dark:text-white">$8.40</span>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-base font-bold text-text-main dark:text-white font-display">Total</span>
+<span class="text-2xl font-bold text-primary font-display">$113.37</span>
+</div>
+<div class="flex flex-col gap-2 pt-2">
+<label class="text-xs font-bold uppercase text-text-muted">Promo Code</label>
+<div class="flex gap-2">
+<input class="flex-1 rounded border border-black dark:border-slate-600 bg-white dark:bg-slate-800 text-sm px-3 py-2 focus:ring-1 focus:ring-primary focus:border-primary placeholder:text-slate-400" placeholder="Enter code" type="text"/>
+<button class="px-4 py-2 bg-slate-100 dark:bg-slate-700 text-text-main dark:text-white text-sm font-bold rounded hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                                            Apply
+                                        </button>
+</div>
+</div>
+<button class="w-full bg-primary hover:bg-[#880d2f] text-white font-bold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2 group mt-2">
+                                    Proceed to Checkout
+                                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<div class="flex items-center justify-center gap-2 text-text-muted text-xs mt-2">
+<span class="material-symbols-outlined text-sm">lock</span>
+                                    Secure Checkout
+                                </div>
+</div>
+</div>
+</div>
+</div>
+</main>
     {% partialdef cart_items inline %}
     <div id="cart-container">
         {% if not cart_items_and_forms %}

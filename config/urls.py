@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from src.views import views
+from src.views import *
 from django.contrib.auth import views as auth_views
 from src.forms import CustomLoginForm
 from django.conf import settings
@@ -24,19 +24,20 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.IndexView.as_view(), name='home'),
+    path('', IndexView.as_view(), name='home'),
     path('login/', auth_views.LoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
-    path('sign-up/', views.signup, name='signup'),
-    path('users/<uuid:public_id>', views.UserProfileView.as_view(), name='user_profile'),
+    path('sign-up/', signup, name='signup'),
+    path('users/<uuid:public_id>', UserProfileView.as_view(), name='user_profile'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('books/<slug:category>/', views.BookListView.as_view(), name='book_list'),
-    path('series-index/<str:series_type>', views.SeriesIndexView.as_view(), name='series_index'),
-    path('series/<uuid:public_id>', views.SeriesDetailView.as_view(), name='series_detail'),
-    path('b/<uuid:public_id>/', views.ProductDetailView.as_view(), name='product_detail'),
-    path('books/p/search', views.search_results_view, name='search_results'),
-    path('books/deals', views.HotDealsView.as_view(), name='deals'),
-    path('cart', views.CartView.as_view(), name='cart'),
-    path('cart/update', views.update_and_delete_cart, name='cart_update'),
+    path('books/<slug:category>/', BookListView.as_view(), name='book_list'),
+    path('series-index/<str:series_type>', SeriesIndexView.as_view(), name='series_index'),
+    path('series/<uuid:public_id>', SeriesDetailView.as_view(), name='series_detail'),
+    path('b/<uuid:public_id>/', ProductDetailView.as_view(), name='product_detail'),
+    path('books/p/search', search_results_view, name='search_results'),
+    path('books/deals', HotDealsView.as_view(), name='deals'),
+    path('cart', CartView.as_view(), name='cart'),
+    path('cart/update', update_and_delete_cart_view, name='cart_update'),
+    path('bestselling/<slug:category>/', BestsellingView.as_view(), name='bestselling')
 ]
 
 if settings.DEBUG:

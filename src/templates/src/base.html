@@ -75,7 +75,7 @@
                             <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
                             <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark"
                                   id="cart-count"
-                                  hx-swap-oob="true">{{ request.session.item_count }}</span>
+                                  hx-swap-oob="true">{{ request.session.item_count|default:0 }}</span>
                         </a>
                         <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
                             <span class="material-symbols-outlined">person</span>

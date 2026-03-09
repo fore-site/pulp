@@ -1,0 +1,168 @@
+<!-- Main Content Area -->
+<main class="flex-grow w-full max-w-[1280px] mx-auto px-4 sm:px-6 lg:px-10 py-8 lg:py-12">
+<div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
+<!-- Left Column: Checkout Process -->
+<div class="flex-1 min-w-0">
+<!-- Breadcrumbs / Steps -->
+<nav class="flex flex-wrap items-center gap-3 mb-8 text-sm sm:text-base">
+<a class="text-primary font-medium hover:underline" href="#">Cart</a>
+<span class="text-text-muted">/</span>
+<span class="text-text-main dark:text-white font-bold">Shipping</span>
+<span class="text-text-muted">/</span>
+<span class="text-text-muted font-medium">Payment</span>
+<span class="text-text-muted">/</span>
+<span class="text-text-muted font-medium">Review</span>
+</nav>
+<!-- Progress Bar -->
+<div class="mb-10">
+<div class="flex justify-between items-end mb-2">
+<h1 class="text-2xl sm:text-3xl font-bold tracking-tight">Shipping Address</h1>
+<span class="text-text-muted text-sm font-medium">Step 1 of 3</span>
+</div>
+<div class="h-2 w-full bg-neutral-border dark:bg-neutral-border/10 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-1/3 rounded-full"></div>
+</div>
+</div>
+<!-- Shipping Form -->
+<form class="flex flex-col gap-6">
+<!-- Name Fields -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="firstName">First Name</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="firstName" placeholder="Jane" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="lastName">Last Name</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="lastName" placeholder="Doe" type="text"/>
+</div>
+</div>
+<!-- Address Field -->
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="address">Address</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="address" placeholder="123 Pulp Street, Apt 4B" type="text"/>
+</div>
+<!-- City, State, ZIP -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="city">City</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="city" placeholder="New York" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="state">State/Province</label>
+<div class="relative">
+<select class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer" id="state">
+<option>Select State</option>
+<option>New York</option>
+<option>California</option>
+<option>Texas</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="zip">ZIP Code</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="zip" placeholder="10001" type="text"/>
+</div>
+</div>
+<!-- Phone & Email -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="phone">Phone Number</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="phone" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="text-sm font-medium text-text-main dark:text-white" for="email">Email Address</label>
+<input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" id="email" placeholder="jane@example.com" type="email"/>
+</div>
+</div>
+<!-- Checkbox -->
+<div class="flex items-center gap-3 mt-2">
+<input class="w-5 h-5 rounded border-neutral-border text-primary focus:ring-primary bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 cursor-pointer" id="save-info" type="checkbox"/>
+<label class="text-sm text-text-main dark:text-white cursor-pointer select-none" for="save-info">Save this information for next time</label>
+</div>
+<!-- Navigation Buttons -->
+<div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-neutral-border dark:border-white/10">
+<a class="flex items-center gap-2 text-text-main dark:text-white font-medium hover:text-primary transition-colors py-3" href="#">
+<span class="material-symbols-outlined text-lg">arrow_back</span>
+                            Return to Cart
+                        </a>
+<button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2" type="button">
+                            Continue to Shipping
+                            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Right Column: Order Summary (Sticky) -->
+<aside class="w-full lg:w-[400px] flex-shrink-0">
+<div class="lg:sticky lg:top-28 bg-neutral-surface dark:bg-[#2a161b] border border-neutral-border dark:border-white/10 rounded-xl p-6 shadow-sm">
+<h2 class="text-xl font-bold mb-6 text-text-main dark:text-white">Order Summary</h2>
+<!-- Items List -->
+<div class="flex flex-col gap-6 mb-6">
+<!-- Item 1 -->
+<div class="flex gap-4">
+<div class="relative w-20 h-20 rounded-lg overflow-hidden bg-background-light flex-shrink-0 border border-neutral-border dark:border-white/5">
+<img alt="Black Leather Sneakers" class="w-full h-full object-cover" data-alt="Black minimalist leather casual shoe on white background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgWHTfmEiT1BZtMhstbAlvyB48OLVWAZEm7QPphL6T9kKtI6PBZwOVlJTG3nYnG8FeA72KZxvWYPVnYXtLPIvb3oneLDCjnghKU4nQuIt8pBR44WmBNdTERYJZZ86-EPZgDNe_UvhI1m_Wlw_NqkK2D_IGHaShCm_pyrb73nPEr8Sjv3ieCjUEoKbwvQPUxkhMCLaLfaYtZkYZeHhBerXLrSarJEv1Bc9r4JTC-0fdwe-tamxhprcZglbfbdhG0kQ3lXMUG68H0BKS"/>
+<span class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-bl-md">1</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<h3 class="font-bold text-text-main dark:text-white leading-tight">Leather Low-Tops</h3>
+<p class="text-sm text-text-muted mt-1">Size: 42 / Black</p>
+</div>
+<div class="flex flex-col justify-center items-end">
+<p class="font-bold text-text-main dark:text-white">$145.00</p>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex gap-4">
+<div class="relative w-20 h-20 rounded-lg overflow-hidden bg-background-light flex-shrink-0 border border-neutral-border dark:border-white/5">
+<img alt="Basic Grey Tee" class="w-full h-full object-cover" data-alt="Folded grey cotton t-shirt with minimal design" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4t7MV4BP7fy-jRQe90jeX5EJCaB1EG2e2yvKoipsdiLL2fzWhsZI8b2foyMm3O0y339A1LYfvJimcTIR6f1YKYabxIwy2AWV2oa8JhG_nTPDHmU3d6UP6ux3-H-40K40Ai-_Nq2HirBeX3cuwDHgiy53YQJoTd-9hpjy-QKfTuZQZXQO0kdOBdlzbUyaNcC64pWydI6ewgDabLvNhQ8Uz6w5ChQeWnC2tQlfHR-QRC6TvhvBlkexswwrW4-h76Bc1cvAYD6cCQ0qh"/>
+<span class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-1.5 py-0.5 rounded-bl-md">2</span>
+</div>
+<div class="flex flex-col justify-center flex-1">
+<h3 class="font-bold text-text-main dark:text-white leading-tight">Essential Tee</h3>
+<p class="text-sm text-text-muted mt-1">Size: L / Heather Grey</p>
+</div>
+<div class="flex flex-col justify-center items-end">
+<p class="font-bold text-text-main dark:text-white">$64.00</p>
+</div>
+</div>
+</div>
+<!-- Discount Code -->
+<div class="flex gap-2 mb-6 pt-6 border-t border-neutral-border dark:border-white/10">
+<input class="flex-1 h-11 px-3 rounded-lg border border-neutral-border bg-background-light dark:bg-background-dark/50 dark:border-white/10 text-sm focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow" placeholder="Gift card or discount code" type="text"/>
+<button class="h-11 px-4 rounded-lg bg-text-main dark:bg-white dark:text-black text-white text-sm font-bold hover:opacity-90 transition-opacity">Apply</button>
+</div>
+<!-- Costs Breakdown -->
+<div class="space-y-3 pt-2">
+<div class="flex justify-between text-sm">
+<span class="text-text-muted">Subtotal</span>
+<span class="font-medium text-text-main dark:text-white">$209.00</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-muted">Shipping</span>
+<span class="font-medium text-text-muted text-xs">Calculated at next step</span>
+</div>
+<div class="flex justify-between text-sm">
+<span class="text-text-muted">Estimated Taxes</span>
+<span class="font-medium text-text-main dark:text-white">$18.81</span>
+</div>
+</div>
+<!-- Total -->
+<div class="flex justify-between items-center mt-6 pt-6 border-t border-neutral-border dark:border-white/10">
+<span class="text-base font-bold text-text-main dark:text-white">Total</span>
+<div class="flex items-baseline gap-1">
+<span class="text-xs text-text-muted font-medium">USD</span>
+<span class="text-2xl font-bold text-primary">$227.81</span>
+</div>
+</div>
+</div>
+<!-- Trust Badges (Optional but good for checkout context) -->
+<div class="mt-6 flex justify-center gap-4 opacity-50 grayscale">
+<div class="h-6 w-10 bg-neutral-300 rounded"></div>
+<div class="h-6 w-10 bg-neutral-300 rounded"></div>
+<div class="h-6 w-10 bg-neutral-300 rounded"></div>
+</div>
+</aside>
+</div>
+</main>

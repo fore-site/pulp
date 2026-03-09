@@ -1,0 +1,136 @@
+{% extends "src/base.html" %}
+{% load pulp_tags %}
+{% block title %}
+    Pulp - {{ category }} Bestsellers
+{% endblock title %}
+{% block content %}
+    <!-- Main Content -->
+    <div class="flex-grow w-full max-w-[1440px] mx-auto px-4 lg:px-10 py-8">
+        <!-- Header -->
+        <div class="flex flex-col gap-6 mb-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <h1 class="text-slate-900 dark:text-slate-100 text-4xl lg:text-5xl font-bold font-display leading-tight tracking-tight">
+                        {{ category }} Bestsellers
+                    </h1>
+                    <p class="text-[#88636d] mt-2 text-lg">Top rated and most read {{ category|lower }} of the month.</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-[#88636d]">Sort by:</span>
+                    <select class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg text-sm font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer">
+                        <option>Newest Arrivals</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar Filters -->
+            <aside class="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24 h-fit space-y-8">
+                <!-- Categories -->
+                <div class="space-y-4">
+                    <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
+                    <div class="space-y-3">
+                        {% for genre in genres %}
+                            <label class="flex items-start gap-3 group cursor-pointer">
+                                <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                                       type="checkbox" />
+                                <div class="flex flex-col">
+                                    <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
+                                </div>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+                <!-- Price Range -->
+                <div class="space-y-4">
+                    <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Price Range</h3>
+                    <div class="px-2">
+                        <div class="relative h-1 bg-[#e5dcde] dark:bg-[#3a2e32] rounded-full mb-6">
+                            <div class="absolute left-[10%] right-[30%] top-0 bottom-0 bg-primary rounded-full"></div>
+                            <div class="absolute left-[10%] top-1/2 -translate-y-1/2 -translate-x-1/2 size-4 bg-primary border-2 border-white dark:border-[#211115] rounded-full shadow cursor-pointer">
+                            </div>
+                            <div class="absolute right-[30%] top-1/2 -translate-y-1/2 translate-x-1/2 size-4 bg-primary border-2 border-white dark:border-[#211115] rounded-full shadow cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-between text-sm font-medium text-slate-900 dark:text-slate-100">
+                            <span>$5</span>
+                            <span>$50+</span>
+                        </div>
+                    </div>
+                </div>
+                <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+                <!-- Publishers -->
+                <div class="space-y-4">
+                    <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Publisher</h3>
+                    <div class="space-y-2">
+                        {% for publisher in publishers %}
+                            <label class="flex items-center gap-3 group cursor-pointer">
+                                <input class="size-4 rounded border-[#e5dcde]  text-primary focus:ring-primary bg-transparent"
+                                       type="checkbox" />
+                                <span class="text-slate-700 dark:text-slate-300 text-sm group-hover:text-primary transition-colors">{{ publisher.name }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                </div>
+            </aside>
+            <!-- Product Grid -->
+            <div class="flex-1">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Product Card 1 -->
+                    {% for book_sku in bestselling_books %}
+                        <div class="group flex flex-col gap-3">
+                            <div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
+                                <span class="absolute left-2 top-2 z-10 bg-primary text-white text-[10px] font-bold tracking-wider px-2 py-1 rounded-sm uppercase">Bestseller</span>
+                                <img alt="Comic Cover"
+                                     class="h-full w-full object-cover object-center transition-transform duration-300 group-hover:scale-105"
+                                     data-alt="Comic book cover featuring a superhero in a dynamic pose with vibrant colors"
+                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcBbWn4zw5REIOUHfl09fdC0fZBmoQ69XqCE3X_IedM4gOOnWmX9eFrjpgbxq2lP9bqIwrhsTHkQFz3LaQyOg-VJHEGH7zzjzety72r60UFLagL3AGmET6C7sfQKuSgogVzyxpNgDtlILdomIiKMQ7HAE-VP-Tw3G9gzomx4_EGhd2VW3xA9F3t0WV41gJCJGuBa9YSkiMJ9yfZ16cVm4Lzgs9DT_3jTBAeCyHsNzAIpZHJm0UKFGjRQhLTcP9p7aN8VfWWime7Hp-" />
+                                <button class="absolute bottom-3 right-3 flex size-10 items-center justify-center rounded-full bg-white text-slate-900 shadow-md opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:bg-slate-100">
+                                    <span class="material-symbols-outlined fill-1">shopping_bag</span>
+                                </button>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <div class="flex items-center gap-0.5 text-primary text-xs">{% to_stars book_sku.book.average_rating %}</div>
+                                <h3 class="text-base font-bold text-slate-900 dark:text-slate-100 font-display leading-tight truncate">
+                                    {{ book_sku.book.title }}
+                                </h3>
+                                <p class="text-sm text-[#88636d] truncate">{{ book_sku.book.authors.all|join:", " }}</p>
+                                <div class="flex items-center gap-2 text-sm mt-1">
+                                    {% if book_sku.has_discount %}
+                                        <span class="line-through text-text-muted-light dark:text-text-muted-dark">${{ book_sku.price_usd }}</span>
+                                        <span class="font-bold text-text-main-light dark:text-text-main-dark">${{ book_sku.discounted_price }}</span>
+                                    {% else %}
+                                        <span class="font-bold text-text-main-light dark:text-text-main-dark">${{ book_sku.price_usd }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination -->
+                <div class="flex items-center justify-center gap-2 mt-12">
+                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] disabled:opacity-50">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="flex items-center justify-center size-10 rounded-lg bg-primary text-white font-bold">1</button>
+                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] font-medium">
+                        2
+                    </button>
+                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] font-medium">
+                        3
+                    </button>
+                    <span class="text-slate-400">...</span>
+                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] font-medium">
+                        12
+                    </button>
+                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225]">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

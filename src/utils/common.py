@@ -191,3 +191,14 @@ def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids,
             used_ids.add(item.id)
 
     return related
+
+def distinct_sku(sku: Sku, category):
+    # Create a distinct queryset, one sku per book
+    distinct_skus = (sku.objects.filter(book__series__category=category)
+        .distinct('book')
+        .annotate(distinct_id=Subquery(
+            sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+            .values('id')[:1]
+        )).values_list('distinct_id', flat=True))
+    
+    return distinct_skus

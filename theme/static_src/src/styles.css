@@ -4,29 +4,29 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #9F1239;
-  --color-primary-dark: #881337;
-  --color-primary-light: #be123c;
+    --color-primary: #9f1239;
+    --color-primary-dark: #881337;
+    --color-primary-light: #be123c;
 
-  --color-background-light: #fcfafb;
-  --color-background-dark: #1a0f12;
+    --color-background-light: #fcfafb;
+    --color-background-dark: #1a0f12;
 
-  --color-surface-light: #ffffff;
-  --color-surface-dark: #2a181d;
+    --color-surface-light: #ffffff;
+    --color-surface-dark: #2a181d;
 
-  --color-text-main-light: #1f1517;
-  --color-text-main-dark: #ede6e8;
+    --color-text-main-light: #1f1517;
+    --color-text-main-dark: #ede6e8;
 
-  --color-text-muted-light: #705c62;
-  --color-text-muted-dark: #a88e96;
+    --color-text-muted-light: #705c62;
+    --color-text-muted-dark: #a88e96;
 
-  --font-display: "Space Grotesk", sans-serif;
-  --font-body: "Satoshi", sans-serif;
+    --font-display: 'Space Grotesk', sans-serif;
+    --font-body: 'Satoshi', sans-serif;
 
-  --radius: 0.125rem;
-  --radius-lg: 0.25rem;
-  --radius-xl: 0.5rem;
-  --radius-full: 9999px;
+    --radius: 0.125rem;
+    --radius-lg: 0.25rem;
+    --radius-xl: 0.5rem;
+    --radius-full: 9999px;
 }
 
 .hero-pattern {
@@ -48,23 +48,41 @@
         radial-gradient(#be123c 0.5px, #1a0f12 0.5px);
 }
 
+/* Custom scrollbar for sidebar in bestseller page */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+input[type='range']::-webkit-slider-thumb {
+    pointer-events: all;
+    width: 20px;
+    height: 20px;
+    -webkit-appearance: none;
+    background: #a1123a;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
 @layer utilities {
-            .custom-scrollbar::-webkit-scrollbar {
-                height: 2px;
-            }
-            .custom-scrollbar::-webkit-scrollbar-track {
-                background: #f1f1f1;
-            }
-            .custom-scrollbar::-webkit-scrollbar-thumb {
-                background: #000000;
-            }
-            .hide-scrollbar {
-                -ms-overflow-style: none;
-                scrollbar-width: none;
-            }
-            .hide-scrollbar::-webkit-scrollbar {
-                display: none;
-            }
-        }
+    .custom-scrollbar::-webkit-scrollbar {
+        height: 2px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #000000;
+    }
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+}
 
 @source "../../../**/*.{html,py,js}";
