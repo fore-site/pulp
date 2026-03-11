@@ -29,16 +29,16 @@
     <!-- Content Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
         {% for series in series_list|slice:":5" %}
-            <a class="group flex flex-col gap-4"
+            <a class="group flex flex-col gap-2"
                href="{% url 'series_detail' series.public_id %}">
-                <div class="relative w-full aspect-[3/4] overflow-hidden rounded border border-gray-900 dark:border-gray-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] transition-all">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
+                <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                          data-alt="Dark moody manga cover art abstract"
                          style="background-image: url('{{ series.cover_image }}')"></div>
                 </div>
                 <div class="flex flex-col gap-1">
                     <h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors truncate">{{ series.title }}</h3>
-                    <div class="flex justify-between items-center border-t border-dashed border-gray-300 dark:border-gray-700 pt-2 mt-1">
+                    <div class="flex justify-between items-center border-t border-dashed border-gray-300 pt-2 mt-1">
                         <p class="text-sm font-bold text-primary">{{ series.book_count }} Books</p>
                     </div>
                 </div>
@@ -67,16 +67,16 @@
             </div>
         </div>
         {% for series in series_list|slice:"5:" %}
-            <a class="group flex flex-col gap-4"
+            <a class="group flex flex-col gap-2"
                href="{% url 'series_detail' series.public_id %}">
-                <div class="relative w-full aspect-[3/4] overflow-hidden rounded border border-gray-900 dark:border-gray-700 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] dark:shadow-[4px_4px_0px_0px_rgba(255,255,255,0.2)] group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] dark:group-hover:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.2)] transition-all">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                         data-alt="Mystery thriller dark silhouette abstract"
-                         style='background-image: url("{{ series.cover_image }}")'></div>
+                <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
+                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                         data-alt="Dark moody manga cover art abstract"
+                         style="background-image: url('{{ series.cover_image }}')"></div>
                 </div>
                 <div class="flex flex-col gap-1">
                     <h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors truncate">{{ series.title }}</h3>
-                    <div class="flex justify-between items-center border-t border-dashed border-gray-300 dark:border-gray-700 pt-2 mt-1">
+                    <div class="flex justify-between items-center border-t border-dashed border-gray-300 pt-2 mt-1">
                         <p class="text-sm font-bold text-primary">{{ series.book_count }} Books</p>
                     </div>
                 </div>

@@ -4,60 +4,53 @@
 {% endblock title %}
 {% block content %}
     {% if not results %}
-    <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 md:py-32 w-full max-w-[1440px] mx-auto">
-<div class="w-full max-w-3xl flex flex-col items-center text-center space-y-10 animate-fade-in-up">
-<!-- Illustration Area -->
-<div class="relative group">
-<!-- Decorative background blob -->
-<div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-orange-200 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-500"></div>
-<!-- Main Image Container -->
-<div class="relative bg-white border-2 border-black p-4 rotate-3 hover:rotate-0 transition-transform duration-500 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
-<div class="w-48 h-64 md:w-64 md:h-80 bg-[#f4f0f1] border border-black flex items-center justify-center overflow-hidden relative">
-<!-- Abstract Geometric Manga Pattern -->
-<div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#181113 1px, transparent 1px); background-size: 10px 10px;"></div>
-<div class="flex flex-col items-center gap-4 text-text-muted/50">
-<span class="material-symbols-outlined !text-6xl md:!text-8xl">menu_book</span>
-<span class="material-symbols-outlined !text-4xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary opacity-20">close</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Text Content -->
-<div class="space-y-6 max-w-2xl mt-8">
-<h2 class="text-4xl md:text-6xl font-bold tracking-tight text-text-main uppercase leading-none">
-                    No Titles Found
-                </h2>
-<p class="text-lg md:text-xl text-text-muted font-normal leading-relaxed">
-                    Your search for "<span class="text-primary font-medium">Naruto Vol. 1</span>" did not yield any results. <br class="hidden md:block"/>
-                    Try adjusting your filters or checking your spelling.
-                </p>
-</div>
-<!-- Actions -->
-<div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full pt-4">
-<button class="w-full sm:w-auto px-8 h-14 bg-primary text-white text-base font-bold uppercase tracking-wide rounded hover:bg-red-700 hover:shadow-lg transition-all flex items-center justify-center gap-2">
-<span>Browse All Manga</span>
-<span class="material-symbols-outlined text-sm">arrow_forward</span>
-</button>
-<button class="w-full sm:w-auto px-8 h-14 bg-white border-2 border-[#e5e5e5] text-text-main text-base font-bold uppercase tracking-wide rounded hover:border-black hover:bg-gray-50 transition-all">
-                    Return to Home
-                </button>
-</div>
-<!-- Helpful Links / Suggestions -->
-<div class="pt-12 border-t border-gray-100 w-full mt-8">
-<p class="text-sm text-text-muted mb-4 font-medium uppercase tracking-widest">Popular Categories</p>
-<div class="flex flex-wrap justify-center gap-3">
-<a class="px-4 py-2 bg-[#f4f0f1] rounded-full text-sm font-medium text-text-main hover:bg-primary hover:text-white transition-colors" href="#">Shonen</a>
-<a class="px-4 py-2 bg-[#f4f0f1] rounded-full text-sm font-medium text-text-main hover:bg-primary hover:text-white transition-colors" href="#">Seinen</a>
-<a class="px-4 py-2 bg-[#f4f0f1] rounded-full text-sm font-medium text-text-main hover:bg-primary hover:text-white transition-colors" href="#">Fantasy</a>
-<a class="px-4 py-2 bg-[#f4f0f1] rounded-full text-sm font-medium text-text-main hover:bg-primary hover:text-white transition-colors" href="#">Horror</a>
-<a class="px-4 py-2 bg-[#f4f0f1] rounded-full text-sm font-medium text-text-main hover:bg-primary hover:text-white transition-colors" href="#">Slice of Life</a>
-</div>
-</div>
-</div>
-</main>
-        <h2>There are no books matching your query '{{ query }}'</h2>
-    {% else %}
-        <h2>Here are the results of your query '{{ query }}'</h2>
-        {% include "partials/book_card.html" with books=results %}
-    {% endif %}
+        <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 md:py-32 w-full max-w-[1440px] mx-auto">
+            <div class="w-full max-w-3xl flex flex-col items-center text-center space-y-10 animate-fade-in-up">
+                <!-- Illustration Area -->
+                <div class="relative group">
+                    <!-- Decorative background blob -->
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-primary/20 to-orange-200 rounded-full blur-3xl opacity-40 group-hover:opacity-60 transition-opacity duration-500">
+                    </div>
+                    <!-- Main Image Container -->
+                    <div class="relative bg-white border-2 border-black p-4 rotate-3 hover:rotate-0 transition-transform duration-500 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                        <div class="w-48 h-64 md:w-64 md:h-80 bg-[#f4f0f1] border border-black flex items-center justify-center overflow-hidden relative">
+                            <!-- Abstract Geometric Manga Pattern -->
+                            <div class="absolute inset-0 opacity-10"
+                                 style="background-image: radial-gradient(#181113 1px, transparent 1px);
+                                        background-size: 10px 10px"></div>
+                            <div class="flex flex-col items-center gap-4 text-text-muted/50">
+                                <span class="material-symbols-outlined !text-6xl md:!text-8xl">menu_book</span>
+                                <span class="material-symbols-outlined !text-4xl absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-primary opacity-20">close</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Text Content -->
+                <div class="space-y-6 max-w-2xl mt-8">
+                    <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-text-main uppercase leading-none">No Titles Found</h2>
+                    <p class="text-lg md:text-xl text-text-muted font-normal leading-relaxed">
+                        Your search for "<span class="text-primary font-body">{{ query }}</span>" did not yield any results.
+                        <br class="hidden md:block" />
+                        Try adjusting your filters or checking your spelling.
+                    </p>
+                </div>
+                <!-- Actions -->
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full pt-4">
+                    <a href="{% url 'deals' %}"
+                       class="w-full sm:w-auto px-8 h-14 bg-primary text-white text-base font-bold uppercase tracking-wide rounded hover:bg-primary-dark transition-all flex items-center justify-center gap-2">
+                        <span>Browse Latest Deals</span>
+                        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                    <a href="{% url 'home' %}"
+                       class="w-full sm:w-auto px-8 h-14 bg-white border-2 border-[#e5e5e5] text-text-main text-base font-bold uppercase tracking-wide rounded hover:border-black hover:bg-gray-50 transition-all">
+                        Return Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+{% else %}
+    <h2>Here are the results of your query '{{ query }}'</h2>
+    {% include "partials/book_card_scroll.html" with books=results %}
+{% endif %}
 {% endblock content %}

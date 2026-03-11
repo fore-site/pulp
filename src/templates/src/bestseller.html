@@ -79,12 +79,10 @@
             <!-- Product Grid -->
             <div class="flex-1">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Product Card 1 -->
-                    <div class="group flex flex-col gap-3">
-                            {% for book_sku in bestselling_books %}
-                            {% include 'partials/base_book_card.html' with book_sku=book_sku %}
-                            {% endfor %}
-                        </div>
+                    <!-- Product Cards -->
+                    {% for book_sku in bestselling_books %}
+                        <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with book_sku=book_sku %}</div>
+                    {% endfor %}
                 </div>
                 <!-- Pagination -->
                 <div class="flex items-center justify-center gap-2 mt-12">

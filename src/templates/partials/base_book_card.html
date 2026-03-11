@@ -1,57 +1,55 @@
 {% load pulp_tags %}
 <div class="group relative flex flex-col gap-2">
-            <!-- Image Container -->
-            <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 dark:bg-gray-800 rounded-sm shadow-sm ring-1 ring-black/5 dark:ring-white/10 group-hover:ring-primary/50 transition-all duration-300">
-                <!-- Background Image -->
-                <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
-                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                         style="background-image: url('{{ book_sku.book.cover_image }}')"></div>
-                </a>
-                <!-- Add to Cart button (hover overlay) -->
-                <div class="absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                    <form action="{% url 'cart' %}" method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="sku_id" value="{{ book_sku.public_id }}">
-                        <input type="hidden" name="next" value="{{ request.path }}">
-                        <button type="submit"
-                                hx-post="{% url 'cart' %}"
-                                hx-target="#cart-count"
-                                hx-swap="innerHTML"
-                                class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 text-sm rounded shadow-lg transform active:scale-95 transition-transform add-to-cart-btn">
-                            Add to Cart
-                        </button>
-                    </form>
-                </div>
-                <!-- Discount / Limited Badges -->
-                {% if book_sku.discount_percent > 40 %}
-                    <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[12px]">local_fire_department</span> HOT DEAL
-                    </span>
-                {% elif book_sku.quantity < 11 %}
-                    <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm">Limited</span>
-                {% elif book_sku.has_discount and book_sku.discount_percent < 40 %}
-                    <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm">{{ book_sku.discount_percent }}% OFF</span>
-                {% endif %}
-            </div>
-            <!-- Title, Author, Format -->
-            <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
-                <h3 class="font-body font-bold text-lg truncate text-text-main-light dark:text-text-main-dark group transition-colors">
-                    {{ book_sku.book.title }}
-                </h3>
-                <p class="text-sm text-text-muted-light dark:text-text-muted-dark truncate font-body">
-                    {{ book_sku.book.authors.all|join:", " }}
-                </p>
-                <p class="text-sm text-text-muted-light dark:text-text-muted-dark truncate font-body">{{ book_sku.format }}</p>
-                <!-- Rating -->
-                <div class="flex items-center gap-0.5 text-primary text-xs">{% to_stars book_sku.book.average_rating %}</div>
-            </a>
-            <!-- Price (always visible, outside hover overlay) -->
-            <div class="flex items-center gap-2 text-sm mt-1">
-                {% if book_sku.has_discount %}
-                    <span class="line-through text-text-muted-light dark:text-text-muted-dark">${{ book_sku.price_usd }}</span>
-                    <span class="font-bold text-text-main-light dark:text-text-main-dark">${{ book_sku.discounted_price }}</span>
-                {% else %}
-                    <span class="font-bold text-text-main-light dark:text-text-main-dark">${{ book_sku.price_usd }}</span>
-                {% endif %}
-            </div>
+    <!-- Image Container -->
+    <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
+        <!-- Background Image -->
+        <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
+            <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                 style="background-image: url('{{ book_sku.book.cover_image }}')"></div>
+        </a>
+        <!-- Add to Cart button (hover overlay) -->
+        <div class="absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+            <form action="{% url 'cart' %}" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="sku_id" value="{{ book_sku.public_id }}">
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <button type="submit"
+                        hx-post="{% url 'cart' %}"
+                        hx-target="#cart-count"
+                        hx-swap="innerHTML"
+                        class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-2 text-sm rounded shadow-lg transform active:scale-95 transition-transform add-to-cart-btn">
+                    Add to Cart
+                </button>
+            </form>
         </div>
+        <!-- Discount / Limited Badges -->
+        {% if book_sku.discount_percent > 40 %}
+            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm flex items-center gap-1">
+                <span class="material-symbols-outlined text-[12px]">local_fire_department</span> HOT DEAL
+            </span>
+        {% elif book_sku.quantity < 11 %}
+            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm">Limited</span>
+        {% elif book_sku.has_discount and book_sku.discount_percent < 40 %}
+            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm">{{ book_sku.discount_percent }}% OFF</span>
+        {% endif %}
+    </div>
+    <!-- Title, Author, Format -->
+    <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
+        <h3 class="font-body font-bold text-lg truncate text-text-main-light group transition-colors">
+            {{ book_sku.book.title }}
+        </h3>
+        <p class="text-sm text-text-muted-light truncate font-body">{{ book_sku.book.authors.all|join:", " }}</p>
+        <p class="text-sm text-text-muted-light truncate font-body">{{ book_sku.format }}</p>
+        <!-- Rating -->
+        <div class="flex items-center gap-0.5 text-primary text-xs">{% to_stars book_sku.book.average_rating %}</div>
+    </a>
+    <!-- Price (always visible, outside hover overlay) -->
+    <div class="flex items-center gap-2 text-sm mt-1">
+        {% if book_sku.has_discount %}
+            <span class="line-through text-text-muted-light">${{ book_sku.price_usd }}</span>
+            <span class="font-bold text-text-main-light">${{ book_sku.discounted_price }}</span>
+        {% else %}
+            <span class="font-bold text-text-main-light">${{ book_sku.price_usd }}</span>
+        {% endif %}
+    </div>
+</div>

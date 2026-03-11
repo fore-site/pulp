@@ -161,6 +161,8 @@ class SeriesDetailView(generic.TemplateView):
 @require_GET
 def search_results_view(request):  
     query = request.GET.get('q')
+    if len(query) > 20:
+        query = query[:20] + "..."
     base_queryset = base_book_queryset(Sku)
 
     try:

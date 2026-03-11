@@ -1,4 +1,4 @@
-from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef
+from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef, CharField
 from ..models import Sku, Cart, CartItem
 from django.db.models.manager import BaseManager
 from django.utils import timezone
@@ -18,6 +18,7 @@ class FilterSort:
         self.seven_days = timezone.now().replace(hour=0, minute=0, microsecond=0) - timedelta(days=7)
 
     def filter_skus(self):
+        """Filter sku/books by specified parameter"""
         if self.genres:
             self.books = self.books.filter(book__series__genres__id__in=self.genres)
         if self.featured:
@@ -31,6 +32,7 @@ class FilterSort:
         return self.books
 
     def sort_skus(self, books: Sku, sort_by: str) -> BaseManager[Sku]:
+        """Sort sku/books by specified parameter"""
         if sort_by == 'price_desc' or sort_by == 'price_asc':
             books = books.annotate(
                 current_price=Case(
@@ -89,8 +91,7 @@ def get_cart_items_and_forms(user, session_id):
     else:
         # Get cart items related to cart, return empty cart if it doesn't exist
         cart_items = (CartItem.objects.filter(cart=cart)
-                      .prefetch_related('sku__book__authors')
-                      ).order_by('-created_at')
+            .prefetch_related('sku__book__authors')).order_by('-created_at')
         if not cart_items:
             cart_items_and_forms = []
         else:
@@ -193,7 +194,7 @@ def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids,
     return related
 
 def distinct_sku(sku: Sku, category):
-    # Create a distinct queryset, one sku per book
+    """Create a distinct queryset, one sku per book"""
     distinct_skus = (sku.objects.filter(book__series__category=category)
         .distinct('book')
         .annotate(distinct_id=Subquery(

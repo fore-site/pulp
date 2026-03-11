@@ -1,354 +1,82 @@
 {% extends "src/base.html" %}
+{% load pulp_tags %}
 {% block title %}
-    {{ series.title }}
+    Pulp - {{ series.title }}
 {% endblock title %}
 {% block content %}
-<main class="flex-grow">
-<!-- Series Header -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
-<!-- Cover Image -->
-<div class="lg:col-span-3 flex justify-center lg:justify-start">
-<div class="w-full max-w-[300px] aspect-[2/3] relative rounded-lg overflow-hidden shadow-2xl group">
-<div class="absolute inset-0 bg-slate-200 dark:bg-slate-800 animate-pulse"></div>
-<img alt="Berserk Series Main Cover" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Dark fantasy manga cover art illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmsL4yCyA1EfOvFBhLZksTrChxoI7sKtMwD7j9_moG_fXoxTcrJ-yx3MJqWZMR7n2wAIzC_r1oyQlNEIP0DwrcJ_kSoF9dY90eSg_Bj0k0A1JV7V7kD_Fb8acQVdKLLHP0pzWDulMTuo_5Gc4IJomSd9_Gndc4qNoAKimnqPEWCp9AQ36NlexuyuQhCUE_mUuzDvUpEEtwvyy1rmv9V7XCILtR8t6esXof75c0ixd1ifyG3bLjVcoTwBuao2dXV5JKPodSMN4sNWVD"/>
-<div class="absolute top-4 left-4">
-<span class="inline-flex items-center px-3 py-1 rounded-sm text-xs font-bold bg-primary text-white uppercase tracking-wider">Bestseller</span>
-</div>
-</div>
-</div>
-<!-- Series Info -->
-<div class="lg:col-span-9 flex flex-col justify-end pb-4">
-<div class="mb-2">
-<h1 class="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">Berserk</h1>
-<h2 class="text-xl md:text-2xl text-slate-500 dark:text-slate-400 font-medium flex items-center gap-2">
-                            by <span class="text-slate-900 dark:text-white border-b border-slate-300 dark:border-slate-700 pb-0.5">Kentaro Miura</span>
-</h2>
-</div>
-<p class="text-slate-600 dark:text-slate-300 text-lg max-w-3xl leading-relaxed mb-8 mt-6">
-                        Guts, a former mercenary now known as the "Black Swordsman," is out for revenge. After a tumultuous childhood, he finally finds someone he respects and believes he can trust, only to have everything fall apart. Marked for death and hunted by demons, he struggles to defy his gruesome fate.
-                    </p>
-<!-- Stats Bar -->
-<div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full border-y border-slate-200 dark:border-slate-800 py-6">
-<div class="flex flex-col gap-1 border-r border-slate-200 dark:border-slate-800 pr-6">
-<span class="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">Status</span>
-<div class="flex items-center gap-2">
-<span class="size-2 rounded-full bg-green-500"></span>
-<span class="text-xl font-bold text-slate-900 dark:text-white">Ongoing</span>
-</div>
-</div>
-<div class="flex flex-col gap-1 border-r border-slate-200 dark:border-slate-800 px-6">
-<span class="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">Volumes</span>
-<span class="text-xl font-bold text-slate-900 dark:text-white">41</span>
-</div>
-<div class="flex flex-col gap-1 border-r border-slate-200 dark:border-slate-800 px-6">
-<span class="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">Rating</span>
-<div class="flex items-center gap-1">
-<span class="text-xl font-bold text-slate-900 dark:text-white">4.9</span>
-<span class="text-primary material-symbols-outlined text-[20px] fill-current">star</span>
-</div>
-</div>
-<div class="flex flex-col gap-1 pl-6">
-<span class="text-xs uppercase tracking-widest text-slate-500 dark:text-slate-400">Publisher</span>
-<span class="text-xl font-bold text-slate-900 dark:text-white">Dark Horse</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Filter & Sort -->
-<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-<h3 class="text-2xl font-bold text-slate-900 dark:text-white">Volumes</h3>
-<div class="flex items-center gap-4">
-<label class="flex items-center gap-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-<span class="material-symbols-outlined text-[20px]">sort</span>
-                        Sort by:
-                        <select class="border-none bg-transparent py-0 pl-2 pr-8 text-sm font-bold text-primary focus:ring-0 cursor-pointer">
-<option>Newest First</option>
-<option>Oldest First</option>
-<option>Price: Low to High</option>
-</select>
-</label>
-</div>
-</div>
-<!-- Product Grid -->
-<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
-<!-- Card 1 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<div class="absolute top-2 left-2 z-10 flex gap-1">
-<span class="bg-primary text-white text-[10px] font-bold px-2 py-0.5 uppercase tracking-wide rounded-sm">New</span>
-</div>
-<img alt="Berserk Volume 41 Cover" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Dark moody manga book cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABrxr4HX8N6Yc-BZVSeFM5g4MBMPoowJ1v1fJSebJ0dfz3Ih_g3CPZRsNq9r1hqot4dgbZwIMKfW5sabtt3KchCmMcF36DxQLEs1_y6gZh4GhuuwEDItXPbOOybR_zppLRC8htC06PPqBlYHsybyhQBd83HH6g3ytQ5fXoCSw35OpyovuIJOsLjkY0S1iPLMP1FefAJOkLv6a033xtb_JSvFn_EPPLFQ8ScEYNTzHGbs1HiM1VEVszLUowY1npYskxPMIwvibRsBif"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(124)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 41</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-<!-- Card 2 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<img alt="Berserk Volume 40 Cover" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Book cover with abstract illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdr6n5nP9l9F_3tsnBXy4hSZR3rC8J9e5vH60cBl6fVvtgVMn10m_zrccNbE80dQn5IpBI5JGjFafwy2BhF3bSQFO3DKBCU_MwEoPBY8uQwFHsj-om1eRELBz2_w24gQdUjrDsLTY5HiESHW7w3G3Ynwq2dw1e9Z_ozdtkcS8O1yzykFsZHtuj7ehNFfsv33DFvuTSp91ECr_eDn15V5g_zYI0ubFgY4AtN7vwGb8Z3WDPAsW24nMakaHUXxipwYQ8Gh_wjg6Nnk_L"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star_half</span>
-<span class="text-xs text-slate-400 ml-1">(89)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 40</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800 grayscale">
-<div class="absolute inset-0 bg-white/60 dark:bg-black/60 z-10 flex items-center justify-center">
-<span class="bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold px-3 py-1 uppercase tracking-wide rounded-sm">Out of Stock</span>
-</div>
-<img alt="Berserk Deluxe Edition 1" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-50" data-alt="Thick book spine on table" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXPU9KFSaYWVc-TzbJ_8vNEFc822QNSgq_TsJJ1SSughWSUv2XTRiDFXzQL7KaACLtV_5fb3bOv6DuQjjwF-EVODs5i73KwwxR0yconJBmAaEu8wU0LXiBw50lM9vXbnVEM6NhHeYmXRWCnC1EtQuRChBEagsSUkBC6oWr-d7syVZSZxu9vaUmE4PSwjVMCYgCAZpY4LeKTaCUeNm6_qWTZbK3w7Eb3kT6fmciaAjP35VuZpoxvyeRqSvlrVYq1E9FIMannReFdmmS"/>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(542)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Deluxe Vol 1</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Hardcover</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-400 line-through decoration-primary">$49.99</span>
-</div>
-</div>
-</div>
-<!-- Card 4 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<div class="absolute top-2 left-2 z-10 flex gap-1">
-<span class="bg-primary/10 text-primary border border-primary/20 backdrop-blur-sm text-[10px] font-bold px-2 py-0.5 uppercase tracking-wide rounded-sm">Restock</span>
-</div>
-<img alt="Berserk Volume 13" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Detailed graphic novel cover art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCA4t4h3Z5s-cmOfQAIqdo0Vfq2HcarmnbMStxIh-K2GzQDDYgqPDM0NvpmB912pcI-_aNmnRmt2yOKc3r6NmLZwPBAzdW19L49aZ5M-QQop_i1NQWSztxauk0EDHYpKNVktqN4Fq7m8TYxMOo3hgHxoA9WZJa-a7YBCORPHKIAHjmkdDfze0cOOdMGTYYhN9CECIISOAhtuDx3Q8_P-oWVmYYVACpnp7qgXvh_COizGvXGMkOL9sqbpFqXOWujYa_gMNlI_vPggiWu"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(210)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 13</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-<!-- Card 5 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<img alt="Berserk Volume 1" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Manga book cover art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsbwDn2REPoR0KzQvfJ6PZ2T310CewgBHajkA77omzCcpc-X2iMS3GLj_tSSJP-LfT0XdRie7YtRSskWmPJ7y-Jffc_ajWE9TDdj3rtHRwk2DnWIVOlnyKuvq-rSMON7R_vV50rxrReF13_r4XebBPzbxenCD9WrC_9BKVlzGxA1ci_43OixMR1mE_VKLQ0pOAWI5oH56PYEgeIWFd6Dpo-bZ9xBNUN8t2veu3IdN7OS6-fxqt14ptmJGMbS_qKWuFr_8nVL0l74GY"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(950)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 01</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-<!-- Card 6 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<img alt="Berserk Volume 30" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Stylized manga cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG0MdJcYfmydFwjt47zjsjGQzvrFMcCTe_H08MBOmeI7f82Ns-h5KoU4aPO_gY48OTRVL3VHu4LQZ2I0fI0QOGVEPiq13iSd1uBGoqvMUjJJAFerZI8HJt92RkH63BOlNZL4HCmX961JJJWAf4IYfuPdj0L4lzKqbZmMqSTaaAkKjaIfAGOZXlWAn3vweQq6STJLSj5tM2pkXetqj-K6jYwPB2uXAeq9ExE-tl8DTN8mLgleRFxR7SYdHT3RIlyPQg_cu0VMihCvXL"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] text-slate-300">star</span>
-<span class="text-xs text-slate-400 ml-1">(45)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 30</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-<!-- Card 7 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<div class="absolute top-2 left-2 z-10 flex gap-1">
-<span class="bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-[10px] font-bold px-2 py-0.5 uppercase tracking-wide rounded-sm">Limited</span>
-</div>
-<img alt="Berserk Artbook" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Abstract red and black artbook cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV0ts1S4XEeIFaiEwoWe8fdJ7aTLqFUVtuAEs0x9qJMMM8VC1C84uWsAwaJsU3zglkzjo4ztzbD3OUoBUTgHHlIcBF49cooMyZp0pDnbyacAQCrjXelf1_2V0Bk1Y-edYu1Ruij40mY91zjgata9BQ8v5WPT4WgBywUDuIIAW_ooas2sXP68hDQ72L4_vRL5hYXnhvfq3BlAXnO6bYxxyjqx1SVWCw3lkr4GUJUqLs4KkyJA7gXVSWindhyFmjq1QGsfEOZa4254ft"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(12)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Official Guidebook</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Art Book</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$29.99</span>
-</div>
-</div>
-</div>
-<!-- Card 8 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<img alt="Berserk Volume 25" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Stack of books" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT0JudncmXaD-BOpUaTZBhOs4eOmGGraP-RxbqfGR5SPLs0QFn8bJwMo3A_6oCoCdI0hXLVzKk01GSLBIgJBu2ok3hPmQeuiiF3riqjzIxtMiwYOlK_OEkb-BtZUP8rwnH1AZ1JuLyse5g0esR-648XGNGmlWIf6JctH9KQKwJcE-P58a5gvb_8X7QJkDegd4iMRcgnGkzVs4VGuBtR-iG72bU1ImM2oH_BY-ir-1zg1b3JPhuB9WVRopRtAFW6XFgq2Xqe0lJRGTf"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star_half</span>
-<span class="text-xs text-slate-400 ml-1">(76)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 25</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-<!-- Card 9 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800 grayscale">
-<div class="absolute inset-0 bg-white/60 dark:bg-black/60 z-10 flex items-center justify-center">
-<span class="bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-xs font-bold px-3 py-1 uppercase tracking-wide rounded-sm">Out of Stock</span>
-</div>
-<img alt="Berserk Deluxe Edition 2" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-50" data-alt="Hardcover book front view" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVLRM3u7MIAc8X0K6KPxHf_G7mTWVFI3d0gRPD3foKw2ZRnmnkYCj4Vm-AbnJ-Sm9CFFILZqQ8lItxOxnTiTf9hCOukouBHMmmOkX3st0ttqYlJHn4g5VrPGf_LlKn78F41X37s2NpfW_x_wTrJd4e5caa9elmDhmQeGtHKWitS3iHGM2EATtcP6gt3q8VA_RlBbfrKMMJCpr6Z7vieEB52HU2VPKqeTl0bBXnQfSLilrxkGvI_FWs7aHJPgmwgX2hqBpkvZYvS-sQ"/>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(420)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Deluxe Vol 2</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Hardcover</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-400 line-through decoration-primary">$49.99</span>
-</div>
-</div>
-</div>
-<!-- Card 10 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded bg-slate-100 dark:bg-slate-800">
-<img alt="Berserk Volume 5" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Manga on shelf" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUUXSARZpfNYMyiY7n7fmfaRUzVWRegBUIoOKUfbMvXZTGzM5ue29_ldUpD0n2n11KdbkHmkm2jqGDjJFvQ8zVoXkWp-62YR6pcuzGx_LQx5RztORsNN9BM-V_eBLmotGE0Ng_VBYPD3asqKPeG8dnqR0Yq41pBTZkZ8HHPmgfNwPhWV0vYqHDhXo8kOYlCQTb197GY44_cN-Rn53ewD-B67k5-jSKgikJydeMl0JwzSu_zNIv0-2pf690pRhfwH316J9REN-OsvrR"/>
-<button class="absolute bottom-3 right-3 z-20 size-10 rounded-full bg-white text-slate-900 shadow-lg opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center hover:bg-primary hover:text-white">
-<span class="material-symbols-outlined text-[20px]">add_shopping_cart</span>
-</button>
-</div>
-<div>
-<div class="flex items-center gap-1 mb-1 text-primary">
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="material-symbols-outlined text-[14px] fill-current">star</span>
-<span class="text-xs text-slate-400 ml-1">(325)</span>
-</div>
-<h4 class="text-base font-bold text-slate-900 dark:text-white leading-tight mb-1 group-hover:text-primary transition-colors cursor-pointer">Berserk Volume 05</h4>
-<p class="text-sm text-slate-500 dark:text-slate-400 mb-2">Paperback</p>
-<div class="flex items-center justify-between">
-<span class="text-lg font-bold text-slate-900 dark:text-white">$14.99</span>
-</div>
-</div>
-</div>
-</div>
-<!-- Pagination -->
-<div class="flex justify-center mt-20">
-<nav aria-label="Pagination" class="flex items-center gap-1">
-<a class="p-2 text-slate-500 hover:text-primary" href="#">
-<span class="sr-only">Previous</span>
-<span class="material-symbols-outlined">chevron_left</span>
-</a>
-<a aria-current="page" class="h-10 w-10 flex items-center justify-center rounded bg-primary text-white font-bold" href="#">1</a>
-<a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium" href="#">2</a>
-<a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium" href="#">3</a>
-<span class="h-10 w-10 flex items-center justify-center text-slate-500">...</span>
-<a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium" href="#">5</a>
-<a class="p-2 text-slate-500 hover:text-primary" href="#">
-<span class="sr-only">Next</span>
-<span class="material-symbols-outlined">chevron_right</span>
-</a>
-</nav>
-</div>
-</div>
+    <main class="flex-grow">
+        <!-- Series Header -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
+            <!-- Cover Image -->
+            <div class="lg:col-span-3 flex justify-center lg:justify-start">
+                <div class="w-full max-w-[300px] aspect-[2/3] relative rounded-lg overflow-hidden group border-[2px] border-slate-900">
+                    <img alt="{{ series.title }} Series Main Cover"
+                         class="absolute inset-0 w-full h-full object-cover transition-transform duration-700"
+                         data-alt="{{ series.title }} manga cover art illustration"
+                         src="{{ series.cover_image }}" />
+                </div>
+            </div>
+            <!-- Series Info -->
+            <div class="lg:col-span-9 flex flex-col justify-end pb-4">
+                <div class="mb-2">
+                    <h1 class="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white tracking-tight mb-4">{{ series.title }}</h1>
+                </div>
+                <p class="text-slate-600 dark:text-slate-300 text-lg max-w-3xl leading-relaxed mb-8 mt-6">{{ series.description }}</p>
+                <!-- Stats Bar -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full border-y border-slate-200 py-6">
+                    <div class="flex flex-col gap-1 border-r border-slate-200 px-6">
+                        <span class="text-xs uppercase tracking-widest text-slate-500">Books</span>
+                        <span class="text-xl font-bold text-slate-900">{{ book_count }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Filter & Sort -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <h3 class="text-2xl font-bold text-slate-900">Books</h3>
+            <div class="flex items-center gap-4">
+                <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+                    <span class="material-symbols-outlined text-[20px]">sort</span>
+                    Sort by:
+                    <select class="border-none bg-transparent py-0 pl-2 pr-8 text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+                        <option>Newest First</option>
+                        <option>Oldest First</option>
+                        <option>Price: Low to High</option>
+                        <option>Price: High to Low</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+        <!-- Product Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
+            <!-- Card 1 -->
+            {% for book_sku in sku_list %}
+                <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with books=book_sku %}</div>
+            {% endfor %}
+        </div>
+        <!-- Pagination -->
+        <div class="flex justify-center mt-20">
+            <nav aria-label="Pagination" class="flex items-center gap-1">
+                <a class="p-2 text-slate-500 hover:text-primary" href="#">
+                    <span class="sr-only">Previous</span>
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </a>
+                <a aria-current="page"
+                   class="h-10 w-10 flex items-center justify-center rounded bg-primary text-white font-bold"
+                   href="#">1</a>
+                <a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium"
+                   href="#">2</a>
+                <a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium"
+                   href="#">3</a>
+                <span class="h-10 w-10 flex items-center justify-center text-slate-500">...</span>
+                <a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium"
+                   href="#">5</a>
+                <a class="p-2 text-slate-500 hover:text-primary" href="#">
+                    <span class="sr-only">Next</span>
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </a>
+            </nav>
+        </div>
+    </div>
 </main>
-    <h3>{{ series.title }}</h3>
-    <p>
-        <i>{{ series.description }}</i>
-    </p>
-    <h4>Books in this series: {{ book_count }}</h4>
-    <hr>
-    <ul>
-        {% include "partials/book_card_scroll.html" with books=sku_list %}
-        <hr>
-    </ul>
 {% endblock content %}
