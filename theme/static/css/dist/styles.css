@@ -2127,9 +2127,6 @@
   .selection\:text-white::selection {
     color: var(--color-white);
   }
-  .placeholder\:text-slate-400::placeholder {
-    color: var(--color-slate-400);
-  }
   .placeholder\:text-text-muted-light::placeholder {
     color: var(--color-text-muted-light);
   }
@@ -2240,11 +2237,6 @@
   @media (hover: hover) {
     .hover\:bg-slate-100:hover {
       background-color: var(--color-slate-100);
-    }
-  }
-  @media (hover: hover) {
-    .hover\:bg-slate-200:hover {
-      background-color: var(--color-slate-200);
     }
   }
   @media (hover: hover) {
@@ -2912,9 +2904,6 @@
   .dark\:bg-\[\#1a0e10\]:where(.dark, .dark *) {
     background-color: #1a0e10;
   }
-  .dark\:bg-\[\#1a0e11\]:where(.dark, .dark *) {
-    background-color: #1a0e11;
-  }
   .dark\:bg-\[\#2a161b\]:where(.dark, .dark *) {
     background-color: #2a161b;
   }
@@ -3053,11 +3042,6 @@
   @media (hover: hover) {
     .dark\:hover\:bg-gray-800:where(.dark, .dark *):hover {
       background-color: var(--color-gray-800);
-    }
-  }
-  @media (hover: hover) {
-    .dark\:hover\:bg-slate-600:where(.dark, .dark *):hover {
-      background-color: var(--color-slate-600);
     }
   }
   @media (hover: hover) {

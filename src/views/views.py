@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth import login
-from src.models import Sku, CartItem
+from src.models import Sku, CartItem, Cart
 from ..forms import CustomUserCreationForm, CartUpdateForm
 from django.db.models import F
 from django_htmx.middleware import HtmxDetails
@@ -54,7 +54,7 @@ class CartView(generic.TemplateView):
             self.request.session.create()
         session_id = self.request.session.session_key
 
-        context['cart_items_and_forms'] = get_cart_items_and_forms(user, session_id)
+        context['cart_items_and_forms'] = get_cart_items_and_forms(user, session_id, self.request)
         return context
     
     def post(self, request, **kwargs):
@@ -141,8 +141,16 @@ def update_and_delete_cart_view(request: HtmxHttpRequest):
         return response
     return redirect('cart')
 
-class OrderCheckoutView(generic.FormView):
-    pass
+class CheckoutView(generic.TemplateView):
+    template_name = 'src/checkout_shipping.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cart = get_object_or_404(Cart, public_id = self.kwargs.get('public_id'))
+        user = self.request.user if self.request.user.is_authenticated else None
+        if user:
+            context['user'] = user
+        return context
 
 def order_checkout(request, id):
     return HttpResponse('You have placed an order on %s.' % id)

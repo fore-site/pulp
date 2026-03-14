@@ -52,3 +52,6 @@ class CartUpdateForm(forms.Form):
         min_value=1,
         widget=forms.NumberInput(attrs={'class': 'w-10 h-8 text-center bg-transparent border-none text-text-main font-medium focus:ring-0 p-0 text-sm quantity-input'})
     )
+
+class ShippingAddressForm():
+    pass

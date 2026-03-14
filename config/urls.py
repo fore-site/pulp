@@ -37,7 +37,8 @@ urlpatterns = [
     path('books/deals', HotDealsView.as_view(), name='deals'),
     path('cart', CartView.as_view(), name='cart'),
     path('cart/update', update_and_delete_cart_view, name='cart_update'),
-    path('bestselling/<slug:category>/', BestsellingView.as_view(), name='bestselling')
+    path('bestselling/<slug:category>/', BestsellingView.as_view(), name='bestselling'),
+    path('checkout/<uuid:public_id>/', CheckoutView.as_view(), name='checkout')
 ]
 
 if settings.DEBUG:

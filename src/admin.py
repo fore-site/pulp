@@ -92,6 +92,10 @@ class CategoryAdmin(admin.ModelAdmin):
 class RatingsAdmin(admin.ModelAdmin):
     model = Rating
     list_display = ("book", "user", "rating_value")
+
+class CartAdmin(admin.ModelAdmin):
+    model = Cart
+    list_display = ("public_id", "user")
     
 # Register your models here.
 
@@ -106,6 +110,8 @@ admin.site.register(BookAnalyticsDaily, AdminBookAnalyticsDaily)
 admin.site.register(Genre, GenreAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Rating, RatingsAdmin)
+admin.site.register(Cart, CartAdmin)
+
 admin.site.site_header = 'Pulp administration'
 admin.site.site_title = 'Pulp site admin'
 admin.site.index_title = 'Welcome to Pulp admin dashboard'
