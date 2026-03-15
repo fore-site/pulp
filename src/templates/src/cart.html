@@ -60,7 +60,7 @@
                                             <input type="hidden" name="sku_id" value="{{ item.sku.public_id }}">
                                             <input type="hidden" name="next" value="{{ request.path }}">
                                             {% if item.quantity > 1 %}
-                                                <button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 transition-colors text-text-main"
+                                                <button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 transition-colors text-text-main cart-btn"
                                                         type="button"
                                                         name="action"
                                                         value="subtract"
@@ -70,7 +70,7 @@
                                                     <span class="material-symbols-outlined text-sm">remove</span>
                                                 </button>
                                             {% else %}
-                                                <button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 transition-colors text-text-main"
+                                                <button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 transition-colors text-text-main cart-btn"
                                                         type="button"
                                                         name="action"
                                                         value="delete"
@@ -161,11 +161,10 @@
 {% block scripts %}
     <script>
         // Add event listener to the quantity input field. Element and class is located in forms.py
-        document.querySelectorAll('.quantity-input').forEach(input => {
-            // submit when clicking away
-            input.addEventListener('blur', function() {
-                this.form.submit();
-            });
+        document.addEventListener('focusout', function(e) {
+            if (e.target.matches('.quantity-input') && e.target.form) {
+                e.target.form.submit();
+            }
         });
     </script>
 {% endblock scripts %}

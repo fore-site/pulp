@@ -130,7 +130,7 @@ def update_and_delete_cart_view(request: HtmxHttpRequest):
     store_price_and_count(request, cart)
 
     if request.htmx and action != 'delete':
-        context = {"cart_items_and_forms": get_cart_items_and_forms(user, session_id)}
+        context = {"cart_items_and_forms": get_cart_items_and_forms(user, session_id, request)}
         cart_main_target = render(request, 'src/cart.html#cart_items', context).content.decode()
         cart_count_oob = f'<span id="cart-count" hx-swap-oob="true">{request.session['item_count']}</span>'
         return HttpResponse(cart_main_target + cart_count_oob)
