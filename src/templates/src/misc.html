@@ -35,3 +35,45 @@
 <div class="h-3 w-1/2 bg-slate-200 dark:bg-slate-700 rounded animate-pulse"></div>
 </div>
 </div>
+
+<nav hx-target=#table hx-swap=outerHTML hx-push-url=true>
+        <ul>
+          {% if page.number != 1 %}
+            <li>
+              <!--
+                For each link we use hx-get to tell htmx to fetch that URL and
+                swap it in. We also repeat the URL in the href attribute so the
+                page works without JavaScript, and to ensure the link is
+                displayed as clickable.
+              -->
+              <a hx-get="?page=1" href="?page=1">
+                &laquo; First
+              </a>
+            </li>
+          {% endif %}
+          {% if page.has_previous %}
+            <li>
+              <a hx-get="?page={{ page.previous_page_number }}" href="?page={{ page.previous_page_number }}">
+                {{ page.previous_page_number }}
+              </a>
+            </li>
+          {% endif %}
+          <li>
+            {{ page.number }}
+          </li>
+          {% if page.has_next %}
+            <li>
+              <a hx-get="?page={{ page.next_page_number }}" href="?page={{ page.next_page_number }}">
+                {{ page.next_page_number }}
+              </a>
+            </li>
+          {% endif %}
+          {% if page.number != page.paginator.num_pages %}
+            <li>
+              <a hx-get="?page={{ page.paginator.num_pages }}" href="?page={{ page.paginator.num_pages }}">
+                &raquo; Last
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </nav>

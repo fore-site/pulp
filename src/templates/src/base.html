@@ -119,38 +119,34 @@
                             <h4 class="font-display font-bold text-lg mb-4">Explore</h4>
                             <ul class="space-y-2 font-body text-sm text-white/80">
                                 <li>
-                                    <a class="hover:text-white transition-colors" href="{% url 'home' %}">Browse New Comics</a>
+                                    <a class="hover:text-white transition-colors"
+                                       href="{% url 'new_release' category='comics' %}">Browse New Comics</a>
                                 </li>
                                 <li>
                                     <li>
-                                        <a class="hover:text-white transition-colors" href="#">Browse New Manga</a>
+                                        <a class="hover:text-white transition-colors"
+                                           href="{% url 'new_release' category='manga' %}">Browse New Manga</a>
                                     </li>
                                     <li>
                                         <a class="hover:text-white transition-colors" href="{% url 'deals' %}">Hot Deals</a>
                                     </li>
                                 </ul>
                             </div>
-                            <!-- Support -->
-                            <div class="flex-1 min-w-[180px] flex flex-col gap-2">
-                                <h4 class="font-display font-bold text-lg mb-4">Our Socials</h4>
-                                <ul class="space-y-2 font-body text-sm text-white/80">
-                                    <li>
-                                        <a class="hover:text-white transition-colors"
-                                           href="mailto:ogunsanu17@gmail.com">Mail</a>
-                                    </li>
-                                </ul>
-                                <div class="mt-2">
-                                    <a aria-label="Twitter"
+                            <!-- Socials -->
+                            <div class="flex-1 min-w-[180px] flex flex-col gap-1">
+                                <h4 class="font-display font-bold text-lg mb-2">Socials</h4>
+                                <div class="flex flex-row gap-2 mt-0">
+                                    <a aria-label="X"
                                        class="inline-flex items-center text-white/70 hover:text-white transition-colors"
                                        href="https://x.com/fore-site">
+                                        <!-- X (Twitter) SVG -->
                                         <svg class="size-5"
                                              fill="currentColor"
                                              viewBox="0 0 24 24"
                                              xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z">
-                                            </path>
+                                            <path d="M17.53 3H21L13.62 10.99L22.24 21H16.08L10.98 14.66L5.23 21H1.5L9.34 12.49L1 3H7.32L12 8.72L17.53 3ZM16.44 19.13H18.23L7.66 4.77H5.74L16.44 19.13Z" />
                                         </svg>
-                                        <span class="sr-only">Twitter</span>
+                                        <span class="sr-only">X</span>
                                     </a>
                                 </div>
                             </div>

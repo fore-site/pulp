@@ -1,384 +1,65 @@
-<style>
-        body {
-            font-family: 'Space Grotesk', sans-serif;
-        }
-        /* Custom scrollbar for sticky sidebar if needed */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #d1d5db;
-            border-radius: 4px;
-        }
-    </style>
-
-<!-- Main Content -->
-<main class="flex-grow bg-white">
-<div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-8">
-<div class="flex flex-col lg:flex-row gap-10">
-<!-- Sticky Sidebar Filters -->
-<aside class="w-full lg:w-64 flex-shrink-0">
-<div class="sticky top-24 max-h-[calc(100vh-8rem)] overflow-y-auto custom-scrollbar pr-2">
-<div class="flex items-center justify-between mb-6">
-<h3 class="font-bold text-lg">Filters</h3>
-<button class="text-xs text-primary font-medium hover:underline">Reset</button>
-</div>
-<!-- Categories -->
-<div class="mb-8 border-b border-border-subtle pb-6">
-<h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-text-muted">Category</h4>
-<div class="space-y-3">
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Shonen</span>
-<span class="ml-auto text-xs text-text-muted">128</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input checked="" class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm font-medium text-primary">Seinen</span>
-<span class="ml-auto text-xs text-text-muted">45</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Shojo</span>
-<span class="ml-auto text-xs text-text-muted">82</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Josei</span>
-<span class="ml-auto text-xs text-text-muted">34</span>
-</label>
-</div>
-</div>
-<!-- Price Range -->
-<div class="mb-8 border-b border-border-subtle pb-6">
-<h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-text-muted">Price</h4>
-<div class="space-y-3">
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 border-gray-300 text-primary focus:ring-primary cursor-pointer" name="price" type="radio"/>
-<span class="text-sm group-hover:text-primary transition-colors">Under $10</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 border-gray-300 text-primary focus:ring-primary cursor-pointer" name="price" type="radio"/>
-<span class="text-sm group-hover:text-primary transition-colors">$10 - $20</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 border-gray-300 text-primary focus:ring-primary cursor-pointer" name="price" type="radio"/>
-<span class="text-sm group-hover:text-primary transition-colors">$20 - $50</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 border-gray-300 text-primary focus:ring-primary cursor-pointer" name="price" type="radio"/>
-<span class="text-sm group-hover:text-primary transition-colors">$50+</span>
-</label>
-</div>
-</div>
-<!-- Publisher -->
-<div class="mb-8 border-b border-border-subtle pb-6">
-<h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-text-muted">Publisher</h4>
-<div class="space-y-3">
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Viz Media</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Kodansha</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Dark Horse</span>
-</label>
-<label class="flex items-center gap-3 cursor-pointer group">
-<input class="size-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer" type="checkbox"/>
-<span class="text-sm group-hover:text-primary transition-colors">Yen Press</span>
-</label>
-</div>
-</div>
-<!-- Rating -->
-<div class="mb-8">
-<h4 class="font-bold text-sm mb-4 uppercase tracking-wider text-text-muted">Rating</h4>
-<div class="space-y-2">
-<button class="flex items-center gap-2 group w-full hover:bg-background-subtle p-1.5 -ml-1.5 rounded">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-</div>
-<span class="text-sm text-text-main group-hover:text-primary">&amp; Up</span>
-</button>
-<button class="flex items-center gap-2 group w-full hover:bg-background-subtle p-1.5 -ml-1.5 rounded">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px] fill-current">star</span>
-<span class="material-symbols-outlined text-[18px]">star</span>
-</div>
-<span class="text-sm text-text-main group-hover:text-primary">&amp; Up</span>
-</button>
-</div>
-</div>
-</div>
-</aside>
-<!-- Product Grid Area -->
-<div class="flex-1">
-<!-- Header Section -->
-<div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
-<div>
-<h2 class="text-3xl md:text-4xl font-bold text-text-main mb-2">Manga New Releases</h2>
-<p class="text-text-muted">Fresh from Japan to your shelf. Updated weekly.</p>
-</div>
-<div class="flex items-center gap-3">
-<span class="text-sm text-text-muted">Sort by:</span>
-<div class="relative group">
-<button class="flex items-center gap-2 text-sm font-bold border border-gray-200 rounded px-4 py-2 hover:border-primary transition-colors bg-white">
-                                    Newest First
-                                    <span class="material-symbols-outlined text-[18px]">expand_more</span>
-</button>
-<!-- Dropdown Mockup (Hidden by default logic, just visual here) -->
-</div>
-</div>
-</div>
-<!-- Grid -->
-<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-6 gap-y-10">
-<!-- Product Card 1 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Cyberpunk manga cover art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7Ogj1CdhxSCwqU4mhLmtUUtQMabf0NUosP81Brf5pTRz2Lir9F0T0sl-ZelI9nhxQRB8eg5qvZOnYt8dyZmX5_qNjCAvdMGjjpohtqxsveHVxtqD8RDX_bv1sEBtSfpFfVDJcaHlEq7B_jhcdXeb-yhOvLAHJtkJANp1RLuH3WDv9yJV8Fq4npj9gAtzcpSJJCzImBSPxMv79lum7SQeD9VBt9YGHxVbPMoEHL0Q4ecqgJIS3HBLfvNrCiN9CMbUBtWMG_tn3hLQD"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Neon Genesis Vol. 14</h3>
-<p class="text-sm text-text-muted mt-1">Yoshiyuki Sadamoto</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star_half</span>
-</div>
-<span class="text-xs text-text-muted">(128)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$14.99</div>
-</div>
-</div>
-<!-- Product Card 2 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Dark fantasy manga cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCj1tl6BcSMEMODDt1yZiw9_x5rM6v--CxvEeJhN8S1E8_6WJXcPsliwMN1WZVxwsoj0kk1y7FDSpW8fPQlWPIzkdP11z8i6uCpuWHTDaaV0y1OImYd6t_rpE_pKPC3Bohc2SAuPXLYngdlbpD4cSDNk11Tn3q9_j2JAZKEbZcDZrh-Qjd6C4K6FxT0FsTPc-YhsYqbvGNDIZpFSgvp5YFPgv4aSyhf9ugLpDi0rYl0d9sqLLgoKDH1AXJgNxclAkO1mNzKzHKlM3g"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Berserk Deluxe Vol. 9</h3>
-<p class="text-sm text-text-muted mt-1">Kentaro Miura</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-</div>
-<span class="text-xs text-text-muted">(2.4k)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$49.99</div>
-</div>
-</div>
-<!-- Product Card 3 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Colorful action manga cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAAUDzC6ykRKkO32ljX4fP19HWCTIfbPckNtijNh3jiH_Y2V6GtHzF4wmd3KwsOFcMEfFObcGvRRbToiowfk9SjcHZEJV6pPVbnPlnvwpLWn7UdHdHHZoPXl5bT6we1dm8oruWdHgcYLwSHq9l7t4zb3enkkJU1lDlTjvmFDhiRRQj9FW85kxSo8rpYJ4nwsQL2ntNAH5cg_3ltq-nWr6TBGnI8DR4hLEUnijcxHlDCQxkuH9NJgEWmht7GcNXNFArF2sU8we03nv-J"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Chainsaw Man Vol. 12</h3>
-<p class="text-sm text-text-muted mt-1">Tatsuki Fujimoto</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-</div>
-<span class="text-xs text-text-muted">(856)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$11.99</div>
-</div>
-</div>
-<!-- Product Card 4 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Vintage style manga illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgW0ULGpaUpV_ypbKQopD2ew8iGbIJx0VZgtmtpzXpFXuIIBblGe9CEUCovwUI0HvJejgXC5qVSPnv0AqMmrAgIDAPTPwYK7JCLjtLaO2OwRsb9kK-uRuhI8nGNqAP0UAhNNB4dlHauXpn31HQZpJxWRT27DxsKyqTNhY2yTIs8FWx_PRVNIMN9WxbBF9bNtjrwRGvUSdGn7nxlknaZ1MSv3iX4__b-0FtKtWrRqGEoRCBL9HbZe7lilNv7csSzvSL4XJGmk01yFrB"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Uzumaki: Spiral into Horror</h3>
-<p class="text-sm text-text-muted mt-1">Junji Ito</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px]">star_border</span>
-</div>
-<span class="text-xs text-text-muted">(412)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$22.49</div>
-</div>
-</div>
-<!-- Product Card 5 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Action shonen manga character" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_KMFOzEcaNMmkTMs1aG_67iHuRarkDpOycAD1rm_sv0PPFnMqWkWZtbUJHWaIhU4I-xR6gLmjJs2etSVq4kvtSYLCOOb3fNPwzW8QIgQBVLhUNbi4Y5pwoM9MBqwECVeb_Rio1BN1WFY_ZEeZHdABVw4vjrrTr6eOOJC35nxlb2P2nzOgyDmZykMHjzoX15sVnyEhs5iMo_Ki46zBnGZ8njkJB0NyMCbLkFdU_iaGWVbLD9JpWtBnjfTqHVIsjJvRAuyncDR2k170"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">One Piece Vol. 103</h3>
-<p class="text-sm text-text-muted mt-1">Eiichiro Oda</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-</div>
-<span class="text-xs text-text-muted">(1.1k)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$9.99</div>
-</div>
-</div>
-<!-- Product Card 6 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Magical girl manga art" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpant2rC88ZyU__v9sGHLhXW78b3fBXT5S6uQA0M-OAr6bM80shcYHN539Jqp-NrQj6qx_dBMv65izi6e_MGbuFQyuh0sLe6ZZceC0WtnHJFTtAKHepvID-rD5qsDW75agsdxA5YGKjwCC2My7PXxmNOavm-fM69Vb8eUmS3Wg2q_D0dsva-K3ubDotwKZLDG2BqOGVGmqfnAtNpf8TiXL42rgwkUGIGWn7U0qcqZb8UeKBL1r0eHkw-7w3G9WtjE_OID-RniMBCa4"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Sailor Moon Eternal Edition</h3>
-<p class="text-sm text-text-muted mt-1">Naoko Takeuchi</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px]">star_border</span>
-</div>
-<span class="text-xs text-text-muted">(95)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$27.99</div>
-</div>
-</div>
-<!-- Product Card 7 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Minimalist abstract manga cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGrL4bC_4DRLZQwtH1RLMqI_hZ7xFmAiIsj7dS1LLemtTYAyp_LFQah754HqIzkUcGEBjbhJkf6TPoCb1oet-Pl10owrXYQZDoQwT0NDQ-cisNJ9XheMrNqZEixhUIiPtQIHUDK1z4TlAKUAFMOI9DooAnxLkH9fip6dSrnrtnkBWJpUg81E11DNoREFaeXo0XiHiUpIazKY5LzGLCnjeu9hdffhNn4OQDJgJXf6BEYKYbKBOSsWnW3kdPHYOdvrSEUeH9LscqpKGp"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Goodnight Punpun Vol. 5</h3>
-<p class="text-sm text-text-muted mt-1">Inio Asano</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star_half</span>
-</div>
-<span class="text-xs text-text-muted">(210)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$12.99</div>
-</div>
-</div>
-<!-- Product Card 8 -->
-<div class="group flex flex-col gap-3">
-<div class="relative aspect-[2/3] w-full overflow-hidden rounded-lg bg-gray-100">
-<img alt="Manga Cover" class="h-full w-full object-cover object-center group-hover:scale-105 transition-transform duration-500" data-alt="Mecha manga illustration" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqcmbXTahw5TZG_rjgkeMYF5_-LK2a49KPqzB8FR3aRlRfLv2xnFSymBKOlYkX6WCutKX-CPjwXl3Rvi9VGMdj2G-aKcC4Vlytyx8IrCYNMM0Th7AWMeOviekl_JqbqSrsL6Q4XgXGDvOqSKcEGPIV3w38IEViveuraFnuP7uS-T9N0sY1hzEWVF9r-5lLJPlbY5IM7squAeX_alL5gtFfosa_9iM-UY_7lVG8j8kXZ8A8VUhy43zSxtWnEKfuVq_bjJ_4UdSBtrJN"/>
-<div class="absolute top-2 left-2 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1 shadow-md">
-<span class="material-symbols-outlined text-[12px] fill-current">star</span> NEW
-                                </div>
-<button class="absolute bottom-3 right-3 bg-white/90 hover:bg-white text-primary p-2 rounded-full shadow-lg translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-<span class="material-symbols-outlined text-[20px]">shopping_cart</span>
-</button>
-</div>
-<div>
-<h3 class="font-bold text-base text-text-main leading-tight group-hover:text-primary transition-colors truncate">Akira 35th Anniversary</h3>
-<p class="text-sm text-text-muted mt-1">Katsuhiro Otomo</p>
-<div class="flex items-center gap-2 mt-2">
-<div class="flex text-primary">
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-<span class="material-symbols-outlined text-[16px] fill-current">star</span>
-</div>
-<span class="text-xs text-text-muted">(3k+)</span>
-</div>
-<div class="mt-2 font-bold text-lg text-text-main">$24.99</div>
-</div>
-</div>
-</div>
-<!-- Pagination -->
-<div class="flex justify-center mt-16">
-<div class="flex gap-2">
-<button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-sm">arrow_back_ios_new</span>
-</button>
-<button class="size-10 flex items-center justify-center rounded bg-primary text-white font-bold">1</button>
-<button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">2</button>
-<button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">3</button>
-<span class="size-10 flex items-center justify-center text-text-muted">...</span>
-<button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">12</button>
-<button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
-</button>
-</div>
-</div>
-</div>
-</div>
-</div>
-</main>
+{% extends "src/base.html" %}
+{% load pulp_tags %}
+{% block title %}
+    Pulp - {{ category }} New Releases
+{% endblock title %}
+{% block content %}
+    <!-- Main Content -->
+    <main class="flex-grow bg-white">
+        <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-8">
+            <div class="flex flex-col lg:flex-row gap-10">
+                <!-- Sticky Sidebar Filters -->
+                {% include 'partials/sidebar_filter.html' with genres=genres publishers=publishers %}
+                <!-- Product Grid Area -->
+                <div class="flex-1">
+                    <!-- Header Section -->
+                    <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-bold text-text-main mb-2">{{ category }} New Releases</h2>
+                            <p class="text-text-muted">Updated weekly.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-[#88636d]">Sort by:</span>
+                            <select class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg text-sm font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer">
+                                <option>Newest Arrivals</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <!-- Product Cards -->
+                        {% for book_sku in new_releases %}
+                            <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with book_sku=book_sku %}</div>
+                        {% empty %}
+                            <p class="text-center text-text-muted-light dark:text-text-muted-dark">No books available</p>
+                        {% endfor %}
+                    </div>
+                    <!-- Pagination -->
+                    <div class="flex justify-center mt-16">
+                        <div class="flex gap-2">
+                            <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-sm">arrow_back_ios_new</span>
+                            </button>
+                            <button class="size-10 flex items-center justify-center rounded bg-primary text-white font-bold">1</button>
+                            <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                                2
+                            </button>
+                            <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                                3
+                            </button>
+                            <span class="size-10 flex items-center justify-center text-text-muted">...</span>
+                            <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                                12
+                            </button>
+                            <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                                <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}

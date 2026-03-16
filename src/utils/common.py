@@ -1,5 +1,5 @@
 from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef, CharField
-from ..models import Sku, Cart, CartItem
+from ..models import Sku, Cart, CartItem, Category
 from django.db.models.manager import BaseManager
 from django.utils import timezone
 from datetime import timedelta
@@ -195,8 +195,8 @@ def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids,
 
     return related
 
-def distinct_sku(sku: Sku, category):
-    """Create a distinct queryset, one sku per book"""
+def distinct_sku(sku: Sku, category: Category):
+    """Create a distinct queryset, one sku per book for a category."""
     distinct_skus = (sku.objects.filter(book__series__category=category)
         .distinct('book')
         .annotate(distinct_id=Subquery(

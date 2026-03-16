@@ -30,7 +30,7 @@ urlpatterns = [
     path('users/<uuid:public_id>', UserProfileView.as_view(), name='user_profile'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('books/<slug:category>/', BookListView.as_view(), name='book_list'),
-    path('series-index/<str:series_type>', SeriesIndexView.as_view(), name='series_index'),
+    path('index/<str:series_type>', SeriesIndexView.as_view(), name='series_index'),
     path('series/<uuid:public_id>', SeriesDetailView.as_view(), name='series_detail'),
     path('b/<uuid:public_id>/', ProductDetailView.as_view(), name='product_detail'),
     path('books/p/search', search_results_view, name='search_results'),
@@ -38,6 +38,7 @@ urlpatterns = [
     path('cart', CartView.as_view(), name='cart'),
     path('cart/update', update_and_delete_cart_view, name='cart_update'),
     path('bestselling/<slug:category>/', BestsellingView.as_view(), name='bestselling'),
+    path('new/<slug:category>/', NewReleaseView.as_view(), name='new_release'),
     path('checkout/<uuid:public_id>/', CheckoutView.as_view(), name='checkout')
 ]
 

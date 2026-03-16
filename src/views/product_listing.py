@@ -1,4 +1,5 @@
 from django.utils import timezone
+fronm django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from datetime import timedelta
 from src.models import Series, Sku, Book, BookEvent, Genre, Category, Publisher
@@ -6,7 +7,27 @@ from django.views.decorators.http import require_GET
 from ..utils.common import FilterSort, base_book_queryset, get_related_books, distinct_sku
 from django.db.models import Q, Count
 from django.views import generic
-from ..utils.common import FilterSort
+from datetime import timedelta
+
+def partial_rendering(request: HtmxHttpRequest) -> HttpResponse:
+    # Standard Django pagination
+    page_num = request.GET.get("page", "1")
+    page = Paginator(object_list=people, per_page=10).get_page(page_num)
+
+    # The htmx magic - render just the `#table-section` partial for htmx
+    # requests, allowing us to skip rendering the unchanging parts of the
+    # template.
+    template_name = "partial-rendering.html"
+    if request.htmx:
+        template_name += "#table-section"
+
+    return render(
+        request,
+        template_name,
+        {
+            "page": page,
+        },
+    )
 
 class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
@@ -197,4 +218,34 @@ class BestsellingView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
+        return context
+
+class NewReleaseView(generic.ListView):
+    model = Sku
+    template_name = 'src/new_release.html'
+    context_object_name = 'new_releases'
+
+    def get_queryset(self):
+        today = timezone.now().replace(hour=0, second=0, minute=0, microsecond=0)
+        two_weeks = (today - timedelta(days=14)).date()
+
+        self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
+        base_queryset = base_book_queryset(Sku)
+        
+        distinct = distinct_sku(Sku, self.category)
+        
+        new_releases = (base_queryset.filter(published_at__gte=two_weeks,
+        book__series__category=self.category, id__in=distinct).order_by('-published_at'))
+
+        return new_releases
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        genres = Genre.objects.filter(categories__name__icontains=self.category.name)
+        publishers = Publisher.objects.filter(sku__book__series__category=self.category).distinct('name')
+        
+        context['category'] = self.category.name.capitalize()
+        context['genres'] = genres
+        context['publishers'] = publishers
+        
         return context
