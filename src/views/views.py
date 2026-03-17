@@ -15,7 +15,7 @@ class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
 
 @require_http_methods(['GET', 'POST'])
-def signup(request):
+def signup(request: HtmxHttpRequest) -> HttpResponse:
     if request.POST:
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
@@ -97,7 +97,7 @@ class CartView(generic.TemplateView):
         return redirect('home')
 
 @require_POST
-def update_and_delete_cart_view(request: HtmxHttpRequest):
+def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to update cart contents or clear cart"""
 
     user, session_id = get_user_and_session(request)

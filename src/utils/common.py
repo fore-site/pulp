@@ -8,27 +8,32 @@ from ..forms import CartUpdateForm
 from decimal import Decimal
 
 class FilterSort:
-    def __init__(self, books: Sku, sort_by: str, format: str, featured: str, genres: list[str], latest_release: str):
+    def __init__(self, books: Sku, sort_by: str = None, price: str = None, genres: list[str] = None, publishers: list[str] = None):
         self.books = books
         self.sort_by = sort_by
-        self.format = format
-        self.featured = featured
         self.genres = genres
-        self.latest_release = latest_release
+        self.price = price
+        self.publishers = publishers
         self.seven_days = timezone.now().replace(hour=0, minute=0, microsecond=0) - timedelta(days=7)
 
     def filter_skus(self):
         """Filter sku/books by specified parameter"""
         if self.genres:
             self.books = self.books.filter(book__series__genres__id__in=self.genres)
-        if self.featured:
-            self.books = self.books.filter(book__is_featured=True)
-        if self.format:
-            self.books = self.books.filter(format__iexact=self.format)
-        if self.latest_release:
-            self.books = self.books.filter(published_at__gte=self.seven_days)
+        if self.publishers:
+            self.books = self.books.filter(publisher__in=self.publishers)
         if self.sort_by:
             self.books = self.sort_skus(self.books, self.sort_by)
+        if self.price:
+            self.price = int(self.price)
+            books = self.books.annotate(
+                current_price=Case(
+                    When(discount_percent__gt=0, then=(F('price_usd') - (F('price_usd') * F('discount_percent') / 100))),
+                    default=F('price_usd'),
+                    output_field=DecimalField(max_digits=10, decimal_places=2)
+                )
+            )
+            self.books = books.filter(current_price__lte=self.price)
         return self.books
 
     def sort_skus(self, books: Sku, sort_by: str) -> BaseManager[Sku]:

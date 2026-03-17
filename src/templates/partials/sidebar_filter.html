@@ -1,66 +1,73 @@
 <aside class="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24 max-h-[80vh] overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-[#e5dcde] scrollbar-track-transparent">
-    <!-- Categories -->
+    <!-- Genres -->
     <div class="space-y-4">
         <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
-        <div class="space-y-3">
-            {% for genre in genres %}
-                <label class="flex items-start gap-3 group cursor-pointer">
-                    <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
-                           type="checkbox" />
-                    <div class="flex flex-col">
-                        <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
-                    </div>
-                </label>
-            {% endfor %}
-        </div>
+        <form hx-get="{{ request.path }}"
+              hx-target="#books"
+              hx-swap="innerHTML"
+              hx-push-url="true"
+              hx-trigger="change delay:500ms">
+            <div class="space-y-2">
+                {% for genre in genres %}
+                    <label class="flex items-start gap-3 group cursor-pointer">
+                        <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                               type="checkbox"
+                               name="g"
+                               value="{{ genre.id }}"
+                               {% if genre.id in selected_genres %}checked{% endif %} />
+                        <div class="flex flex-col">
+                            <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+        </form>
     </div>
     <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
     <!-- Price Range -->
     <div class="space-y-4">
         <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Price Range</h3>
-        <div class="px-2 flex flex-col gap-2">
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox"
-                       name="price_range"
-                       value="5-10"
-                       class="size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent" />
-                <span class="text-sm text-slate-900 dark:text-slate-100">$5 - $10</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox"
-                       name="price_range"
-                       value="10-20"
-                       class="size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent" />
-                <span class="text-sm text-slate-900 dark:text-slate-100">$10 - $20</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox"
-                       name="price_range"
-                       value="20-50"
-                       class="size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent" />
-                <span class="text-sm text-slate-900 dark:text-slate-100">$20 - $50</span>
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox"
-                       name="price_range"
-                       value="50-100"
-                       class="size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent" />
-                <span class="text-sm text-slate-900 dark:text-slate-100">$50 - $100</span>
-            </label>
-        </div>
+        <form hx-get="{{ request.path }}"
+              hx-target="#books"
+              hx-swap="innerHTML"
+              hx-push-url="true"
+              hx-trigger="change delay:500ms">
+            <div class="space-y-2">
+                {% for price in price_range %}
+                    <label class="flex items-start gap-3 group cursor-pointer">
+                        <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                               type="checkbox"
+                               name="price"
+                               value="{{ price }}" />
+                        <div class="flex flex-col">
+                            <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">${{ price }} and below</span>
+                        </div>
+                    </label>
+                {% endfor %}
+            </div>
+        </form>
     </div>
     <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
     <!-- Publishers -->
     <div class="space-y-4">
         <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Publisher</h3>
-        <div class="space-y-2">
-            {% for publisher in publishers %}
-                <label class="flex items-center gap-3 group cursor-pointer">
-                    <input class="size-4 rounded border-[#e5dcde]  text-primary focus:ring-primary bg-transparent"
-                           type="checkbox" />
-                    <span class="text-slate-700 dark:text-slate-300 text-sm group-hover:text-primary transition-colors">{{ publisher.name }}</span>
-                </label>
-            {% endfor %}
-        </div>
+        <form hx-get="{{ request.path }}"
+              hx-target="#books"
+              hx-swap="innerHTML"
+              hx-push-url="true"
+              hx-trigger="change delay:500ms">
+            <div class="space-y-2">
+                {% for publisher in publishers %}
+                    <label class="flex items-center gap-3 group cursor-pointer">
+                        <input class="size-4 rounded border-[#e5dcde]  text-primary focus:ring-primary bg-transparent"
+                               type="checkbox"
+                               name="pub"
+                               value="{{ genre.id }}"
+                               {% if publisher.id in selected_publishers %}checked{% endif %} />
+                        <span class="text-slate-700 dark:text-slate-300 text-sm group-hover:text-primary transition-colors">{{ publisher.name }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </form>
     </div>
 </aside>

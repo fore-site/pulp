@@ -1,64 +1,71 @@
 {% extends "src/base.html" %}
 {% load pulp_tags %}
 {% block title %}
-    Pulp - {{ category }} Bestsellers
+    Pulp - {{ category }} Bestseller
 {% endblock title %}
 {% block content %}
     <!-- Main Content -->
-    <div class="flex-grow w-full max-w-[1440px] mx-auto px-4 lg:px-10 py-8">
-        <!-- Header -->
-        <div class="flex flex-col gap-6 mb-8">
-            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-                <div>
-                    <h1 class="text-slate-900 dark:text-slate-100 text-4xl lg:text-5xl font-bold font-display leading-tight tracking-tight">
-                        {{ category }} Bestsellers
-                    </h1>
-                    <p class="text-[#88636d] mt-2 text-lg">Top rated and most read {{ category|lower }} of the month.</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-sm font-medium text-[#88636d]">Sort by:</span>
-                    <select class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg text-sm font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer">
-                        <option>Newest Arrivals</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="flex flex-col lg:flex-row gap-8">
-            <!-- Sidebar Filters -->
-            {% include 'partials/sidebar_filter.html' with genres=genres publishers=publishers %}
-            <!-- Product Grid -->
-            <div class="flex-1">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <!-- Product Cards -->
-                    {% for book_sku in bestselling_books %}
-                        <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with book_sku=book_sku %}</div>
-                    {% empty %}
-                        <p class="text-center text-text-muted-light dark:text-text-muted-dark">No books available</p>
-                    {% endfor %}
-                </div>
+    <main class="flex-grow bg-white">
+        <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-8">
+            <div class="flex flex-col lg:flex-row gap-10">
+                <!-- Sticky Sidebar Filters -->
+                {% include 'partials/sidebar_filter.html' with genres=genres publishers=publishers price_range=price_range %}
+                <!-- Product Grid Area -->
+                <div class="flex-1">
+                    <!-- Header Section -->
+                    <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
+                        <div>
+                            <h2 class="text-3xl md:text-4xl font-bold text-text-main mb-2">{{ category }} Bestseller</h2>
+                            <p class="text-text-muted">Updated weekly.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-sm font-medium text-[#88636d]">Sort by:</span>
+                            <select class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg text-sm font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer">
+                                <option>Newest Arrivals</option>
+                                <option>Price: Low to High</option>
+                                <option>Price: High to Low</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Grid -->
+                    {% partialdef book_display inline %}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                         id="books">
+                        <!-- Product Cards -->
+                        {% for book_sku in bestselling_books %}
+                            <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with book_sku=book_sku %}</div>
+                        {% empty %}
+                            <p class="text-center text-text-muted-light dark:text-text-muted-dark">No books available</p>
+                        {% endfor %}
+                    </div>
+                {% endpartialdef %}
                 <!-- Pagination -->
-                <div class="flex items-center justify-center gap-2 mt-12">
-                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] disabled:opacity-50">
-                        <span class="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button class="flex items-center justify-center size-10 rounded-lg bg-primary text-white font-bold">1</button>
-                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] font-medium">
-                        2
-                    </button>
-                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] font-medium">
-                        3
-                    </button>
-                    <span class="text-slate-400">...</span>
-                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225] font-medium">
-                        12
-                    </button>
-                    <button class="flex items-center justify-center size-10 rounded-lg border border-[#e5dcde] dark:border-[#3a2e32] text-slate-600 dark:text-slate-300 hover:bg-[#f4f0f1] dark:hover:bg-[#2d2225]">
-                        <span class="material-symbols-outlined">chevron_right</span>
-                    </button>
+                <div class="flex justify-center mt-16">
+                    <div class="flex gap-2">
+                        <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-sm">arrow_back_ios_new</span>
+                        </button>
+                        <button class="size-10 flex items-center justify-center rounded bg-primary text-white font-bold">1</button>
+                        <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                            2
+                        </button>
+                        <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                            3
+                        </button>
+                        <span class="size-10 flex items-center justify-center text-text-muted">...</span>
+                        <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                            12
+                        </button>
+                        <button class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                            <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+</div>
+</div>
+</main>
 {% endblock content %}

@@ -1,5 +1,5 @@
 from django.utils import timezone
-fronm django.core.paginator import Paginator
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from datetime import timedelta
 from src.models import Series, Sku, Book, BookEvent, Genre, Category, Publisher
@@ -9,10 +9,10 @@ from django.db.models import Q, Count
 from django.views import generic
 from datetime import timedelta
 
-def partial_rendering(request: HtmxHttpRequest) -> HttpResponse:
+def partial_rendering(request):
     # Standard Django pagination
     page_num = request.GET.get("page", "1")
-    page = Paginator(object_list=people, per_page=10).get_page(page_num)
+    page = Paginator(object_list='', per_page=10).get_page(page_num)
 
     # The htmx magic - render just the `#table-section` partial for htmx
     # requests, allowing us to skip rendering the unchanging parts of the
@@ -98,7 +98,7 @@ class BookListView(generic.ListView):
 
         if self.request.htmx:
             self.template_name = "partials/book_card.html"
-    
+
         return books
     
     def get_context_data(self, **kwargs):
@@ -107,7 +107,6 @@ class BookListView(generic.ListView):
 
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
-        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('g')]
         context['formats'] = ['hardcover', 'paperback', 'digital']
         context['selected_format'] = self.request.GET.get('f')
         context['selected_sort'] = self.request.GET.get('sort')
@@ -201,13 +200,28 @@ class BestsellingView(generic.ListView):
     context_object_name = 'bestselling_books'
 
     def get_queryset(self):
+        # Get query parameters for filter/sort
+        genre_filters = self.request.GET.getlist('g')
+        publisher_filters = self.request.GET.getlist('pub')
+        price_range = self.request.GET.get('price')
+
         self.category = get_object_or_404(Category, name__iexact = self.kwargs.get('category'))
+
+        # Get a list of all distinct Sku in a category 
+        distinct = distinct_sku(Sku, self.category)
 
         base_queryset = base_book_queryset(Sku)
 
-        bestselling = (base_queryset
-                        .filter(book__series__category=self.category, book__bestseller_score__gt=0)
-                        .order_by('book').distinct('book'))
+        base_bestselling = (base_queryset
+                        .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0)
+                        .order_by('book'))
+        
+        filter_sort = FilterSort(base_bestselling, price=price_range, genres=genre_filters, publishers=publisher_filters)
+        bestselling = filter_sort.filter_skus
+
+        if self.request.htmx:
+            self.template_name = 'src/bestseller.html#book_display'
+
         return bestselling
 
     def get_context_data(self, **kwargs):
@@ -218,6 +232,10 @@ class BestsellingView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
+        context['price_range'] = [10, 20, 50, 100]
+        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('g')]
+        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('pub')]
+
         return context
 
 class NewReleaseView(generic.ListView):
@@ -226,13 +244,20 @@ class NewReleaseView(generic.ListView):
     context_object_name = 'new_releases'
 
     def get_queryset(self):
+        # Get current date and date from two weeks ago
         today = timezone.now().replace(hour=0, second=0, minute=0, microsecond=0)
         two_weeks = (today - timedelta(days=14)).date()
 
+        # Get query parameters for filter/sort
+        genre_filters = self.request.GET.getlist('g')
+        publisher_filters = self.request.GET.getlist('pub')
+
         self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
-        base_queryset = base_book_queryset(Sku)
         
+        # Get a list of all distinct Sku in a category 
         distinct = distinct_sku(Sku, self.category)
+        
+        base_queryset = base_book_queryset(Sku)
         
         new_releases = (base_queryset.filter(published_at__gte=two_weeks,
         book__series__category=self.category, id__in=distinct).order_by('-published_at'))
@@ -247,5 +272,7 @@ class NewReleaseView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
-        
+        context['price_range'] = [10, 20, 50, 100]
+        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('g')]
+        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('pub')]
         return context
