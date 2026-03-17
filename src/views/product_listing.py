@@ -201,9 +201,10 @@ class BestsellingView(generic.ListView):
 
     def get_queryset(self):
         # Get query parameters for filter/sort
-        genre_filters = self.request.GET.getlist('g')
-        publisher_filters = self.request.GET.getlist('pub')
+        genre_filters = self.request.GET.getlist('genre')
+        publisher_filters = self.request.GET.getlist('publisher')
         price_range = self.request.GET.get('price')
+        sort_by = self.request.GET.get('sort')
 
         self.category = get_object_or_404(Category, name__iexact = self.kwargs.get('category'))
 
@@ -213,11 +214,11 @@ class BestsellingView(generic.ListView):
         base_queryset = base_book_queryset(Sku)
 
         base_bestselling = (base_queryset
-                        .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0)
-                        .order_by('book'))
+                        .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0))
         
-        filter_sort = FilterSort(base_bestselling, price=price_range, genres=genre_filters, publishers=publisher_filters)
-        bestselling = filter_sort.filter_skus
+        # Apply filters and sort if they exist
+        filter_sort = FilterSort(base_bestselling, sort_by, price=price_range, genres=genre_filters, publishers=publisher_filters)
+        bestselling = filter_sort.filter_skus()
 
         if self.request.htmx:
             self.template_name = 'src/bestseller.html#book_display'
@@ -232,9 +233,11 @@ class BestsellingView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
-        context['price_range'] = [10, 20, 50, 100]
-        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('g')]
-        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('pub')]
+        context['price_range'] = ['10', '20', '50', '100']
+        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
+        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('publisher')]
+        context['selected_price'] = self.request.GET.get('price')
+        context['selected_sort'] = self.request.GET.get('sort')
 
         return context
 
@@ -249,8 +252,10 @@ class NewReleaseView(generic.ListView):
         two_weeks = (today - timedelta(days=14)).date()
 
         # Get query parameters for filter/sort
-        genre_filters = self.request.GET.getlist('g')
-        publisher_filters = self.request.GET.getlist('pub')
+        genre_filters = self.request.GET.getlist('genre')
+        publisher_filters = self.request.GET.getlist('publisher')
+        price_range = self.request.GET.get('price')
+        sort_by = self.request.GET.get('sort')
 
         self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
         
@@ -259,8 +264,15 @@ class NewReleaseView(generic.ListView):
         
         base_queryset = base_book_queryset(Sku)
         
-        new_releases = (base_queryset.filter(published_at__gte=two_weeks,
-        book__series__category=self.category, id__in=distinct).order_by('-published_at'))
+        base_new_releases = (base_queryset.filter(published_at__gte=two_weeks,
+        book__series__category=self.category, id__in=distinct))
+
+        # Apply filters and sort if they exist
+        filter_sort = FilterSort(base_new_releases, sort_by, price=price_range, genres=genre_filters, publishers=publisher_filters)
+        new_releases = filter_sort.filter_skus()
+
+        if self.request.htmx:
+            self.template_name = 'src/new_release.html#book_display'
 
         return new_releases
 
@@ -272,7 +284,10 @@ class NewReleaseView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
-        context['price_range'] = [10, 20, 50, 100]
-        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('g')]
-        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('pub')]
+        context['price_range'] = ['10', '20', '50', '100']
+        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
+        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('publisher')]
+        context['selected_price'] = self.request.GET.get('price')
+        context['selected_sort'] = self.request.GET.get('sort')
+        
         return context

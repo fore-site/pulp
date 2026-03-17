@@ -6,28 +6,22 @@
     <!-- Category Header -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12 pb-8 border-b border-gray-200 dark:border-gray-800">
         <div class="max-w-2xl">
-            <h1 class="text-5xl md:text-6xl font-black tracking-tight mb-4 text-text-main dark:text-white uppercase">
-                {{ title }}
-            </h1>
+            <h1 class="text-5xl md:text-6xl font-black tracking-tight mb-4 text-text-main">{{ title }}</h1>
             <p class="text-lg md:text-xl text-text-subtle dark:text-gray-300 leading-relaxed max-w-xl">
                 Discover narratives and themes in our curated collection of manga, targeting young adult audiences with depth and nuance.
             </p>
         </div>
         <!-- Filters -->
         <div class="flex flex-wrap gap-2">
-            <button class="px-5 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary bg-white dark:bg-gray-900 text-sm font-medium transition-all">
-                Bestsellers
-            </button>
-            <button class="px-5 py-2 rounded-full bg-primary text-white border border-primary text-sm font-medium shadow-md">
-                Newest
-            </button>
-            <button class="px-5 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary bg-white dark:bg-gray-900 text-sm font-medium transition-all">
+            <button name="filter"
+                    class="px-5 py-2 rounded-full border border-gray-200 dark:border-gray-700 hover:border-primary hover:text-primary bg-white dark:bg-gray-900 text-sm font-medium transition-all">
                 A-Z
             </button>
         </div>
     </div>
     <!-- Content Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12"
+         id="books">
         {% for series in series_list|slice:":5" %}
             <a class="group flex flex-col gap-2"
                href="{% url 'series_detail' series.public_id %}">
@@ -39,7 +33,14 @@
                 <div class="flex flex-col gap-1">
                     <h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors truncate">{{ series.title }}</h3>
                     <div class="flex justify-between items-center border-t border-dashed border-gray-300 pt-2 mt-1">
-                        <p class="text-sm font-bold text-primary">{{ series.book_count }} Books</p>
+                        <p class="text-sm font-bold text-primary">
+                            {{ series.book_count }}
+                            {% if series.book_count > 1 %}
+                                Books
+                            {% else %}
+                                Book
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </a>
@@ -52,7 +53,6 @@
                  style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAiqBtkbqtS0n2CAjTqkycPwP3udW8IHwaZ4nS6G_oxfNbDj6wcOBia-dpEIJhNt2QRoGl3SGW3Tb7Z016VQ-EWDLR5q8GexVAPbc57ggCw0VY5YLc3DgY4eTe1VGShjKB65euU5QSpk7snQMI5keZPLKg-TePhtXB5dbpEbx_PdWlrd_vX2NxtA4-S-s_VfOFAD_JECouQb8XeqNpS54-goPk3C7HSfKJ09SwceRNvS5D3cSZ32DmP6HYzXnyeX2VFDVzw9HRHeMpk")'>
             </div>
             <div class="relative z-20 flex flex-col gap-4 max-w-md">
-                <span class="text-primary font-bold tracking-widest text-xs bg-black/30 w-fit px-2 py-1 rounded backdrop-blur-sm border border-white/10">EDITOR'S CHOICE</span>
                 <h3 class="text-3xl font-black text-white leading-none">THE MASTER OF SUSPENSE</h3>
                 <p class="text-gray-200 text-sm">
                     Dive into the complete works of Naoki Urasawa, featuring special edition covers available only this week.
@@ -77,7 +77,14 @@
                 <div class="flex flex-col gap-1">
                     <h3 class="text-xl font-bold leading-tight group-hover:text-primary transition-colors truncate">{{ series.title }}</h3>
                     <div class="flex justify-between items-center border-t border-dashed border-gray-300 pt-2 mt-1">
-                        <p class="text-sm font-bold text-primary">{{ series.book_count }} Books</p>
+                        <p class="text-sm font-bold text-primary">
+                            {{ series.book_count }}
+                            {% if series.book_count > 1 %}
+                                Books
+                            {% else %}
+                                Book
+                            {% endif %}
+                        </p>
                     </div>
                 </div>
             </a>

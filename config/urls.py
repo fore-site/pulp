@@ -39,7 +39,9 @@ urlpatterns = [
     path('cart/update', update_and_delete_cart_view, name='cart_update'),
     path('bestselling/<slug:category>/', BestsellingView.as_view(), name='bestselling'),
     path('new/<slug:category>/', NewReleaseView.as_view(), name='new_release'),
-    path('checkout/<uuid:public_id>/', CheckoutView.as_view(), name='checkout')
+    path('checkout/<uuid:public_id>/', CheckoutShippingView.as_view(), name='checkout_shipping'),
+    path('checkout/<uuid:public_id>/2', CheckoutReviewView.as_view(), name='checkout_review'),
+    path('checkout/<uuid:public_id>/3', CheckoutPaymentView.as_view(), name='checkout_review')
 ]
 
 if settings.DEBUG:

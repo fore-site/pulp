@@ -1,11 +1,11 @@
-from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef, CharField
+from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef
 from ..models import Sku, Cart, CartItem, Category
 from django.db.models.manager import BaseManager
 from django.utils import timezone
 from datetime import timedelta
 from django.http import HttpRequest
 from ..forms import CartUpdateForm
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 class FilterSort:
     def __init__(self, books: Sku, sort_by: str = None, price: str = None, genres: list[str] = None, publishers: list[str] = None):
@@ -21,11 +21,10 @@ class FilterSort:
         if self.genres:
             self.books = self.books.filter(book__series__genres__id__in=self.genres)
         if self.publishers:
-            self.books = self.books.filter(publisher__in=self.publishers)
+            self.books = self.books.filter(publisher__id__in=self.publishers)
         if self.sort_by:
             self.books = self.sort_skus(self.books, self.sort_by)
         if self.price:
-            self.price = int(self.price)
             books = self.books.annotate(
                 current_price=Case(
                     When(discount_percent__gt=0, then=(F('price_usd') - (F('price_usd') * F('discount_percent') / 100))),
@@ -33,7 +32,10 @@ class FilterSort:
                     output_field=DecimalField(max_digits=10, decimal_places=2)
                 )
             )
-            self.books = books.filter(current_price__lte=self.price)
+            try:
+                self.books = books.filter(current_price__lte=Decimal(self.price))
+            except InvalidOperation:
+                self.books = []
         return self.books
 
     def sort_skus(self, books: Sku, sort_by: str) -> BaseManager[Sku]:
@@ -47,10 +49,12 @@ class FilterSort:
                 )
             )
             books = books.order_by('current_price') if sort_by == 'price_asc' else books.order_by('-current_price')
-        elif sort_by == 'bestselling':
-            books = books.order_by('-book__bestseller_score')
+        elif sort_by == 'newest':
+            books = books.order_by('-published_at')
         elif sort_by == 'reviews':
             books = books.order_by('-book__average_rating')
+        else:
+            books = books.order_by('book')
             
         return books
 

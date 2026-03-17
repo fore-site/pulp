@@ -82,13 +82,6 @@
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
                             </div>
                         </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white" for="zip">ZIP Code</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="zip"
-                                   placeholder="10001"
-                                   type="text" />
-                        </div>
                     </div>
                     <!-- Phone & Email -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -109,16 +102,6 @@
                                    type="email" />
                         </div>
                     </div>
-                    {% if request.user.is_authenticated %}
-                        <!-- Checkbox -->
-                        <div class="flex items-center gap-3 mt-2">
-                            <input class="w-5 h-5 rounded border-neutral-border text-primary focus:ring-primary bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 cursor-pointer"
-                                   id="save-info"
-                                   type="checkbox" />
-                            <label class="text-sm text-text-main dark:text-white cursor-pointer select-none"
-                                   for="save-info">Save this information for next time</label>
-                        </div>
-                    {% endif %}
                     <!-- Navigation Buttons -->
                     <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-neutral-border dark:border-white/10">
                         <a class="flex items-center gap-2 text-text-main dark:text-white font-medium hover:text-primary transition-colors py-3"

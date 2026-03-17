@@ -2139,11 +2139,6 @@
     }
   }
   @media (hover: hover) {
-    .hover\:bg-\[\#f4f0f1\]:hover {
-      background-color: #f4f0f1;
-    }
-  }
-  @media (hover: hover) {
     .hover\:bg-\[\#f5f0f0\]:hover {
       background-color: #f5f0f0;
     }
@@ -2289,9 +2284,6 @@
   .active\:shadow-none:active {
     --tw-shadow: 0 0 #0000;
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
-  }
-  .disabled\:opacity-50:disabled {
-    opacity: 50%;
   }
   @supports (backdrop-filter: var(--tw)) {
     .supports-\[backdrop-filter\]\:bg-surface-light\/80 {
@@ -2753,12 +2745,6 @@
       line-height: var(--tw-leading, var(--text-2xl--line-height));
     }
   }
-  @media (width >= 64rem) {
-    .lg\:text-5xl {
-      font-size: var(--text-5xl);
-      line-height: var(--tw-leading, var(--text-5xl--line-height));
-    }
-  }
   @media (width >= 80rem) {
     .xl\:col-span-4 {
       grid-column: span 4 / span 4;
@@ -2970,11 +2956,6 @@
   @media (hover: hover) {
     .dark\:hover\:bg-\[\#2d1515\]:where(.dark, .dark *):hover {
       background-color: #2d1515;
-    }
-  }
-  @media (hover: hover) {
-    .dark\:hover\:bg-\[\#2d2225\]:where(.dark, .dark *):hover {
-      background-color: #2d2225;
     }
   }
   @media (hover: hover) {
