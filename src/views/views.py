@@ -4,12 +4,14 @@ from django.urls import reverse
 from django.views import generic
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth import login
-from src.models import Sku, CartItem
+from src.models import Sku, CartItem, Cart
 from ..forms import CustomUserCreationForm, CartUpdateForm
 from django.db.models import F
 from django_htmx.middleware import HtmxDetails
 from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books
 from django.utils.http import url_has_allowed_host_and_scheme
+from decimal import Decimal
+import random
 
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
@@ -61,19 +63,19 @@ class CartView(generic.TemplateView):
         # Get user object if authenticated, create session instance as well
         user, session_id = get_user_and_session(request)
 
-        # Get cart related to user or session_id, create cart if it doesn't exist
-        cart = get_cart(user, session_id)
-
         # Get and validate form data
         sku_id = request.POST.get('sku_id')
         sku = get_object_or_404(Sku, public_id=sku_id)
         
-        # Create or update cart item table
-        updated = CartItem.objects.filter(
-            sku=sku,
-            cart=cart).update(quantity=F('quantity') + 1)
-        
-        if not updated:
+        # Get cart related to user or session_id, create cart if it doesn't exist
+        cart = get_cart(user, session_id, request)
+
+        # Check if item already exists in cart, for idempotency
+        try:
+            CartItem.objects.get(sku=sku, cart=cart)
+
+        # Create cart item entry if item does not exist in cart        
+        except CartItem.DoesNotExist:
             CartItem.objects.create(sku=sku, cart=cart, quantity=1)
 
         # Get total item count in a cart and store it in user session
@@ -101,7 +103,7 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to update cart contents or clear cart"""
 
     user, session_id = get_user_and_session(request)
-    cart = get_cart(user, session_id)
+    cart = get_cart(user, session_id, request)
 
     action = request.POST.get('action')
     sku_id = request.POST.get('sku_id')
@@ -141,9 +143,105 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
         return response
     return redirect('cart')
 
+class CheckoutShippingView(generic.TemplateView):
+    template_name = 'src/checkout_shipping.html'
+    http_method_names = ['get', 'post']
 
-def order_checkout(request, id):
-    return HttpResponse('You have placed an order on %s.' % id)
+    def get(self, request, *args, **kwargs):
+        self.user = request.user if request.user.is_authenticated else None
+        try:
+            if self.user:
+                cart = Cart.objects.get(user=self.user)
+            else:
+                cart = Cart.objects.get(id = request.session.get('cart_id'))
+        except Cart.DoesNotExist:
+            return HttpResponseRedirect(reverse('cart'))
+        
+        self.cart_items = CartItem.objects.filter(cart=cart)
+        if not self.cart_items:
+            return HttpResponseRedirect(reverse('cart'))
+        
+        context = self.get_context_data(request)
 
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, request, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        if self.user:
+            context['user'] = self.user
+
+        context["cart_items"] = self.cart_items
+        
+        request.session["shipping_fee"] = random.choice(['4.00', '5.00'])
+        request.session["payment_provider_fee"] = random.choice(['3.50', '4.15', '2.80'])
+        total_price_before_ship = Decimal(request.session.get('subtotal_price')) + Decimal(self.request.session.get('payment_provider_fee'))
+
+        context["total_price"] = total_price_before_ship.quantize(Decimal('0.01'))
+        return context
+
+class CheckoutReviewView(generic.TemplateView):
+    template_name = 'src/checkout_review.html'
+    http_method_names = ['get', 'post']
+
+    def get(self, request, *args, **kwargs):
+        self.user = request.user if request.user.is_authenticated else None
+        try:
+            if self.user:
+                cart = Cart.objects.get(user=self.user)
+            else:
+                cart = Cart.objects.get(id = request.session.get('cart_id'))
+        except Cart.DoesNotExist:
+            return HttpResponseRedirect(reverse('cart'))
+        
+        self.cart_items = CartItem.objects.filter(cart=cart)
+        if not self.cart_items:
+            return HttpResponseRedirect(reverse('cart'))
+
+        context = self.get_context_data(request)
+
+        return render(request, self.template_name, context)
+
+    def get_context_data(self, request, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        if self.user:
+            context['user'] = self.user
+
+        context["cart_items"] = self.cart_items
+        
+        return context
+
+class CheckoutPaymentView(generic.TemplateView):
+    template_name = 'src/checkout_payment.html'
+
+    def get(self, request, *args, **kwargs):
+        self.user = request.user if request.user.is_authenticated else None
+        try:
+            if self.user:
+                cart = Cart.objects.get(user=self.user)
+            else:
+                cart = Cart.objects.get(id = request.session.get('cart_id'))
+        except Cart.DoesNotExist:
+            return HttpResponseRedirect(reverse('cart'))
+        
+        self.cart_items = CartItem.objects.filter(cart=cart)
+        if not self.cart_items:
+            return HttpResponseRedirect(reverse('cart'))   
+
+        context = self.get_context_data(request)
+
+        return render(request, self.template_name, context)   
+
+    def get_context_data(self, request, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        if self.user:
+            context['user'] = self.user
+
+        context["cart_items"] = self.cart_items
+
+        return context
+    
 class UserProfileView(generic.DetailView):
     pass

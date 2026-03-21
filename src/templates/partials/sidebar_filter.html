@@ -2,6 +2,7 @@
     <form hx-get="{{ request.path }}"
           hx-target="#books"
           hx-swap="innerHTML"
+          hx-push-url="true"
           hx-trigger="change delay:500ms"
           class="space-y-3">
         <!-- Genres -->

@@ -16,18 +16,18 @@
                                 <span class="text-sm font-bold uppercase tracking-wider">Shipping</span>
                             </span>
                         </li>
-                        <li class="h-px w-8 bg-stone-300 dark:bg-stone-700 md:w-16"></li>
+                        <li class="h-px w-8 bg-stone-300 "></li>
                         <li class="flex items-center">
                             <span class="flex items-center text-primary">
-                                <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-primary text-xs font-bold">2</span>
-                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Payment</span>
+                                <span class="material-symbols-outlined mr-2">check_circle</span>
+                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Review</span>
                             </span>
                         </li>
                         <li class="h-px w-8 bg-stone-300 dark:bg-stone-700 md:w-16"></li>
                         <li class="flex items-center">
-                            <span class="flex items-center text-stone-400 dark:text-stone-600">
-                                <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-stone-300 dark:border-stone-700 text-xs font-bold">3</span>
-                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Review</span>
+                            <span class="flex items-center text-primary">
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-primary text-xs font-bold">3</span>
+                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Payment</span>
                             </span>
                         </li>
                     </ol>
@@ -140,9 +140,9 @@
                     <!-- Navigation Actions -->
                     <div class="mt-4 flex items-center justify-between border-t border-stone-200 dark:border-stone-800 pt-8">
                         <a class="group flex items-center text-sm font-medium text-stone-500 hover:text-primary transition-colors"
-                           href="#">
+                           href="{% url 'checkout_review' %}">
                             <span class="material-symbols-outlined mr-2 text-lg transition-transform group-hover:-translate-x-1">arrow_back</span>
-                            Back to Shipping
+                            Back to Review
                         </a>
                         <button class="inline-flex items-center justify-center rounded bg-primary px-8 py-3 text-sm font-bold text-white shadow-sm hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 transition-all"
                                 type="button">
@@ -156,65 +156,18 @@
             <div class="lg:col-span-5 xl:col-span-4">
                 <div class="sticky top-24 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#1a0c0c] p-6 shadow-sm lg:p-8">
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">Order Summary</h3>
-                    <ul class="mt-6 divide-y divide-stone-100 dark:divide-stone-800"
-                        role="list">
-                        <li class="flex py-6">
-                            <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-stone-100 dark:bg-stone-800">
-                                <img alt="Minimalist leather sneakers in white"
-                                     class="h-full w-full object-cover object-center"
-                                     data-alt="Minimalist white leather sneakers on a grey background"
-                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuDb4iJc6cQy5xoO4fOlSvPZK_44kwdE8j5KefL68DwkvWWpyBEbKXT61VCcfQ1vpWzzE1R9IhoNYwzXdX90VemGwHdw4a_z-HjPK6TIgoPzFyG6eYewSb-az0rXQLs3I00MsMrK4yocH_t97ghvx7wX8lmzXt7nOdcgITL-LbcE-xh1sUUQ32xu2nYvCpxZ4_3h-qad_SnaTZyQfeBQdp2f_gXP7rH_je9jg4QrsHDVCp1hKsk1WYwXklVqujRNIJEpuFngj72PrHAR" />
-                            </div>
-                            <div class="ml-4 flex flex-1 flex-col">
-                                <div>
-                                    <div class="flex justify-between text-base font-medium text-slate-900 dark:text-white">
-                                        <h3>
-                                            <a href="#">Court Sneaker</a>
-                                        </h3>
-                                        <p class="ml-4">$180.00</p>
-                                    </div>
-                                    <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">White / 42</p>
-                                </div>
-                                <div class="flex flex-1 items-end justify-between text-sm">
-                                    <p class="text-stone-500 dark:text-stone-400">Qty 1</p>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="flex py-6">
-                            <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded bg-stone-100 dark:bg-stone-800">
-                                <img alt="Leather tote bag in deep tan"
-                                     class="h-full w-full object-cover object-center"
-                                     data-alt="Brown leather tote bag hanging against a wall"
-                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjoVRZHyttV1kL_RPUEkxLtnMYI1zQwIhQ9xkfWJfAxBLpOAmAzZWb07fjlfmsn_eS7Z71uirYctOmTZ9zLST6oLFbzQZN8qm8lGANpO6MC8Bicz0_g2Mfcc_3uO4h6DOAy_1A1cwd0mR-is3oJRorbpejtAKVgOPjx-wRVQZp9OmU7UOWIOvqTY0SlYAeF6HerzKpI3tMiXB9hqod9Ykz_BVrc-MB75LnDCH-Gxxu7kMxfqV_Tl2PogZl1vqpBC3gwzA4o9djrhI3" />
-                            </div>
-                            <div class="ml-4 flex flex-1 flex-col">
-                                <div>
-                                    <div class="flex justify-between text-base font-medium text-slate-900 dark:text-white">
-                                        <h3>
-                                            <a href="#">Everyday Tote</a>
-                                        </h3>
-                                        <p class="ml-4">$245.00</p>
-                                    </div>
-                                    <p class="mt-1 text-sm text-stone-500 dark:text-stone-400">Tan Leather</p>
-                                </div>
-                                <div class="flex flex-1 items-end justify-between text-sm">
-                                    <p class="text-stone-500 dark:text-stone-400">Qty 1</p>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
                     <div class="mt-6 space-y-4 border-t border-stone-200 dark:border-stone-800 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Subtotal</p>
-                            <p class="font-medium text-slate-900 dark:text-white">$425.00</p>
+                            <p class="font-medium text-slate-900 dark:text-white">${{ request.session.subtotal_price }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Shipping</p>
                             <p class="font-medium text-slate-900 dark:text-white">$15.00</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500 dark:text-stone-400">Taxes</p>
-                            <p class="font-medium text-slate-900 dark:text-white">$34.00</p>
+                            <p class="text-stone-500 dark:text-stone-400">Fees</p>
+                            <p class="font-medium text-slate-900 dark:text-white">${{ request.session.payment_provider_fee }}</p>
                         </div>
                         <div class="flex items-center justify-between border-t border-stone-200 dark:border-stone-800 pt-4">
                             <p class="text-base font-bold text-slate-900 dark:text-white">Total</p>
