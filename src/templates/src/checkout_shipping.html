@@ -40,15 +40,14 @@
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main dark:text-white"
                                    for="firstName">First Name</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
+                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
                                    id="firstName"
                                    placeholder="Jane"
                                    type="text" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white"
-                                   for="lastName">Last Name</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
+                            <label class="text-sm font-medium text-text-main" for="lastName">Last Name</label>
+                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
                                    id="lastName"
                                    placeholder="Doe"
                                    type="text" />
@@ -58,7 +57,7 @@
                     <div class="flex flex-col gap-2">
                         <label class="text-sm font-medium text-text-main dark:text-white"
                                for="address">Address</label>
-                        <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
+                        <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
                                id="address"
                                placeholder="123 Pulp Street, Apt 4B"
                                type="text" />
@@ -66,17 +65,9 @@
                     <!-- City, State, ZIP -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white" for="city">City</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="city"
-                                   placeholder="New York"
-                                   type="text" />
-                        </div>
-                        <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white"
-                                   for="state">State/Province</label>
+                            <label class="text-sm font-medium text-text-main" for="state">State</label>
                             <div class="relative">
-                                <select class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer"
+                                <select class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer"
                                         id="state">
                                     <option>Select State</option>
                                     <option>New York</option>
@@ -86,21 +77,26 @@
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
                             </div>
                         </div>
+                        <div class="flex flex-col gap-2">
+                            <label class="text-sm font-medium text-text-main dark:text-white" for="city">City</label>
+                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
+                                   id="city"
+                                   placeholder="New York"
+                                   type="text" />
+                        </div>
                     </div>
                     <!-- Phone & Email -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white"
-                                   for="phone">Phone Number</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
+                            <label class="text-sm font-medium text-text-main" for="phone">Phone Number</label>
+                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
                                    id="phone"
                                    placeholder="+1 (555) 000-0000"
                                    type="tel" />
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white"
-                                   for="email">Email Address</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
+                            <label class="text-sm font-medium text-text-main" for="email">Email Address</label>
+                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
                                    id="email"
                                    placeholder="jane@example.com"
                                    type="email" />

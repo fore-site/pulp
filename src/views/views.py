@@ -5,7 +5,7 @@ from django.views import generic
 from django.views.decorators.http import require_http_methods, require_POST
 from django.contrib.auth import login
 from src.models import Sku, CartItem, Cart
-from ..forms import CustomUserCreationForm, CartUpdateForm
+from ..forms import CustomUserCreationForm, CartUpdateForm, ShippingAddressForm
 from django.db.models import F
 from django_htmx.middleware import HtmxDetails
 from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books
@@ -178,6 +178,9 @@ class CheckoutShippingView(generic.TemplateView):
         total_price_before_ship = Decimal(request.session.get('subtotal_price')) + Decimal(self.request.session.get('payment_provider_fee'))
 
         context["total_price"] = total_price_before_ship.quantize(Decimal('0.01'))
+        form = ShippingAddressForm()
+        context["form"] = form
+        
         return context
 
 class CheckoutReviewView(generic.TemplateView):

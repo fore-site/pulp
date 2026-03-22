@@ -29,11 +29,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class UserAddress(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT)
-    recipient_name = models.CharField(max_length=255)
+    recipient_firstname = models.CharField(max_length=255)
+    recipient_lastname = models.CharField(max_length=255)
     recipient_phone_no = models.CharField(max_length=255)
+    address_desc = models.CharField(max_length=300)
     address_state = models.CharField(max_length=255)
     address_city = models.CharField(max_length=255)
-    address_street = models.CharField(max_length=300)
     is_default = models.BooleanField(default=False)
 
     def __str__(self):

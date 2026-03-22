@@ -29,7 +29,6 @@ urlpatterns = [
     path('sign-up/', signup, name='signup'),
     path('users/<uuid:public_id>', UserProfileView.as_view(), name='user_profile'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
-    path('books/<slug:category>/', BookListView.as_view(), name='book_list'),
     path('index/<str:series_type>', SeriesIndexView.as_view(), name='series_index'),
     path('series/<uuid:public_id>', SeriesDetailView.as_view(), name='series_detail'),
     path('b/<uuid:public_id>/', ProductDetailView.as_view(), name='product_detail'),

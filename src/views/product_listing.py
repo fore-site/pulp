@@ -71,48 +71,6 @@ class IndexView(generic.TemplateView):
         context['manga_bestselling'] = manga_bestselling
 
         return context
-
-class BookListView(generic.ListView):
-    model = Sku
-    template_name = 'src/book_list.html'
-    context_object_name = 'books'
-
-    def get_queryset(self):
-        self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
-
-        # Fetch filters and sort params 
-        genre_filters = self.request.GET.getlist('g')
-        featured = self.request.GET.get('featured')
-        format = self.request.GET.get('f')
-        sort_by = self.request.GET.get('sort')
-        latest_release = self.request.GET.get('r')
-
-        distinct_skus = distinct_sku(Sku, self.category)
-
-        # Create a base queryset
-        books = base_book_queryset(Sku).filter(id__in=distinct_skus).order_by('book__title')
-        
-        # Filter and sort Skus if params exist
-        filter_sort = FilterSort(books, sort_by, format, featured, genre_filters, latest_release)
-        books = filter_sort.filter_skus()
-
-        if self.request.htmx:
-            self.template_name = "partials/book_card.html"
-
-        return books
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        genres = Genre.objects.filter(categories__name__icontains=self.category.name)
-
-        context['category'] = self.category.name.capitalize()
-        context['genres'] = genres
-        context['formats'] = ['hardcover', 'paperback', 'digital']
-        context['selected_format'] = self.request.GET.get('f')
-        context['selected_sort'] = self.request.GET.get('sort')
-        context['latest_release'] = self.request.GET.get('r')
-
-        return context
                
 class ProductDetailView(generic.TemplateView):
     model = Sku
@@ -221,7 +179,7 @@ class BestsellingView(generic.ListView):
         bestselling = filter_sort.filter_skus()
 
         if self.request.htmx:
-            self.template_name = 'src/bestseller.html#book_display'
+            self.template_name = 'partials/book_display.html'
 
         return bestselling
 
@@ -272,7 +230,7 @@ class NewReleaseView(generic.ListView):
         new_releases = filter_sort.filter_skus()
 
         if self.request.htmx:
-            self.template_name = 'src/new_release.html#book_display'
+            self.template_name = 'partials/book_display.html'
 
         return new_releases
 
