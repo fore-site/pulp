@@ -3,6 +3,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from .models import User, UserAddress
 from django import forms
+from django.urls import reverse_lazy
 
 class CustomUserCreationForm(UserCreationForm):
     
@@ -46,6 +47,7 @@ class CustomLoginForm(AuthenticationForm):
         'inactive': _('This account is currently disabled'),
     }
 
+
 class CartUpdateForm(forms.Form):
     quantity = forms.IntegerField(
         max_value=100,
@@ -53,33 +55,39 @@ class CartUpdateForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'w-10 h-8 text-center bg-transparent border-none text-text-main font-medium focus:ring-0 p-0 text-sm quantity-input'})
     )
 
-STATES = [
-    "Select State",
-    "Lagos",
-    "Ogun",
-    "Abuja"
-]
+STATES = {
+    "Select State": 'Select State',
+    "Lagos": 'Lagos',
+    "Ogun": 'Ogun',
+    "Abuja": 'Abuja',
+}
 
-CITIES = [
-    "Select City",
-    "Ikeja",
-    "Abeokuta",
-    "Maitama"
-]
+CITIES = {
+    "Select City": 'Select City',
+    "Ikeja": 'Ikeja',
+    "Abeokuta": 'Abeokuta',
+    "Maitama": 'Maitama',
+}
 
 class ShippingAddressForm(forms.ModelForm):
     phone_no = forms.CharField(max_length=255, required=True, 
                                widget=forms.TextInput(
                                    attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
-                                   'id': 'phone'}))
+                                   'id': 'phone',
+                                   'placeholder': '09012345678'}))
     email = forms.EmailField(max_length=255, required=True,
                               widget=forms.EmailInput(
                                     attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
-                                    'id': 'email'}))
+                                    'id': 'email',
+                                    'placeholder': 'example@email.com'}))
     address_state = forms.CharField(
         widget=forms.Select(choices=STATES, 
                             attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
-                                   'id': 'state'})
+                                   'id': 'state',
+                                   'hx-get': reverse_lazy('checkout_shipping'),
+                                   'hx-target': '#shipping_fee',
+                                   'hx-swap': 'innerHTML',
+                                   'hx-trigger': 'change'})
     )
     address_city = forms.CharField(
         widget=forms.Select(choices=CITIES,
@@ -103,9 +111,12 @@ class ShippingAddressForm(forms.ModelForm):
         }
         widgets = {
             'recipient_firstname': forms.TextInput(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
-                                                          'id': 'firstName'}),
+                                                          'id': 'firstName',
+                                                          'placeholder': 'Barry'}),
             'recipient_lastname': forms.TextInput(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
-                                                          'id': 'lastName'}),
+                                                          'id': 'lastName',
+                                                          'placeholder': 'Allen'}),
             'address_desc': forms.TextInput(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
-                                                        'id': 'address'}),
+                                                        'id': 'address',
+                                                        'placeholder': '123, Sesame street.'}),
         }

@@ -9,17 +9,15 @@
         {% partialdef cart_items inline %}
         <div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1"
              id="cart-container">
-            <!-- Page Title -->
-            <div class="flex flex-col gap-3 pb-8">
-                <h1 class="text-text-main dark:text-white text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] uppercase">
-                    Your Cart
-                </h1>
-            </div>
-            {% if not cart_items_and_forms %}
-                <p>
-                    Your cart is empty. <a href="{% url 'home' %}">Start shopping</a> now to add items to your cart
-                </p>
-            {% else %}
+             {% if not cart_items_and_forms %}
+             {% include 'partials/empty_cart.html' with trending=trending %}
+             {% else %}
+             <!-- Page Title -->
+             <div class="flex flex-col gap-3 pb-8">
+                 <h1 class="text-text-main text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] uppercase">
+                     Your Cart
+                 </h1>
+             </div>
                 <div class="flex flex-col lg:flex-row gap-12">
                     <!-- Left Column: Cart Items -->
                     <div class="w-full lg:w-3/4 flex flex-col gap-6">
@@ -128,16 +126,16 @@
                     </div>
                     <!-- Right Column: Order Summary -->
                     <div class="w-full lg:w-1/4">
-                        <div class="sticky top-28 bg-white border border-black p-6 rounded-lg flex flex-col gap-6 shadow-sm">
-                            <h3 class="text-xl font-bold font-display text-text-main dark:text-white uppercase tracking-tight">Order Summary</h3>
+                        <div class="sticky top-24 rounded-lg border border-stone-200 bg-white p-6 shadow-sm lg:p-8">
+                            <h3 class="text-lg font-bold text-slate-900">Order Summary</h3>
                             <div class="grid grid-cols-2 gap-y-2 pb-6 border-b border-dashed border-slate-300 dark:border-slate-700">
                                 <span class="text-text-muted text-sm">{{ request.session.item_count }} items</span>
                                 <span class="font-medium text-text-main text-right text-sm">${{ request.session.subtotal_price }}</span>
                                 <span class="text-text-muted text-sm">Shipping</span>
-                                <span class="font-medium text-text-main dark:text-white text-right text-sm">Calculated at next step</span>
+                                <span class="font-medium text-text-main text-right text-sm">Calculated at next step</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-base font-bold text-text-main dark:text-white font-display">Subtotal</span>
+                                <span class="text-base font-bold text-text-main font-display">Subtotal</span>
                                 <span class="text-2xl font-bold text-primary font-display">${{ request.session.subtotal_price }}</span>
                             </div>
                             <a class="w-full bg-primary hover:bg-[#880d2f] text-white font-bold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2 group mt-2"

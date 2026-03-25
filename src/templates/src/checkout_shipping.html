@@ -34,117 +34,121 @@
                     </ol>
                 </nav>
                 <!-- Shipping Form -->
-                <form class="flex flex-col gap-6">
+                <form class="flex flex-col gap-6"
+                      method="post"
+                      action="{% url 'checkout_shipping' %}"
+                      novalidate>
+                    {% csrf_token %}
                     <!-- Name Fields -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main dark:text-white"
                                    for="firstName">First Name</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="firstName"
-                                   placeholder="Jane"
-                                   type="text" />
+                            {{ form.recipient_firstname }}
+                            {% if form.recipient_firstname.errors %}{{ form.recipient_firstname.errors }}{% endif %}
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main" for="lastName">Last Name</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="lastName"
-                                   placeholder="Doe"
-                                   type="text" />
+                            {{ form.recipient_lastname }}
+                            {% if form.recipient_lastname.errors %}{{ form.recipient_lastname.errors }}{% endif %}
                         </div>
                     </div>
                     <!-- Address Field -->
                     <div class="flex flex-col gap-2">
                         <label class="text-sm font-medium text-text-main dark:text-white"
                                for="address">Address</label>
-                        <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                               id="address"
-                               placeholder="123 Pulp Street, Apt 4B"
-                               type="text" />
+                        {{ form.address_desc }}
+                        {% if form.address_desc.errors %}{{ form.address_desc.errors }}{% endif %}
                     </div>
-                    <!-- City, State, ZIP -->
+                    <!-- City, State -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main" for="state">State</label>
                             <div class="relative">
-                                <select class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer"
-                                        id="state">
-                                    <option>Select State</option>
-                                    <option>New York</option>
-                                    <option>California</option>
-                                    <option>Texas</option>
-                                </select>
+                                {{ form.address_state }}
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
+                                {% if form.address_state.errors %}{{ form.address_state.errors }}{% endif %}
                             </div>
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main dark:text-white" for="city">City</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface dark:bg-[#2a161b] dark:border-white/10 text-text-main dark:text-white placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="city"
-                                   placeholder="New York"
-                                   type="text" />
+                            <div class="relative">
+                                {{ form.address_city }}
+                                <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
+                                {% if form.address_city.errors %}{{ form.address_city.errors }}{% endif %}
+                            </div>
                         </div>
                     </div>
                     <!-- Phone & Email -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main" for="phone">Phone Number</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="phone"
-                                   placeholder="+1 (555) 000-0000"
-                                   type="tel" />
+                            {{ form.phone_no }}
+                            {% if form.phone_no.errors %}{{ form.phone_no.errors }}{% endif %}
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="text-sm font-medium text-text-main" for="email">Email Address</label>
-                            <input class="w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow"
-                                   id="email"
-                                   placeholder="jane@example.com"
-                                   type="email" />
+                            {{ form.email }}
+                            {% if form.email.errors %}{{ form.email.errors }}{% endif %}
                         </div>
                     </div>
                     <!-- Navigation Buttons -->
                     <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-4 mt-8 pt-6 border-t border-neutral-border dark:border-white/10">
-                        <a class="flex items-center gap-2 text-text-main dark:text-white font-medium hover:text-primary transition-colors py-3"
+                        <a class="flex items-center gap-2 text-text-main font-medium hover:text-primary transition-colors py-3"
                            href="{% url 'cart' %}">
                             <span class="material-symbols-outlined text-lg">arrow_back</span>
                             Return to Cart
                         </a>
-                        <a href="{% url 'checkout_review' %}"
-                           class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
+                        <button type="submit"
+                                class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
                             Review Order
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
-                        </a>
+                        </button>
                     </div>
                 </form>
             </div>
             <!-- Right Column: Order Summary (Sticky) -->
             <div class="lg:col-span-5 xl:col-span-4">
-                <div class="sticky top-24 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#1a0c0c] p-6 shadow-sm lg:p-8">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Order Summary</h3>
-                    <div class="mt-6 space-y-4 border-t border-stone-200 dark:border-stone-800 pt-6">
+                <div class="sticky top-24 rounded-lg border border-stone-200 bg-white p-6 shadow-sm lg:p-8">
+                    <h3 class="text-lg font-bold text-slate-900">Order Summary</h3>
+                    <div class="mt-6 space-y-4 border-t border-stone-200 pt-6">
                         <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500 dark:text-stone-400">Subtotal</p>
-                            <p class="font-medium text-slate-900 dark:text-white">${{ request.session.subtotal_price }}</p>
+                            <p class="text-stone-500">Subtotal</p>
+                            <p class="font-medium text-slate-900">${{ request.session.subtotal_price }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500 dark:text-stone-400">Shipping</p>
-                            <p class="font-medium text-slate-900 dark:text-white">$15.00</p>
+                            <p class="text-stone-500">Shipping</p>
+                            <p class="font-medium text-slate-900" id="shipping_fee">
+                                {% if request.session.shipping_fee %}
+                                    ${{ request.session.shipping_fee }}
+                                {% else %}
+                                    To be calculated
+                                {% endif %}
+                            </p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500 dark:text-stone-400">Fees</p>
-                            <p class="font-medium text-slate-900 dark:text-white">${{ request.session.payment_provider_fee }}</p>
+                            <p class="text-stone-500">Fees</p>
+                            <p class="font-medium text-slate-900">${{ request.session.payment_provider_fee }}</p>
                         </div>
-                        <div class="flex items-center justify-between border-t border-stone-200 dark:border-stone-800 pt-4">
-                            <p class="text-base font-bold text-slate-900 dark:text-white">Total</p>
-                            <p class="text-base font-bold text-primary">${{ total_price }}</p>
+                        <div class="flex items-center justify-between border-t border-stone-200 pt-4">
+                            <p class="text-base font-bold text-slate-900">Total</p>
+                            <span class="text-base font-bold text-primary"
+                                  id="total_price"
+                                  hx-swap-oob="true">
+                                {% if request.session.shipping_fee %}
+                                    ${{ request.session.total_price_after_ship }}
+                                {% else %}
+                                    ${{ request.session.total_price_before_ship }}
+                                {% endif %}
+                            </span>
                         </div>
                     </div>
-                    <div class="mt-6 rounded bg-stone-50 dark:bg-stone-900 p-4">
+                    <div class="mt-6 rounded bg-stone-50 p-4">
                         <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined text-stone-400 mt-0.5">local_shipping</span>
+                            <span class="material-symbols-outlined mt-0.5">local_shipping</span>
                             <div>
-                                <p class="text-sm font-medium text-slate-900 dark:text-white">Standard Shipping</p>
-                                <p class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Estimated delivery: Apr 24 - Apr 26</p>
+                                <p class="text-sm font-medium text-slate-900">Standard Shipping</p>
+                                <p class="text-xs text-stone-500 mt-0.5">Estimated delivery: Apr 24 - Apr 26</p>
                             </div>
                         </div>
                     </div>

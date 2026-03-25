@@ -37,9 +37,9 @@
                     <p class="text-slate-500 dark:text-slate-400">Please verify your details before placing the order.</p>
                 </div>
                 <!-- Information Review Cards -->
-                <div class="flex flex-col gap-4 border-t border-b border-[#e6dbdb] dark:border-[#3a1a1a] py-6">
+                <div class="flex flex-col gap-4 border-t border-b border-[#e6dbdb] py-6">
                     <!-- Shipping Address -->
-                    <div class="flex items-start justify-between p-4 bg-white dark:bg-[#1a0c0c] rounded border border-transparent hover:border-[#e6dbdb] dark:hover:border-[#3a1a1a] transition-all">
+                    <div class="flex items-start justify-between p-4 bg-white rounded border border-transparent hover:border-[#e6dbdb] dark:hover:border-[#3a1a1a] transition-all">
                         <div class="flex gap-4">
                             <div class="mt-1 text-slate-400">
                                 <span class="material-symbols-outlined">location_on</span>
@@ -47,20 +47,17 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-1">Shipping Address</h3>
                                 <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
-                                    Jane Doe
+                                    {{ request.session.firstname }} {{ request.session.lastname }}
                                     <br />
-                                    123 Pulp Fiction Lane
+                                    {{ request.session.address_desc }}
                                     <br />
-                                    Los Angeles, CA 90001
+                                    {{ request.session.address_city }}, {{ request.session.address_state }}
                                 </p>
                             </div>
                         </div>
-                        <button class="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-1">
-                            Edit <span class="material-symbols-outlined text-[16px]">edit</span>
-                        </button>
                     </div>
                     <!-- Shipping Method -->
-                    <div class="flex items-start justify-between p-4 bg-white dark:bg-[#1a0c0c] rounded border border-transparent hover:border-[#e6dbdb] dark:hover:border-[#3a1a1a] transition-all">
+                    <div class="flex items-start justify-between p-4 bg-white rounded border border-transparent hover:border-[#e6dbdb] dark:hover:border-[#3a1a1a] transition-all">
                         <div class="flex gap-4">
                             <div class="mt-1 text-slate-400">
                                 <span class="material-symbols-outlined">local_shipping</span>
@@ -70,30 +67,10 @@
                                 <p class="text-slate-600 dark:text-slate-300 text-sm">Express Delivery (2-3 Business Days)</p>
                             </div>
                         </div>
-                        <button class="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-1">
-                            Edit <span class="material-symbols-outlined text-[16px]">edit</span>
-                        </button>
-                    </div>
-                    <!-- Payment Method -->
-                    <div class="flex items-start justify-between p-4 bg-white dark:bg-[#1a0c0c] rounded border border-transparent hover:border-[#e6dbdb] dark:hover:border-[#3a1a1a] transition-all">
-                        <div class="flex gap-4">
-                            <div class="mt-1 text-slate-400">
-                                <span class="material-symbols-outlined">credit_card</span>
-                            </div>
-                            <div>
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-1">Payment Method</h3>
-                                <div class="flex items-center gap-2">
-                                    <span class="text-slate-600 dark:text-slate-300 text-sm">Visa ending in 4242</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="text-sm font-medium text-slate-500 hover:text-primary transition-colors flex items-center gap-1">
-                            Edit <span class="material-symbols-outlined text-[16px]">edit</span>
-                        </button>
                     </div>
                 </div>
                 <!-- Items List -->
-                <div>
+                <div id="item_container">
                     <h3 class="text-xl font-bold mb-6 text-slate-900">Items in your cart</h3>
                     <div class="flex flex-col gap-6">
                         <!-- Item 1 -->
@@ -120,10 +97,19 @@
                                         {% endif %}
                                     </div>
                                     <div class="flex items-center gap-4 mt-4">
-                                        <div class="text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-[#1a0c0c] border border-[#e6dbdb] px-3 py-1 rounded">
-                                            Qty: {{ item.quantity }}
-                                        </div>
-                                        <button class="text-sm text-primary hover:text-red-700 underline underline-offset-2">Remove</button>
+                                        <div class="text-sm text-slate-600 bg-white border border-[#e6dbdb] px-3 py-1 rounded">Qty: {{ item.quantity }}</div>
+                                        <form action="{% url 'cart_update' %}" method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="sku_id" value="{{ item.sku.public_id }}">
+                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                            <button class="text-sm text-primary hover:text-red-700 underline underline-offset-2"
+                                                    type="button"
+                                                    name="action"
+                                                    value="delete"
+                                                    hx-post="{% url 'cart_update' %}"
+                                                    hx-target="#item_container"
+                                                    hx-swap="innerHTML">Remove</button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>
@@ -155,23 +141,25 @@
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Shipping</p>
-                            <p class="font-medium text-slate-900 dark:text-white">$15.00</p>
+                            <p class="font-medium text-slate-900">${{ request.session.shipping_fee }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500 dark:text-stone-400">Fees</p>
-                            <p class="font-medium text-slate-900 dark:text-white">${{ request.session.payment_provider_fee }}</p>
+                            <p class="text-stone-500">Fees</p>
+                            <p class="font-medium text-slate-900">${{ request.session.payment_provider_fee }}</p>
                         </div>
-                        <div class="flex items-center justify-between border-t border-stone-200 dark:border-stone-800 pt-4">
-                            <p class="text-base font-bold text-slate-900 dark:text-white">Total</p>
-                            <p class="text-base font-bold text-primary">${{ total_price }}</p>
+                        <div class="flex items-center justify-between border-t border-stone-200 pt-4">
+                            <p class="text-base font-bold text-slate-900">Total</p>
+                            <p class="text-base font-bold text-primary">${{ request.session.total_price_after_ship }}</p>
                         </div>
                     </div>
-                    <div class="mt-6 rounded bg-stone-50 dark:bg-stone-900 p-4">
+                    <div class="mt-6 rounded bg-stone-50 p-4">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-stone-400 mt-0.5">local_shipping</span>
                             <div>
-                                <p class="text-sm font-medium text-slate-900 dark:text-white">Standard Shipping</p>
-                                <p class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">Estimated delivery: Apr 24 - Apr 26</p>
+                                <p class="text-sm font-medium text-slate-900 dark:text-white">Express Shipping</p>
+                                <p class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                                    Estimated delivery: {{ delivery_date_1 }} - {{ delivery_date_2 }}
+                                </p>
                             </div>
                         </div>
                     </div>

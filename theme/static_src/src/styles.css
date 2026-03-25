@@ -83,6 +83,12 @@ input[type='range']::-webkit-slider-thumb {
     .hide-scrollbar::-webkit-scrollbar {
         display: none;
     }
+    .input-field {
+        @apply w-full h-12 px-4 border-2 border-black bg-white text-black placeholder:text-gray-400 focus:border-primary focus:ring-0 transition-colors rounded-none;
+    }
+    .btn-primary {
+        @apply w-full h-14 bg-primary text-white font-bold text-lg tracking-widest uppercase border-2 border-primary hover:bg-white hover:text-primary transition-colors flex items-center justify-center gap-2 rounded-none;
+    }
 }
 
 @source "../../../**/*.{html,py,js}";

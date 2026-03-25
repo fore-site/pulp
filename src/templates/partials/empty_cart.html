@@ -1,0 +1,40 @@
+<div class="flex-grow mx-auto gap-24">
+<div class="flex flex-col items-center text-center max-w-4xl animate-in fade-in zoom-in duration-500">
+<div class="mb-10 relative">
+<div class="absolute inset-0 bg-surface-light rounded-full blur-2xl opacity-50 scale-150"></div>
+<span class="material-symbols-outlined text-slate-900 relative z-10 font-thin" style="font-size: 5rem;">shopping_bag</span>
+</div>
+<h2 class="text-text-main text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] uppercase">
+                Your Collection<br/>Is Empty</span>
+</h2>
+<p class="text-lg md:text-xl text-slate-500 dark:text-slate-400 mb-12 max-w-xl font-body font-medium leading-relaxed">
+                It looks like you haven't added any volumes to your cart yet.
+            </p>
+<a href="{% url 'new_release' category='comic' %}" class="bg-primary hover:bg-primary-dark text-white text-lg font-display font-bold py-5 px-12 rounded-full transition-all uppercase tracking-widest flex items-center gap-3 transform">
+                Explore New Comic Releases
+                <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</div>
+
+<section class="mt-20 mb-12">
+<div>
+<h3 class="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-primary pl-4">
+                Curated For You
+            </h3>
+<p class="text-slate-500 font-body">Check out the top trending books.</p>
+            <!-- Product Cards -->
+            <div class="relative group">
+                <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+                <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                    {% include "partials/book_card_scroll.html" with books=trending %}
+                </div>
+            </div>
+</div>
+</div>
+</section>
