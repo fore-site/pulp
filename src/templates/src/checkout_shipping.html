@@ -8,7 +8,6 @@
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
             <!-- Left Column: Checkout Process -->
             <div class="flex-1 min-w-0">
-                <!-- Breadcrumbs / Steps -->
                 <nav aria-label="Progress">
                     <ol class="flex items-center space-x-4 md:space-x-8" role="list">
                         <li class="flex items-center">
@@ -22,13 +21,6 @@
                             <span class="flex items-center text-stone-400">
                                 <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-stone-300 dark:border-stone-700 text-xs font-bold">2</span>
                                 <span class="ml-2 text-sm font-bold uppercase tracking-wider">Review</span>
-                            </span>
-                        </li>
-                        <li class="h-px w-8 bg-stone-300"></li>
-                        <li class="flex items-center">
-                            <span class="flex items-center text-stone-400">
-                                <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-stone-300 dark:border-stone-700 text-xs font-bold">3</span>
-                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Payment</span>
                             </span>
                         </li>
                     </ol>
@@ -101,7 +93,7 @@
                         </a>
                         <button type="submit"
                                 class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
-                            Review Order
+                            Review & Pay
                             <span class="material-symbols-outlined text-lg">arrow_forward</span>
                         </button>
                     </div>
@@ -145,10 +137,12 @@
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">
                         <div class="flex items-start gap-3">
-                            <span class="material-symbols-outlined mt-0.5">local_shipping</span>
+                            <span class="material-symbols-outlined text-stone-400 mt-0.5">local_shipping</span>
                             <div>
-                                <p class="text-sm font-medium text-slate-900">Standard Shipping</p>
-                                <p class="text-xs text-stone-500 mt-0.5">Estimated delivery: Apr 24 - Apr 26</p>
+                                <p class="text-sm font-medium text-slate-900 dark:text-white">Express Shipping</p>
+                                <p class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                                    Estimated delivery: {{ delivery_date_1 }} - {{ delivery_date_2 }}
+                                </p>
                             </div>
                         </div>
                     </div>

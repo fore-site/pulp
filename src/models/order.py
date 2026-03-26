@@ -1,12 +1,7 @@
 from django.conf import settings
 from django.db import models
-from .shipping import Carrier, PickUpLocation
 
 class Order(models.Model):
-
-    class ShippingMethod(models.TextChoices):
-        pickup = 'Local Pickup'
-        delivery = 'Delivery'
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, null=True)
     session_id = models.CharField(max_length=255, blank=True)
@@ -14,9 +9,6 @@ class Order(models.Model):
     shipping_fee_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='shipping fee cost in usd')
     total_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
     order_exchange_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text='Exchange rate from usd to naira during order placement.')
-    shipping_method = models.CharField(max_length=13, choices=ShippingMethod)
-    pickup_location = models.ForeignKey(PickUpLocation, on_delete=models.RESTRICT, null=True)
-    carrier = models.ForeignKey(Carrier, on_delete=models.RESTRICT, null=True)
     tracking_number = models.CharField(max_length=255, blank=True)
     order_status = models.CharField(max_length=255, blank=True, default='Placed')
     delivered_at = models.DateTimeField(null=True, blank=True)

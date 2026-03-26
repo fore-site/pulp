@@ -12,4 +12,3 @@ from .product import (Publisher,
                       Category,
                       Rating)
 from .user import User, UserAddress
-from .shipping import Carrier

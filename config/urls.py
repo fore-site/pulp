@@ -27,7 +27,6 @@ urlpatterns = [
     path('', IndexView.as_view(), name='home'),
     path('login/', auth_views.LoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
     path('sign-up/', signup, name='signup'),
-    path('users/<uuid:public_id>', UserProfileView.as_view(), name='user_profile'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('index/<str:series_type>', SeriesIndexView.as_view(), name='series_index'),
     path('series/<uuid:public_id>', SeriesDetailView.as_view(), name='series_detail'),
@@ -40,7 +39,8 @@ urlpatterns = [
     path('new/<slug:category>/', NewReleaseView.as_view(), name='new_release'),
     path('checkout/shipping/', CheckoutShippingView.as_view(), name='checkout_shipping'),
     path('checkout/review/', CheckoutReviewView.as_view(), name='checkout_review'),
-    path('checkout/payment/', CheckoutPaymentView.as_view(), name='checkout_payment')
+    path('orders/lookup/', order_lookup_view, name='order_lookup'),
+    path('orders/', order_detail_view, name='order_detail')
 ]
 
 if settings.DEBUG:

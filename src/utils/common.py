@@ -94,7 +94,7 @@ def get_cart(user, session_id, request):
 
 
 def get_cart_items_and_forms(user, session_id, request):
-    """Find or create existing cart and return a zip of each item and their corresponding form if exists, else empty list"""
+    """Find existing cart and return a zip of each item and their corresponding form if exists, else empty list"""
     try:
         # Get cart related to user or session_id, return empty cart if it doesn't exist
         cart = Cart.objects.get(user=user) if user else Cart.objects.get(session_id=session_id)

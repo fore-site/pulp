@@ -1,0 +1,60 @@
+{% extends 'src/base.html' %}
+{% block title %}
+    Pulp - Order Lookup
+{% endblock title %}
+{% block content %}
+    <!-- Track order lookup -->
+    <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 md:py-32 w-full max-w-[1440px] mx-auto">
+        <div class="w-full max-w-xl">
+            <!-- Hero Heading -->
+            <div class="mb-12 text-center md:text-left">
+                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-on-surface mb-4">Where is my order?</h1>
+                <p class="text-on-surface-variant font-medium">Enter your tracking ID below to track your order in real-time.</p>
+            </div>
+            <!-- Lookup Form -->
+            <div class="space-y-8">
+                <div class="relative group">
+                    <form action="{% url 'order_detail' %}" method="get">
+                        <label class="block text-[10px] uppercase tracking-widest font-bold text-on-surface mb-2"
+                               for="tracking-id">Tracking ID</label>
+                        <input class="w-full h-16 px-6 bg-surface-container-high border-2 border-black text-xl font-bold placeholder:text-gray-300 focus:ring-0 focus:outline-none focus:border-primary transition-colors"
+                               id="tracking-id"
+                               name="track_id"
+                               placeholder="#PULP-8921-X"
+                               type="text" />
+                    </form>
+                </div>
+                <div class="flex flex-col gap-6">
+                    <button class="w-full h-16 bg-primary text-white font-bold text-lg tracking-tight hover:opacity-90 active:scale-[0.98] transition-all rounded-none">
+                        Track Order
+                    </button>
+                    <div class="flex items-center justify-center md:justify-start gap-2 text-sm">
+                        <span class="text-on-surface-variant">Can't find your tracking ID?</span>
+                        <p class="font-bold text-black">Check your email</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Decorative Element (Editorial Layout) -->
+            <div class="mt-24 grid grid-cols-3 gap-1">
+                <div class="aspect-[4/5] bg-surface-container-highest overflow-hidden">
+                    <img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                         data-alt="high fashion model in crimson velvet suit posing against a stark white studio wall minimalist aesthetic"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAf_juOgCLDtBhiyIXUvYNJn6gy2YvYqXazv2tyZIYZvtgCVLQFCtCd7qGjdI5wx8Aca7wS7ytdfgaFYroMfgLQot2mT3u8Z-1Yi_W1BcY2ObcY3XS4nc6DY8HTsapBTFeOmjcgRsJRK-UOOKi8J6RgUH7EiWdJJh4DpGs17c2veK090W-_atrvxBMYDoSieZFwo7MbtujpZyAUB-BpNArfhSj2iwadyV0j_F14biBn5kpyL2QM7UxWdZpb-WSZxAwiLIva2MsbFbJ" />
+                </div>
+                <div class="aspect-[4/5] bg-surface-container-highest overflow-hidden relative">
+                    <div class="absolute inset-0 flex items-center justify-center z-10">
+                        <span class="text-[10px] font-bold tracking-[0.3em] uppercase -rotate-90 text-on-surface">Autumn / Winter</span>
+                    </div>
+                    <img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                         data-alt="close up detail of premium crimson fabric texture with sharp lighting and deep shadows"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfsVBPTtk3FmLVnLDb-7qxSj0scJvbPfdzvzO0ilZbadj_ZMIZ2DeIBLA74WBqaDopFV8Vb00p2M1pcI3PW9fqTInci3KGHF_dQ4nvYiefG_rY4ECpW-JFoJFXVkP34nEQ1VwOkhMOvLrAcbng-wIqyuHdfVSkd83qvfK1GW3t4ypdrzTzsnpQfjI0cJO74tBP_py7bOBI1j3PDA2P5pAoz28C8guUoCFd67CRGgGhdXAR6tQ2jk87tAp6cG_xu-lF37EB4Edb2uZI" />
+                </div>
+                <div class="aspect-[4/5] bg-surface-container-highest overflow-hidden">
+                    <img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+                         data-alt="modernist architecture with sharp angles and clean lines in bright daylight and high contrast"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf6viGkwEBIlTQ8U-X6Y6-_aCTVhoY7yxtF25Xx63Aq_4lZ2ui02cC6Y3cITuwkcMDQr2eNlbOkm6Z_1VqFbJ24z4MF-cxw7OAZWp9P-XxtMI-fBTkGQM2iUy2I4yKM1Ac-eZVeok2M96ULLnjlYpWiSLnZefmG768gOuNg6M9sYyStUwFEQMRRVw4W8tDBnYhbKsuyNaCiNSpduv-9JY3YDw9GdiX6TKoFas-bt8eJYvvoSUBGtJkKsrnmYR8u6xErmh0osxL0p1C" />
+                </div>
+            </div>
+        </div>
+    </main>
+{% endblock content %}

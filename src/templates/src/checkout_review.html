@@ -20,13 +20,6 @@
                         <span class="ml-2 text-sm font-bold uppercase tracking-wider">Review</span>
                     </span>
                 </li>
-                <li class="h-px w-8 bg-stone-300 md:w-16"></li>
-                <li class="flex items-center">
-                    <span class="flex items-center text-stone-400">
-                        <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-stone-300 dark:border-stone-700 text-xs font-bold">3</span>
-                        <span class="ml-2 text-sm font-bold uppercase tracking-wider">Payment</span>
-                    </span>
-                </li>
             </ol>
         </nav>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -65,6 +58,18 @@
                             <div>
                                 <h3 class="font-bold text-slate-900 dark:text-white mb-1">Shipping Method</h3>
                                 <p class="text-slate-600 dark:text-slate-300 text-sm">Express Delivery (2-3 Business Days)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Payment Method Review (Paystack) -->
+                    <div class="flex items-start justify-between p-4 bg-white rounded border border-transparent hover:border-[#e6dbdb] dark:hover:border-[#3a1a1a] transition-all">
+                        <div class="flex gap-4">
+                            <div class="h-10 w-16 bg-stone-100 dark:bg-stone-900 flex items-center justify-center border border-stone-200 dark:border-stone-800">
+                                <span class="material-symbols-outlined text-stone-400">payments</span>
+                            </div>
+                            <div>
+                                <h3 class="font-bold text-slate-900 mb-1">Payment Method</h3>
+                                <p class="text-slate-600 dark:text-slate-300 text-sm">Paystack Secure Payment</p>
                             </div>
                         </div>
                     </div>
@@ -121,11 +126,11 @@
                                 <span class="material-symbols-outlined text-lg">arrow_back</span>
                                 Return to shipping
                             </a>
-                            <a href="{% url 'checkout_payment' %}"
-                               class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
-                                Proceed to payment
-                                <span class="material-symbols-outlined text-lg">arrow_forward</span>
-                            </a>
+                            <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
+                                    type="button">
+                                Pay with Paystack
+                                <span class="material-symbols-outlined ml-2 text-lg">lock</span>
+                            </button>
                         </div>
                     </div>
                 </div>

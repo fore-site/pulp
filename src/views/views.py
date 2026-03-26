@@ -2,14 +2,15 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
-from django.views.decorators.http import require_http_methods, require_POST
+from django.views.decorators.http import require_http_methods, require_POST, require_GET
 from django.contrib.auth import login
-from src.models import Sku, CartItem, Cart
+from src.models import Sku, CartItem, Cart, Order, OrderItem
 from ..forms import CustomUserCreationForm, CartUpdateForm, ShippingAddressForm
 from django_htmx.middleware import HtmxDetails
 from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils import timezone
+from django.db import transaction
 from datetime import timedelta
 from decimal import Decimal
 import random
@@ -98,9 +99,16 @@ class CartView(generic.TemplateView):
             allowed_hosts=request.get_host(),
             require_https=False
         )
-        if request.htmx:
-            return HttpResponse(request.session['item_count'])
+        
+        if request.htmx and next_url == reverse('cart'):
+            if is_safe:
+                response = HttpResponse()
+                response['HX-Redirect'] = next_url
+                return response
 
+        if request.htmx and next_url != reverse('cart'):
+            return HttpResponse(request.session['item_count'])
+        
         if next_url and is_safe:
             return redirect(next_url)
         return redirect('home')
@@ -166,7 +174,7 @@ class CheckoutShippingView(generic.TemplateView):
     template_name = 'src/checkout_shipping.html'
     http_method_names = ['get', 'post']
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         if request.htmx:
             state = request.GET.get('address_state')
             request.session['address_state'] = state
@@ -209,6 +217,8 @@ class CheckoutShippingView(generic.TemplateView):
 
     def get_context_data(self, request, **kwargs):
         context = super().get_context_data(**kwargs)
+        today = timezone.now()
+        estimated_delivery_dates = (today + timedelta(days=2)).strftime("%b, %d"), (today + timedelta(days=3)).strftime("%b, %d")
     
         self.request.session["payment_provider_fee"] = random.choice(['3.50', '4.15', '2.80'])
         total_price_before_ship = Decimal(self.request.session.get('subtotal_price')) + Decimal(self.request.session.get('payment_provider_fee'))
@@ -230,6 +240,8 @@ class CheckoutShippingView(generic.TemplateView):
         else:
             form = ShippingAddressForm()
         context["form"] = form
+        context['delivery_date_1'] = estimated_delivery_dates[0]
+        context['delivery_date_2'] = estimated_delivery_dates[1]
         
         return context
     
@@ -254,7 +266,7 @@ class CheckoutReviewView(generic.TemplateView):
     template_name = 'src/checkout_review.html'
     http_method_names = ['get', 'post']
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request):
         self.user = request.user if request.user.is_authenticated else None
         try:
             if self.user:
@@ -296,38 +308,33 @@ class CheckoutReviewView(generic.TemplateView):
         context['delivery_date_2'] = estimated_delivery_dates[1]
 
         return context
-
-
-class CheckoutPaymentView(generic.TemplateView):
-    template_name = 'src/checkout_payment.html'
-
-    def get(self, request, *args, **kwargs):
-        self.user = request.user if request.user.is_authenticated else None
-        try:
-            if self.user:
-                cart = Cart.objects.get(user=self.user)
-            else:
-                cart = Cart.objects.get(id = request.session.get('cart_id'))
-        except Cart.DoesNotExist:
-            return HttpResponseRedirect(reverse('cart'))
-        
-        self.cart_items = CartItem.objects.filter(cart=cart)
-        if not self.cart_items:
-            return HttpResponseRedirect(reverse('cart'))   
-
-        context = self.get_context_data(request)
-
-        return render(request, self.template_name, context)   
-
-    def get_context_data(self, request, **kwargs):
-        context = super().get_context_data(**kwargs)
-        
-        if self.user:
-            context['user'] = self.user
-
-        context["cart_items"] = self.cart_items
-
-        return context
     
-class UserProfileView(generic.DetailView):
-    pass
+@require_GET
+def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
+    """View to retrieve order lookup form"""
+    return render(request, 'src/order_lookup.html')
+
+@require_GET
+def order_detail_view(request: HtmxHttpRequest) -> HttpResponse:
+    """ View to display order details for real-time tracking """
+    track_id = request.GET.get('track_id')
+    try:
+        order = Order.objects.get(tracking_number__iexact=track_id)
+        order_items = OrderItem.objects.filter(order=order)
+    except Order.DoesNotExist:
+        order = []
+        order_items = []
+    
+    return render(request, 'src/order_detail.html', {'order': order, 'order_items': order_items})
+
+@require_POST
+def order_creation_view(request: HtmxHttpRequest) -> HttpResponse:
+    """ Create order in database"""
+    with transaction.atomic():
+        Order.objects.create(
+            user = request.user if request.user.is_authenticated else None,
+            session_id = request.session.session_key,
+            subtotal_amount_usd = request.session.get('total_price_before_ship'),
+            shipping_fee_usd = request.session.get('shipping_fee'),
+            total_amount_usd = request.session.get('total_price_after_ship')
+        )
