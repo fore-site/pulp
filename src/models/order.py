@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+import uuid
 
 class Order(models.Model):
 
@@ -9,7 +10,7 @@ class Order(models.Model):
     shipping_fee_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='shipping fee cost in usd')
     total_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
     order_exchange_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text='Exchange rate from usd to naira during order placement.')
-    tracking_number = models.CharField(max_length=255, blank=True)
+    tracking_id = models.UUIDField(unique=True, blank=True, default=uuid.uuid4)
     order_status = models.CharField(max_length=255, blank=True, default='Placed')
     delivered_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -26,7 +27,6 @@ class OrderItem(models.Model):
     sku = models.ForeignKey('Sku', on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField()
     unit_price_usd = models.DecimalField(max_digits=10, decimal_places=2)
-    total_price_usd = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.order

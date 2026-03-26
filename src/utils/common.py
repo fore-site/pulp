@@ -1,4 +1,4 @@
-from django.db.models import Case, When, F, DecimalField, Sum, Q, Subquery, OuterRef
+from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef
 from ..models import Sku, Cart, CartItem, Category
 from django.db.models.manager import BaseManager
 from django.utils import timezone
