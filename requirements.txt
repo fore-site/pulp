@@ -8,6 +8,6 @@ django-nigerian-states
 django-smart-selects
 djlint
 Pillow
-django-crispy-forms
-crispy-daisyui
 django-tailwind
+django-htmx
+whitenoise
