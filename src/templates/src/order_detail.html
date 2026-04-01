@@ -13,207 +13,179 @@
                 Detailed status updates for your recent purchase are listed below.
             </p>
         </div>
-        <!-- Order Info Bar -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white dark:bg-[#1a0e10] p-6 border border-gray-200 dark:border-gray-800 rounded-lg mb-10 shadow-sm">
-            <div class="flex flex-col gap-1 mb-4 md:mb-0">
-                <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Tracking ID</span>
-                <span class="text-xl font-bold text-primary tracking-wide">#PULP-8921-X</span>
-            </div>
-            <div class="flex flex-col gap-1 md:text-right">
-                <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Current Status</span>
-                <div class="flex items-center gap-2 md:justify-end">
-                    <span class="relative flex h-3 w-3">
-                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-                    </span>
-                    <span class="text-xl font-bold text-primary">In Transit</span>
+        {% if not order %}
+            <p>Order does not exist</p>
+        {% else %}
+            <!-- Order Info Bar -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white dark:bg-[#1a0e10] p-6 border border-gray-200 dark:border-gray-800 rounded-lg mb-10 shadow-sm">
+                <div class="flex flex-col gap-1 mb-4 md:mb-0">
+                    <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Tracking ID</span>
+                    <span class="text-xl font-bold text-primary tracking-wide">{{ order.tracking_id }}</span>
+                </div>
+                <div class="flex flex-col gap-1 md:text-right">
+                    <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Current Status</span>
+                    <div class="flex items-center gap-2 md:justify-end">
+                        <span class="relative flex h-3 w-3">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                        </span>
+                        <span class="text-xl font-bold text-primary">{{ order.order_status }}</span>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            <!-- Left Column: Timeline -->
-            <div class="lg:col-span-7 xl:col-span-8">
-                <div class="bg-white dark:bg-[#1a0e10] p-8 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm h-full">
-                    <h3 class="text-xl font-bold mb-8 text-slate-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">
-                        Shipment Progress
-                    </h3>
-                    <div class="relative pl-4">
-                        <!-- Vertical Line -->
-                        <div class="absolute left-[27px] top-2 bottom-4 w-[2px] bg-gray-200 dark:bg-gray-800"></div>
-                        <!-- Step 1: Completed -->
-                        <div class="relative flex gap-6 pb-12 group">
-                            <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-primary text-white shadow-md shadow-primary/20">
-                                <span class="material-symbols-outlined">check</span>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <!-- Left Column: Timeline -->
+                <div class="lg:col-span-7 xl:col-span-8">
+                    <div class="bg-white dark:bg-[#1a0e10] p-8 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm h-full">
+                        <h3 class="text-xl font-bold mb-8 text-slate-900 dark:text-white border-b border-gray-100 dark:border-gray-800 pb-4">
+                            Shipment Progress
+                        </h3>
+                        <div class="relative pl-4">
+                            <!-- Vertical Line -->
+                            <div class="absolute left-[27px] top-2 bottom-4 w-[2px] bg-gray-200 dark:bg-gray-800"></div>
+                            <!-- Step 1: Completed -->
+                            <div class="relative flex gap-6 pb-12 group">
+                                <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-primary text-white shadow-md shadow-primary/20">
+                                    <span class="material-symbols-outlined">check</span>
+                                </div>
+                                <div class="flex flex-col pt-1">
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                        Order Placed
+                                    </h4>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400">{{ order.created_at }}</span>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">We have received your order.</p>
+                                </div>
                             </div>
-                            <div class="flex flex-col pt-1">
-                                <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                    Order Placed
-                                </h4>
-                                <span class="text-sm text-slate-500 dark:text-slate-400">Oct 24, 10:00 AM</span>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">We have received your order.</p>
+                            <!-- Step 2: Completed -->
+                            <div class="relative flex gap-6 pb-12 group">
+                                <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-primary text-white shadow-md shadow-primary/20">
+                                    <span class="material-symbols-outlined">inventory_2</span>
+                                </div>
+                                <div class="flex flex-col pt-1">
+                                    <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Processed</h4>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400">Oct 24, 02:30 PM</span>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">Your items have been packed and are ready for pickup.</p>
+                                </div>
+                            </div>
+                            <!-- Step 3: Current / Active -->
+                            <div class="relative flex gap-6 pb-12 group">
+                                <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-white dark:bg-[#1a0e10] border-2 border-primary text-primary shadow-lg shadow-primary/10">
+                                    <span class="material-symbols-outlined">local_shipping</span>
+                                    <!-- Pulse ring for active state -->
+                                    <span class="absolute -inset-1 rounded-full border border-primary opacity-30 animate-pulse"></span>
+                                </div>
+                                <div class="flex flex-col pt-1">
+                                    <h4 class="text-lg font-bold text-primary">Shipped - In Transit</h4>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400">Oct 25, 09:15 AM</span>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">
+                                        Shipment has left the origin facility. Currently in transit to distribution center.
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Step 4: Future -->
+                            <div class="relative flex gap-6 pb-12 opacity-60">
+                                <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-white dark:bg-[#1a0e10] border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500">
+                                    <span class="material-symbols-outlined">near_me</span>
+                                </div>
+                                <div class="flex flex-col pt-1">
+                                    <h4 class="text-lg font-medium text-slate-900 dark:text-white">Out for Delivery</h4>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400">Estimated Oct 27</span>
+                                </div>
+                            </div>
+                            <!-- Step 5: Future -->
+                            <div class="relative flex gap-6 opacity-60">
+                                <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-white dark:bg-[#1a0e10] border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500">
+                                    <span class="material-symbols-outlined">home</span>
+                                </div>
+                                <div class="flex flex-col pt-1">
+                                    <h4 class="text-lg font-medium text-slate-900 dark:text-white">Delivered</h4>
+                                    <span class="text-sm text-slate-500 dark:text-slate-400">Pending</span>
+                                </div>
                             </div>
                         </div>
-                        <!-- Step 2: Completed -->
-                        <div class="relative flex gap-6 pb-12 group">
-                            <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-primary text-white shadow-md shadow-primary/20">
-                                <span class="material-symbols-outlined">inventory_2</span>
-                            </div>
-                            <div class="flex flex-col pt-1">
-                                <h4 class="text-lg font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">Processed</h4>
-                                <span class="text-sm text-slate-500 dark:text-slate-400">Oct 24, 02:30 PM</span>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">Your items have been packed and are ready for pickup.</p>
-                            </div>
+                    </div>
+                </div>
+                <!-- Right Column: Details & Items -->
+                <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-8">
+                    <!-- Shipping Details Card -->
+                    <div class="bg-white dark:bg-[#1a0e10] p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
+                        <div class="flex items-center gap-2 mb-6 text-primary">
+                            <span class="material-symbols-outlined">local_shipping</span>
+                            <h3 class="text-lg font-bold uppercase tracking-wide">Shipping Details</h3>
                         </div>
-                        <!-- Step 3: Current / Active -->
-                        <div class="relative flex gap-6 pb-12 group">
-                            <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-white dark:bg-[#1a0e10] border-2 border-primary text-primary shadow-lg shadow-primary/10">
-                                <span class="material-symbols-outlined">local_shipping</span>
-                                <!-- Pulse ring for active state -->
-                                <span class="absolute -inset-1 rounded-full border border-primary opacity-30 animate-pulse"></span>
-                            </div>
-                            <div class="flex flex-col pt-1">
-                                <h4 class="text-lg font-bold text-primary">Shipped - In Transit</h4>
-                                <span class="text-sm text-slate-500 dark:text-slate-400">Oct 25, 09:15 AM</span>
-                                <p class="text-sm text-slate-600 dark:text-slate-300 mt-1">
-                                    Shipment has left the origin facility. Currently in transit to distribution center.
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-xs uppercase tracking-wider text-slate-500 mb-1">Courier</p>
+                                <p class="text-slate-900 dark:text-white font-medium flex items-center gap-2">
+                                    FedEx Express
+                                    <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold uppercase">Express</span>
                                 </p>
                             </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-wider text-slate-500 mb-1">Delivery Address</p>
+                                <div class="text-slate-900 dark:text-white font-medium leading-snug">
+                                    <p>{{ order_address.recipient_firstname }} {{ order_address.recipient_lastname }}</p>
+                                    <p>{{ order_address.address_desc }}</p>
+                                    <p>{{ order_address.address_city }}, {{ order_address.address_state }}</p>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-xs uppercase tracking-wider text-slate-500 mb-1">Shipping Fee</p>
+                                <div class="text-slate-900 dark:text-white font-medium leading-snug">${{ order.shipping_fee_usd }}</div>
+                            </div>
                         </div>
-                        <!-- Step 4: Future -->
-                        <div class="relative flex gap-6 pb-12 opacity-60">
-                            <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-white dark:bg-[#1a0e10] border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500">
-                                <span class="material-symbols-outlined">near_me</span>
-                            </div>
-                            <div class="flex flex-col pt-1">
-                                <h4 class="text-lg font-medium text-slate-900 dark:text-white">Out for Delivery</h4>
-                                <span class="text-sm text-slate-500 dark:text-slate-400">Estimated Oct 27</span>
-                            </div>
+                    </div>
+                    <!-- Items in Shipment -->
+                    <div class="bg-white dark:bg-[#1a0e10] p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm flex-grow">
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="text-lg font-bold uppercase tracking-wide text-slate-900 dark:text-white">Items in Shipment</h3>
                         </div>
-                        <!-- Step 5: Future -->
-                        <div class="relative flex gap-6 opacity-60">
-                            <div class="relative z-10 flex items-center justify-center size-14 shrink-0 rounded-full bg-white dark:bg-[#1a0e10] border border-gray-300 dark:border-gray-600 text-gray-400 dark:text-gray-500">
-                                <span class="material-symbols-outlined">home</span>
-                            </div>
-                            <div class="flex flex-col pt-1">
-                                <h4 class="text-lg font-medium text-slate-900 dark:text-white">Delivered</h4>
-                                <span class="text-sm text-slate-500 dark:text-slate-400">Pending</span>
-                            </div>
+                        <div class="flex flex-col gap-4">
+                            <!-- Item 1 -->
+                            {% for item in order_items %}
+                                <div class="flex gap-4 items-center group cursor-pointer">
+                                    <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
+                                        <img alt="{{ item.sku.book.title }}"
+                                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                                             data-alt="{{ item.sku.book.title }}"
+                                             src="{{ item.sku.book.cover_image }}" />
+                                    </div>
+                                    <div class="flex-grow">
+                                        <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
+                                            {{ item.sku.book.title }}
+                                        </h4>
+                                        <p class="text-xs text-slate-500">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
+                                        <p class="text-xs text-slate-500">Quantity: {{ item.quantity }}</p>
+                                    </div>
+                                    {% if item.sku.has_discount %}
+                                        <span class="text-sm font-semibold text-slate-900">${{ item.sku.discounted_price }}</span>
+                                    {% else %}
+                                        <span class="text-sm font-semibold text-slate-900">${{ item.sku.price_usd }}</span>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center text-sm">
+                            <span class="text-slate-500">Total</span>
+                            <span class="font-bold text-lg text-slate-900">${{ order.total_amount_usd }}</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- Right Column: Details & Items -->
-            <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-8">
-                <!-- Shipping Details Card -->
-                <div class="bg-white dark:bg-[#1a0e10] p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm">
-                    <div class="flex items-center gap-2 mb-6 text-primary">
-                        <span class="material-symbols-outlined">local_shipping</span>
-                        <h3 class="text-lg font-bold uppercase tracking-wide">Shipping Details</h3>
-                    </div>
-                    <div class="space-y-6">
-                        <div>
-                            <p class="text-xs uppercase tracking-wider text-slate-500 mb-1">Courier</p>
-                            <p class="text-slate-900 dark:text-white font-medium flex items-center gap-2">
-                                FedEx Express
-                                <span class="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-bold uppercase">Standard</span>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-xs uppercase tracking-wider text-slate-500 mb-1">Tracking Number</p>
-                            <p class="text-slate-900 dark:text-white font-medium font-mono select-all">9821 7362 1928</p>
-                        </div>
-                        <div>
-                            <p class="text-xs uppercase tracking-wider text-slate-500 mb-1">Delivery Address</p>
-                            <div class="text-slate-900 dark:text-white font-medium leading-snug">
-                                <p>Alex Morgan</p>
-                                <p>1280 Pulp Fiction Blvd, Suite 400</p>
-                                <p>Los Angeles, CA 90028</p>
-                                <p>United States</p>
-                            </div>
-                        </div>
-                        <div class="pt-4 border-t border-gray-100 dark:border-gray-800">
-                            <button class="w-full py-3 px-4 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-primary dark:hover:bg-gray-200 transition-colors rounded text-sm font-bold uppercase tracking-wide">
-                                Change Delivery Options
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <!-- Items in Shipment -->
-                <div class="bg-white dark:bg-[#1a0e10] p-6 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm flex-grow">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-lg font-bold uppercase tracking-wide text-slate-900 dark:text-white">Items in Shipment</h3>
-                        <span class="text-xs font-semibold text-slate-500 bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">3 Items</span>
-                    </div>
-                    <div class="flex flex-col gap-4">
-                        <!-- Item 1 -->
-                        <div class="flex gap-4 items-center group cursor-pointer">
-                            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
-                                <img alt="White leather sneakers minimalist style"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                     data-alt="White leather sneakers minimalist style"
-                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2-ANK6daBLK9HOgGz1l6iim9sTqSA_Qcb7_8Re08nYFe5_mxGJsBDKGDjGy_r-Nhxa5ffNrAilFfImnUhurpW29i9TNbWVaGIUS04BQdGvgVkUnF5hXFvrewjsq7N6RDGYfydq8ruBHUSZXckQWXwLiJN9POGCXjzQd3D6CnNfyVp-LnpKoLST1It_CesHQhzlpXksh1CiCWmY7nFcZueDHg40EFfWzsgJLeT82AD7AcGnty7zV_drvsyY750e-4hI6Eqs9n0sXfi" />
-                            </div>
-                            <div class="flex-grow">
-                                <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                    Vanguard Sneaker
-                                </h4>
-                                <p class="text-xs text-slate-500">Size: 10 / Color: Bone</p>
-                            </div>
-                            <span class="text-sm font-semibold text-slate-900 dark:text-white">$145</span>
-                        </div>
-                        <!-- Item 2 -->
-                        <div class="flex gap-4 items-center group cursor-pointer">
-                            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
-                                <img alt="Basic white cotton t-shirt folded"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                     data-alt="Basic white cotton t-shirt folded"
-                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCbHiRjtF2efySOPQ16y1GMkTKvWz0tRHaf_Hs5gy3TAea7bfRfxZyxN8xN-3rv9nXg_TeOz_g_-H01UGvaya-flpJWobW_hRDJYJeuwKD-9vnZr-gj6iZ5jvYkrzWnQTypep7LfdJXPBw152llpjFdDt0-0Wnm_KkNHCCYLx8fZ2uVhzcKU8coJ1IRijQhzWpxy3w7qB0tuT6l42zI6vymLwoYh9Fq4ZaCMhYzqBlhi82jgVxH2XWGvDpDcXwE0PTzoTPG5TINuo3" />
-                            </div>
-                            <div class="flex-grow">
-                                <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                    Essential Tee
-                                </h4>
-                                <p class="text-xs text-slate-500">Size: L / Color: White</p>
-                            </div>
-                            <span class="text-sm font-semibold text-slate-900 dark:text-white">$45</span>
-                        </div>
-                        <!-- Item 3 -->
-                        <div class="flex gap-4 items-center group cursor-pointer">
-                            <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded overflow-hidden shrink-0 border border-gray-200 dark:border-gray-700">
-                                <img alt="Minimalist ceramic coffee mug"
-                                     class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                                     data-alt="Minimalist ceramic coffee mug"
-                                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVBwt8MArxeH5pIzpNTSb3r2ylEopdlXkn1KkEumWnugit6RAVsq9xTKOHUX2thHs6n0sQH8iG-SC4J3yIrkyoEcnBMuxavO-gcUhfseVDOxoiTrZFHc5v3xolv9eDYBIyeNjkbHmJbM1IxWaX0hNBbBhydfUuUCUoWmfFKE33o88s9Ga4PuJkDivV4oapia5c7jo82xhor2IFrq68SZVuXN6LQvPPsHCc9J3s9GjTqT2PodbCFW5AloSM6RaU8d0po0_wQciOitHI" />
-                            </div>
-                            <div class="flex-grow">
-                                <h4 class="text-sm font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">
-                                    Ceramic Tumbler
-                                </h4>
-                                <p class="text-xs text-slate-500">One Size / Color: Clay</p>
-                            </div>
-                            <span class="text-sm font-semibold text-slate-900 dark:text-white">$32</span>
-                        </div>
-                    </div>
-                    <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800 flex justify-between items-center text-sm">
-                        <span class="text-slate-500">Total</span>
-                        <span class="font-bold text-lg text-slate-900 dark:text-white">$222.00</span>
+            <!-- Map Placeholder / Additional Info -->
+            <div class="mt-12 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden h-64 relative border border-gray-200 dark:border-gray-700">
+                <img alt="Map Location"
+                     class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
+                     data-alt="Abstract map view of city streets in monochrome"
+                     data-location="{{ order_address.address_city }}"
+                     src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzHPKhEfSkSXWYg-J73Nvhmd2xAeLJXWYNsToxJ_wiIhPapas5jh4hScDlf_gC3fkg_UjbPFhVSODQJpn6H_GnC1rVBCaGgPFBBYqsvrmSbEymoFlk_rQDs7CSyJx55tvVfiS-UXFwvpX-PNs3if7NFZf9bHYpOaPGitQiecISrj4Pgcn7det4PxHbxzuK1xRR6IqoSqjDAq250V4H1MkOVDCFRHr9IBppLjWIod0Vm5bXwz11DlHZo9jpDru7yw10hWCEA422jbmS" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
+                    <div class="text-white">
+                        <p class="text-xs uppercase tracking-widest mb-1">Current Location</p>
+                        <h3 class="text-2xl font-bold">Distribution Center #04, Lagos</h3>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Map Placeholder / Additional Info -->
-        <div class="mt-12 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden h-64 relative border border-gray-200 dark:border-gray-700">
-            <img alt="Map Location"
-                 class="w-full h-full object-cover opacity-60 grayscale hover:grayscale-0 transition-all duration-700"
-                 data-alt="Abstract map view of city streets in monochrome"
-                 data-location="Los Angeles"
-                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzHPKhEfSkSXWYg-J73Nvhmd2xAeLJXWYNsToxJ_wiIhPapas5jh4hScDlf_gC3fkg_UjbPFhVSODQJpn6H_GnC1rVBCaGgPFBBYqsvrmSbEymoFlk_rQDs7CSyJx55tvVfiS-UXFwvpX-PNs3if7NFZf9bHYpOaPGitQiecISrj4Pgcn7det4PxHbxzuK1xRR6IqoSqjDAq250V4H1MkOVDCFRHr9IBppLjWIod0Vm5bXwz11DlHZo9jpDru7yw10hWCEA422jbmS" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end p-6">
-                <div class="text-white">
-                    <p class="text-xs uppercase tracking-widest mb-1">Current Location</p>
-                    <h3 class="text-2xl font-bold">Distribution Center #04, Los Angeles</h3>
-                </div>
-            </div>
-        </div>
+        {% endif %}
     </main>
 {% endblock content %}

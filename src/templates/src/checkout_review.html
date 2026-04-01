@@ -126,11 +126,13 @@
                                 <span class="material-symbols-outlined text-lg">arrow_back</span>
                                 Return to shipping
                             </a>
-                            <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
-                                    type="button">
-                                Pay with Paystack
-                                <span class="material-symbols-outlined ml-2 text-lg">lock</span>
-                            </button>
+                            <form action="{% url 'handle_order_and_payment' %}" method="post">
+                                {% csrf_token %}
+                                <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
+                                    Pay with Paystack
+                                    <span class="material-symbols-outlined ml-2 text-lg">lock</span>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -148,13 +150,9 @@
                             <p class="text-stone-500 dark:text-stone-400">Shipping</p>
                             <p class="font-medium text-slate-900">${{ request.session.shipping_fee }}</p>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500">Fees</p>
-                            <p class="font-medium text-slate-900">${{ request.session.payment_provider_fee }}</p>
-                        </div>
                         <div class="flex items-center justify-between border-t border-stone-200 pt-4">
                             <p class="text-base font-bold text-slate-900">Total</p>
-                            <p class="text-base font-bold text-primary">${{ request.session.total_price_after_ship }}</p>
+                            <p class="text-base font-bold text-primary">${{ request.session.total_price }}</p>
                         </div>
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">

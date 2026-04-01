@@ -9,5 +9,5 @@ django-smart-selects
 djlint
 Pillow
 django-tailwind
-django-htmx
 whitenoise
+django-htmx (extended update)

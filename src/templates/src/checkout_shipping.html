@@ -118,21 +118,11 @@
                                 {% endif %}
                             </p>
                         </div>
-                        <div class="flex items-center justify-between text-sm">
-                            <p class="text-stone-500">Fees</p>
-                            <p class="font-medium text-slate-900">${{ request.session.payment_provider_fee }}</p>
-                        </div>
                         <div class="flex items-center justify-between border-t border-stone-200 pt-4">
                             <p class="text-base font-bold text-slate-900">Total</p>
                             <span class="text-base font-bold text-primary"
                                   id="total_price"
-                                  hx-swap-oob="true">
-                                {% if request.session.shipping_fee %}
-                                    ${{ request.session.total_price_after_ship }}
-                                {% else %}
-                                    ${{ request.session.total_price_before_ship }}
-                                {% endif %}
-                            </span>
+                                  hx-swap-oob="true">${{ request.session.total_price }}</span>
                         </div>
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">

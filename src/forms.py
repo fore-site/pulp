@@ -56,14 +56,12 @@ class CartUpdateForm(forms.Form):
     )
 
 STATES = {
-    "Select State": 'Select State',
     "Lagos": 'Lagos',
     "Ogun": 'Ogun',
     "Abuja": 'Abuja',
 }
 
 CITIES = {
-    "Select City": 'Select City',
     "Ikeja": 'Ikeja',
     "Abeokuta": 'Abeokuta',
     "Maitama": 'Maitama',

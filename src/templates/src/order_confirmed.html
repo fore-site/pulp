@@ -1,111 +1,123 @@
-<main class="flex-1 flex flex-col items-center justify-start px-4 py-12 md:py-20 w-full max-w-5xl mx-auto gap-12">
-<!-- Hero Section -->
-<div class="flex flex-col items-center gap-6 text-center animate-fade-in-up w-full max-w-2xl">
-<div class="size-24 rounded-full border-4 border-primary flex items-center justify-center text-primary mb-2">
-<span class="material-symbols-outlined text-[48px] font-bold">check</span>
-</div>
-<h1 class="text-5xl md:text-6xl font-bold uppercase tracking-tight text-text-main">
-                    Order Confirmed
-                </h1>
-<p class="text-text-muted text-lg md:text-xl font-light max-w-md">
-                    Thank you for your contribution to the collection. Your taste is impeccable.
-                </p>
-<div class="mt-4 bg-text-main text-white px-6 py-3 flex items-center gap-3 shadow-[4px_4px_0px_0px_#9F1239]">
-<span class="uppercase text-sm tracking-widest opacity-80">Order Number:</span>
-<span class="font-mono text-lg font-bold">#84902-PLP</span>
-</div>
-</div>
-<!-- Content Grid -->
-<div class="w-full grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-border-sharp">
-<!-- Order Summary -->
-<div class="p-8 md:p-10 border-b-2 md:border-b-0 md:border-r-2 border-border-sharp bg-gray-50/50">
-<h3 class="text-xl font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
-<span class="material-symbols-outlined">receipt_long</span>
-                        Summary
+{% extends 'src/base.html' %}
+{% block title %}
+    Pulp - Success
+{% endblock title %}
+{% block content %}
+    <main class="flex-1 flex flex-col items-center justify-start px-4 py-12 md:py-20 w-full max-w-5xl mx-auto gap-12">
+        <!-- Hero Section -->
+        <div class="flex flex-col items-center gap-6 text-center animate-fade-in-up w-full max-w-2xl">
+            <div class="size-24 rounded-full border-4 border-primary flex items-center justify-center text-primary mb-2">
+                <span class="material-symbols-outlined text-[48px] font-bold">check</span>
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold uppercase tracking-tight text-text-main">Order Confirmed</h1>
+            <p class="text-text-muted text-lg md:text-xl font-light max-w-md">
+                Thank you for your purchase. Your taste is impeccable.
+            </p>
+            <div class="mt-4 bg-text-main text-white px-6 py-3 flex items-center gap-3 shadow-[4px_4px_0px_0px_#9F1239]">
+                <span class="uppercase text-sm tracking-widest opacity-80">Tracking ID:</span>
+                <span class="font-mono text-lg font-bold">{{ order.tracking_id }}</span>
+            </div>
+        </div>
+        <!-- Content Grid -->
+        <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-border-sharp">
+            <!-- Order Summary -->
+            <div class="p-8 md:p-10 border-b-2 md:border-b-0 md:border-r-2 border-border-sharp bg-gray-50/50">
+                <h3 class="text-xl font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
+                    <span class="material-symbols-outlined">receipt_long</span>
+                    Summary
+                </h3>
+                <div class="flex flex-col gap-6">
+                    <!-- Item 1 -->
+                    {% for item in order_items %}
+                        <div class="flex gap-4 items-start">
+                            <div class="w-20 h-24 bg-gray-200 border border-border-sharp shrink-0 relative overflow-hidden">
+                                <img alt="{{ item.sku.book.title }}"
+                                     class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300"
+                                     data-alt="Black minimalist shirt folded"
+                                     src="{{ item.sku.book.cover_image }}" />
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-bold text-lg leading-tight">{{ item.sku.book.title }}</h4>
+                                <p class="text-sm text-text-muted mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
+                                {% if item.sku.has_discount %}
+                                    <p class="text-sm font-medium mt-2">${{ item.sku.discounted_price }}</p>
+                                {% else %}
+                                    <p class="text-sm font-medium mt-2">${{ item.sku.price_usd }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="h-px bg-gray-300 my-2"></div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-text-muted">Subtotal</span>
+                        <span class="font-mono">${{ order.subtotal_amount_usd }}</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm">
+                        <span class="text-text-muted">Shipping</span>
+                        {% if order.shipping_fee_usd %}
+                            <span class="font-mono">{{ order.shipping_fee_usd }}</span>
+                        {% else %}
+                            <span class="font-mono">Free</span>
+                        {% endif %}
+                    </div>
+                    <div class="flex justify-between items-center text-lg font-bold pt-2 border-t border-gray-300 mt-2">
+                        <span>Total</span>
+                        <span class="font-mono">${{ order.total_amount_usd }}</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Shipping Details -->
+            <div class="flex flex-col">
+                <div class="p-8 md:p-10 flex-1">
+                    <h3 class="text-xl font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
+                        <span class="material-symbols-outlined">local_shipping</span>
+                        Delivery
                     </h3>
-<div class="flex flex-col gap-6">
-<!-- Item 1 -->
-<div class="flex gap-4 items-start">
-<div class="w-20 h-24 bg-gray-200 border border-border-sharp shrink-0 relative overflow-hidden">
-<img alt="Minimalist fashion item" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" data-alt="Black minimalist shirt folded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCnx9Eqj_e--ukK1OYijDiNRGk8ZEAuuP-Ah5orIntHXF8hRoKmJ0cgbeIFAfV8HTozfy37o8UXBF2Ym1e4kv33T09Jc9gF1rSKF8_LymPx-jaWKHhlYPiWFv1QsIrWSgJip-mTf5W05uOddQcrC0t4XN4k_72np6dGpDM2-l3iohrdOOPIPyRnY8YWPgKICkrhplzkdFYOGm4Tlun3Er1ZTDJXytxvdBDQg7CEO75NHomhXiE5DUZvlokjnQBE3JLA0rNAKOOHyO-P"/>
-</div>
-<div class="flex-1">
-<h4 class="font-bold text-lg leading-tight">Structured Cotton Tee</h4>
-<p class="text-sm text-text-muted mt-1">Size: M / Color: Obsidian</p>
-<p class="text-sm font-medium mt-2">$85.00</p>
-</div>
-</div>
-<!-- Item 2 -->
-<div class="flex gap-4 items-start">
-<div class="w-20 h-24 bg-gray-200 border border-border-sharp shrink-0 relative overflow-hidden">
-<img alt="Ceramic vase texture" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" data-alt="Ceramic vase closeup" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBcLv7wCpH_eQsHD3LaWgukl_L9lYXX9VO9nYqIaupFCSqp4ApUwOrzB24DHLy51mu59qFUywV9qMgNVrZfOF1Gx7HThwcgCRXFt6cE9Zq0X7hOcMh8ntXo9ciMvpY0t3CYEMkIY_-bjkpWAKa4oLQ0_4749ezrkG473eIVNN7HUCmA29V2e9WlOMJAk69pAT5-Ioy5q2vhCQb_-Cty-wOqgCmyfhuvHjWlPMaANZwnayiywZhODgCZPW31Cqcwycerv-p66pn9q-0B"/>
-</div>
-<div class="flex-1">
-<h4 class="font-bold text-lg leading-tight">Ceramic Vessel No. 4</h4>
-<p class="text-sm text-text-muted mt-1">Limited Edition</p>
-<p class="text-sm font-medium mt-2">$120.00</p>
-</div>
-</div>
-<div class="h-px bg-gray-300 my-2"></div>
-<div class="flex justify-between items-center text-sm">
-<span class="text-text-muted">Subtotal</span>
-<span class="font-mono">$205.00</span>
-</div>
-<div class="flex justify-between items-center text-sm">
-<span class="text-text-muted">Shipping</span>
-<span class="font-mono">Free</span>
-</div>
-<div class="flex justify-between items-center text-lg font-bold pt-2 border-t border-gray-300 mt-2">
-<span>Total</span>
-<span class="font-mono">$205.00</span>
-</div>
-</div>
-</div>
-<!-- Shipping Details -->
-<div class="flex flex-col">
-<div class="p-8 md:p-10 flex-1">
-<h3 class="text-xl font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
-<span class="material-symbols-outlined">local_shipping</span>
-                            Delivery
-                        </h3>
-<div class="space-y-6">
-<div>
-<p class="text-xs uppercase tracking-widest text-text-muted mb-2">Shipping Address</p>
-<p class="font-medium text-lg">Alex Morgan</p>
-<p class="text-text-muted">142 Design District Blvd, Suite 400</p>
-<p class="text-text-muted">New York, NY 10013</p>
-</div>
-<div>
-<p class="text-xs uppercase tracking-widest text-text-muted mb-2">Estimated Arrival</p>
-<p class="font-medium text-lg flex items-center gap-2">
-<span class="material-symbols-outlined text-primary">schedule</span>
-                                    Oct 24 - Oct 26
-                                </p>
-</div>
-<div>
-<p class="text-xs uppercase tracking-widest text-text-muted mb-2">Shipping Method</p>
-<p class="text-text-main">Standard Ground (Carbon Neutral)</p>
-</div>
-</div>
-</div>
-<!-- Map visual placeholder -->
-<div class="h-40 w-full bg-gray-100 border-t-2 border-border-sharp relative overflow-hidden group">
-<img alt="Map texture" class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Abstract map of city streets" data-location="New York" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjefR4Z5UZFyZNu01ERJmT8ZcFKyWaSZhZIx4Wbt5zBRP1nAKuQwn7_gXv31d9plqkeSVjBB-SwiqmuaIomB3z46k1eb5D60JfzYkZ67uPoxm-Fat2biu4xYGWQ2Tbp8DOi3WIHrNnZst4gsLXf9KVbYd7hgYDKHTzuoZ18niuQZLDMTvFhcWV5r5Va4ZMx0EfFgatknZ5f6cLulYwTEKwImuRxGBKMHa00D0Jt3U5v4uBhOd55t3EzdN8D8t6SqX3HUsyM5YJOyCY"/>
-<div class="absolute inset-0 flex items-center justify-center bg-black/10">
-<div class="bg-white p-2 border border-black shadow-lg">
-<span class="material-symbols-outlined text-primary">location_on</span>
-</div>
-</div>
-</div>
-</div>
-</div>
-<!-- Actions -->
-<div class="flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
-<button class="flex-1 bg-primary text-white h-14 font-bold uppercase tracking-widest hover:bg-primary-dark transition-all duration-300 shadow-[4px_4px_0px_0px_#181113] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[2px_2px_0px_0px_#181113] active:translate-x-[4px] active:translate-y-[4px] active:shadow-none border border-transparent">
-                    Continue Collecting
-                </button>
-<button class="flex-1 bg-transparent text-text-main border-2 border-border-sharp h-14 font-bold uppercase tracking-widest hover:bg-gray-100 transition-all duration-300 hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px]">
-                    Order History
-                </button>
-</div>
-</main>
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-text-muted mb-2">Shipping Address</p>
+                            <p class="font-medium text-lg">{{ order_address.recipient_firstname }} {{ order_address.recipient_lastname }}</p>
+                            <p class="text-text-muted">{{ order_address.address_desc }}</p>
+                            <p class="text-text-muted">{{ order_address.address_city }}, {{ order_address.address_state }}</p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-text-muted mb-2">Estimated Arrival</p>
+                            <p class="font-medium text-lg flex items-center gap-2">
+                                <span class="material-symbols-outlined text-primary">schedule</span>
+                                {{ delivery_date1 }} - {{ delivery_date2 }}
+                            </p>
+                        </div>
+                        <div>
+                            <p class="text-xs uppercase tracking-widest text-text-muted mb-2">Shipping Method</p>
+                            <p class="text-text-main">Express</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Map visual placeholder -->
+                <div class="h-40 w-full bg-gray-100 border-t-2 border-border-sharp relative overflow-hidden group">
+                    <img alt="Map texture"
+                         class="w-full h-full object-cover opacity-50 grayscale group-hover:grayscale-0 transition-all duration-500"
+                         data-alt="Abstract map of city streets"
+                         data-location="{{ order_address.address_state }}"
+                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjefR4Z5UZFyZNu01ERJmT8ZcFKyWaSZhZIx4Wbt5zBRP1nAKuQwn7_gXv31d9plqkeSVjBB-SwiqmuaIomB3z46k1eb5D60JfzYkZ67uPoxm-Fat2biu4xYGWQ2Tbp8DOi3WIHrNnZst4gsLXf9KVbYd7hgYDKHTzuoZ18niuQZLDMTvFhcWV5r5Va4ZMx0EfFgatknZ5f6cLulYwTEKwImuRxGBKMHa00D0Jt3U5v4uBhOd55t3EzdN8D8t6SqX3HUsyM5YJOyCY" />
+                    <div class="absolute inset-0 flex items-center justify-center bg-black/10">
+                        <div class="bg-white p-2 border border-black shadow-lg">
+                            <span class="material-symbols-outlined text-primary">location_on</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row gap-4 w-full max-w-md mx-auto">
+            <a href="{% url 'home' %}"
+               class="flex-1 bg-primary text-white h-14 font-bold uppercase tracking-widest hover:bg-primary-dark transition-all duration-300 active:translate-x-[4px] active:translate-y-[4px] border border-transparent">
+                Continue Shopping
+            </a>
+            <a href="{% url 'order_detail' %}?track_id={{ order.tracking_id }}"
+               class="flex-1 bg-transparent text-text-main border-2 border-border-sharp h-14 font-bold uppercase tracking-widest hover:bg-gray-100 transition-all duration-300 hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px]">
+                Track Order
+            </a>
+        </div>
+    </main>
+{% endblock content %}

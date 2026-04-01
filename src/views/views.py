@@ -75,11 +75,14 @@ class CartView(generic.TemplateView):
 
         # Check if item already exists in cart, for idempotency
         try:
-            CartItem.objects.get(sku=sku, cart=cart)
+            item = CartItem.objects.get(sku=sku, cart=cart)
 
         # Create cart item entry if item does not exist in cart        
         except CartItem.DoesNotExist:
-            CartItem.objects.create(sku=sku, cart=cart, quantity=1)
+            # Ensure user is not currently processing payment in a separate window
+            # Ensure sku is not out of stock
+            if not request.session.get('is_payment_processing') and sku.quantity > 0:
+                CartItem.objects.create(sku=sku, cart=cart, quantity=1)
 
         # Get total item count in a cart and store it in user session
         store_price_and_count(request, cart)
@@ -121,7 +124,9 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
         sku = get_object_or_404(Sku, public_id=sku_id)
     
     form = CartUpdateForm({'quantity': request.POST.get('quantity')})
-    if action == 'clear':
+    if request.session.get('is_payment_processing') or sku.quantity < 1:
+        pass
+    elif action == 'clear':
         CartItem.objects.filter(cart=cart).delete()
     elif action == 'delete':
             CartItem.objects.filter(sku=sku, cart=cart).delete()
@@ -152,8 +157,12 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
             allowed_hosts=request.get_host(),
             require_https=False
         )
-
-    if request.htmx and action != 'delete':
+    
+    if request.htmx and request.session.get('is_payment_processing'):
+        response = HttpResponse()
+        response['HX-Redirect'] = next_url if next_url and is_safe else reverse('cart')
+        return response
+    elif request.htmx and action != 'delete':
         context = {"cart_items_and_forms": get_cart_items_and_forms(user, session_id, request)}
         cart_main_target = render(request, 'src/cart.html#cart_items', context).content.decode()
         cart_count_oob = f'<span id="cart-count" hx-swap-oob="true">{request.session.get('item_count')}</span>'

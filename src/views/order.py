@@ -1,11 +1,13 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.db import transaction
 from django.db.models import Case, When, F, DecimalField
-from src.models import CartItem, Cart, Order, OrderItem
+from src.models import CartItem, Cart, Order, OrderItem, OrderAddress
 from django_htmx.middleware import HtmxDetails
+from datetime import timedelta
+import time
 
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
@@ -20,17 +22,20 @@ def order_detail_view(request: HtmxHttpRequest) -> HttpResponse:
     """ View to display order details for real-time tracking """
     track_id = request.GET.get('track_id')
     try:
-        order = Order.objects.get(tracking_number__iexact=track_id)
+        order = Order.objects.get(tracking_id__iexact=track_id)
         order_items = OrderItem.objects.filter(order=order)
+        order_address = OrderAddress.objects.get(order=order)
     except Order.DoesNotExist:
         order = []
         order_items = []
+        order_address = []
     
-    return render(request, 'src/order_detail.html', {'order': order, 'order_items': order_items})
+    return render(request, 'src/order_detail.html',
+                   {'order': order, 'order_items': order_items, 'order_address': order_address})
 
 @require_POST
-def order_creation_view(request: HtmxHttpRequest) -> HttpResponse:
-    """ Create order in database"""
+def handle_payment_and_order_view(request: HtmxHttpRequest) -> HttpResponse:
+    """ Create order in database and redirect to payment provider"""
     user = request.user if request.user.is_authenticated else None
     try:
         if user:
@@ -48,13 +53,18 @@ def order_creation_view(request: HtmxHttpRequest) -> HttpResponse:
     if not cart_items:
         return HttpResponseRedirect(reverse('cart'))
 
+    if not request.session.get('firstname'):
+        return HttpResponseRedirect(reverse('checkout_shipping'))
+    
+    request.session['is_payment_processing'] = True
+
     with transaction.atomic():
         user_order = Order.objects.create(
             user = user,
             session_id = request.session.session_key,
-            subtotal_amount_usd = request.session.get('total_price_before_ship'),
+            subtotal_amount_usd = request.session.get('subtotal_price'),
             shipping_fee_usd = request.session.get('shipping_fee'),
-            total_amount_usd = request.session.get('total_price_after_ship'),
+            total_amount_usd = request.session.get('total_price'),
             order_exchange_rate = 1400,
         )
 
@@ -66,3 +76,42 @@ def order_creation_view(request: HtmxHttpRequest) -> HttpResponse:
                 unit_price_usd = item.unit_price
             )
 
+        OrderAddress.objects.create(
+            order = user_order,
+            recipient_firstname = request.session.get('firstname'),
+            recipient_lastname = request.session.get('lastname'),
+            recipient_email = request.session.get('email'),
+            recipient_phone_no = request.session.get('phone_no'),
+            address_desc = request.session.get('address_desc'),
+            address_state = request.session.get('address_state'),
+            address_city = request.session.get('address_city')
+        )
+
+        time.sleep(10)
+
+    return HttpResponseRedirect(reverse('order_confirmed', kwargs={"track_id": user_order.tracking_id}))
+
+@require_GET
+def order_confirmed_view(request: HtmxHttpRequest, track_id) -> HttpResponse:
+    try:
+        order = Order.objects.get(tracking_id=track_id)
+        order_items = OrderItem.objects.filter(order=order)
+        order_address = OrderAddress.objects.get(order=order)
+    except Order.DoesNotExist:
+        return redirect('home')
+    except OrderAddress.DoesNotExist:
+        return redirect('home')
+    
+    if not order_items:
+        return redirect('home')
+
+    request.session['is_payment_processing'] = False
+    request.session['item_count'] = 0
+    order_created_at = order.created_at
+    estimated_delivery_dates = (order_created_at + timedelta(days=2)).strftime("%b, %d"), (order_created_at + timedelta(days=3)).strftime("%b, %d")
+
+    return render(request, 'src/order_confirmed.html', 
+                  {'order': order, 'order_items': order_items, 
+                   'order_address': order_address,
+                   'delivery_date1': estimated_delivery_dates[0],
+                   'delivery_date2': estimated_delivery_dates[1]})

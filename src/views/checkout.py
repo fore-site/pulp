@@ -7,7 +7,6 @@ from src.models import CartItem, Cart
 from ..forms import ShippingAddressForm
 from datetime import timedelta
 from decimal import Decimal
-import random
 
 class CheckoutShippingView(generic.TemplateView):
     template_name = 'src/checkout_shipping.html'
@@ -17,24 +16,18 @@ class CheckoutShippingView(generic.TemplateView):
         if request.htmx:
             state = request.GET.get('address_state')
             request.session['address_state'] = state
-            subtotal = Decimal(request.session.get('total_price_before_ship'))
+            subtotal = Decimal(request.session.get('subtotal_price'))
             if state == 'Lagos':
                 request.session['shipping_fee'] = '3.00'
-                total_price_after_ship = (subtotal + Decimal('3.00')).quantize(Decimal('0.01'))
-                request.session['total_price_after_ship'] = str(total_price_after_ship)
-                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price_after_ship')}</span>"
+                total_price = (subtotal + Decimal('3.00')).quantize(Decimal('0.01'))
+                request.session['total_price'] = str(total_price)
+                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price')}</span>"
                 return HttpResponse('$3.00' + total_price_oob)
-            
-            elif state == 'Select State':
-                request.session['shipping_fee'] = None
-                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price_before_ship')}</span>"
-                return HttpResponse('To be calculated' + total_price_oob)
-            
             else:
                 request.session['shipping_fee'] = '5.00'
-                total_price_after_ship = (subtotal + Decimal('5.00')).quantize(Decimal('0.01'))
-                request.session['total_price_after_ship'] = str(total_price_after_ship)
-                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price_after_ship')}</span>"
+                total_price = (subtotal + Decimal('5.00')).quantize(Decimal('0.01'))
+                request.session['total_price'] = str(total_price)
+                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price')}</span>"
                 return HttpResponse('$5.00' + total_price_oob)
             
         self.user = request.user if request.user.is_authenticated else None
@@ -58,14 +51,11 @@ class CheckoutShippingView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         today = timezone.now()
         estimated_delivery_dates = (today + timedelta(days=2)).strftime("%b, %d"), (today + timedelta(days=3)).strftime("%b, %d")
-    
-        self.request.session["payment_provider_fee"] = random.choice(['3.50', '4.15', '2.80'])
-        total_price_before_ship = Decimal(self.request.session.get('subtotal_price')) + Decimal(self.request.session.get('payment_provider_fee'))
-
-        self.request.session["total_price_before_ship"] = str(total_price_before_ship.quantize(Decimal('0.01')))
-        
+            
         if self.request.session.get('shipping_fee'):
-            self.request.session['total_price_after_ship'] = str((total_price_before_ship + Decimal(self.request.session.get('shipping_fee'))).quantize(Decimal('0.01')))
+            self.request.session['total_price'] = str((Decimal(self.request.session.get('subtotal_price')) + Decimal(self.request.session.get('shipping_fee'))).quantize(Decimal('0.01')))
+        else:
+            self.request.session['total_price'] = self.request.session.get('subtotal_price')
 
         if request.session.get('firstname'):
             form = ShippingAddressForm(initial={
@@ -135,12 +125,7 @@ class CheckoutReviewView(generic.TemplateView):
             context['user'] = self.user
 
         # Revalidate total price before/after shipping fee
-        total_price_before_ship = Decimal(self.request.session.get('subtotal_price')) + Decimal(self.request.session.get('payment_provider_fee'))
-
-        self.request.session["total_price_before_ship"] = str(total_price_before_ship.quantize(Decimal('0.01')))
-        
-        if self.request.session.get('shipping_fee'):
-            self.request.session['total_price_after_ship'] = str((total_price_before_ship + Decimal(self.request.session.get('shipping_fee'))).quantize(Decimal('0.01')))
+        self.request.session['total_price'] = str((Decimal(self.request.session.get('subtotal_price')) + Decimal(self.request.session.get('shipping_fee'))).quantize(Decimal('0.01')))
 
         context["cart_items"] = self.cart_items
         context['delivery_date_1'] = estimated_delivery_dates[0]
