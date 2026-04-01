@@ -12,7 +12,6 @@ database_user = os.getenv('DATABASE_USER')
 database_name = os.getenv('DATABASE_NAME')
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DEV_SECRET_KEY')
@@ -146,7 +145,7 @@ LOGOUT_REDIRECT_URL = 'home'
 
 TAILWIND_APP_NAME = 'theme'
 
-# NPM PATH FOR WINDOWS
+# NPM PATH FOR LINUX
 NPM_BIN_PATH = "/usr/bin/npm"
 
 AUTHENTICATION_BACKENDS = [
