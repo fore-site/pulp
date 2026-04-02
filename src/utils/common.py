@@ -41,8 +41,8 @@ class FilterSort:
         if self.price:
             books = self.books.annotate(
                 current_price=Case(
-                    When(discount_percent__gt=0, then=(F('price_usd') - (F('price_usd') * F('discount_percent') / 100))),
-                    default=F('price_usd'),
+                    When(discount_percent__gt=0, then=(F('price') - (F('price') * F('discount_percent') / 100))),
+                    default=F('price'),
                     output_field=DecimalField(max_digits=10, decimal_places=2)
                 )
             )
@@ -57,8 +57,8 @@ class FilterSort:
         if sort_by == 'price_desc' or sort_by == 'price_asc':
             books = books.annotate(
                 current_price=Case(
-                    When(discount_percent__gt=0, then=(F('price_usd') - (F('price_usd') * F('discount_percent') / 100))),
-                    default=F('price_usd'),
+                    When(discount_percent__gt=0, then=(F('price') - (F('price') * F('discount_percent') / 100))),
+                    default=F('price'),
                     output_field=DecimalField(max_digits=10, decimal_places=2)
                 )
             )
@@ -82,7 +82,7 @@ def base_book_queryset(sku: Sku):
                          .prefetch_related('book__authors')
                          .only(
                              'book__title',
-                             'price_usd',
+                             'price',
                              'format',
                              'isbn_number',
                              'book__authors__name',
@@ -137,8 +137,8 @@ def store_price_and_count(request, cart):
         cart_items = CartItem.objects.filter(cart=cart).values('cart').annotate(
                     item_count=Sum(F('quantity')),
                     subtotal=Sum(Case(
-                                When(sku__discount_percent__gt=0, then=(F('sku__price_usd') - (F('sku__price_usd') * F('sku__discount_percent') / 100)) * F('quantity')),
-                                default=F('sku__price_usd') * F('quantity'),
+                                When(sku__discount_percent__gt=0, then=(F('sku__price') - (F('sku__price') * F('sku__discount_percent') / 100)) * F('quantity')),
+                                default=F('sku__price') * F('quantity'),
                                 output_field=DecimalField(max_digits=10, decimal_places=2)
                             )
                         )
@@ -159,7 +159,7 @@ def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids,
         .exclude(book=book_sku.book)
         .distinct('book')
         .annotate(distinct_id=Subquery(
-            Sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+            Sku.objects.filter(book=OuterRef('book')).order_by('price')
             .values('id')[:1]
         )).values_list('distinct_id', flat=True))
 
@@ -231,7 +231,7 @@ def distinct_sku(sku: Sku, category: Category | None = None):
         distinct_skus_with_category = (sku.objects.filter(book__series__category=category)
             .distinct('book')
             .annotate(distinct_id=Subquery(
-                sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+                sku.objects.filter(book=OuterRef('book')).order_by('price')
                 .values('id')[:1]
             )).values_list('distinct_id', flat=True))
         return distinct_skus_with_category
@@ -239,7 +239,7 @@ def distinct_sku(sku: Sku, category: Category | None = None):
     distinct_skus = (sku.objects
             .distinct('book')
             .annotate(distinct_id=Subquery(
-                sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+                sku.objects.filter(book=OuterRef('book')).order_by('price')
                 .values('id')[:1]
             )).values_list('distinct_id', flat=True))
     return distinct_skus
@@ -254,10 +254,9 @@ def create_order_and_related_data(request, user, cart_items, record: Idempotency
         user_order = Order.objects.create(
             user = user,
             session_id = request.session.session_key,
-            subtotal_amount_usd = request.session.get('subtotal_price'),
-            shipping_fee_usd = request.session.get('shipping_fee'),
-            total_amount_usd = request.session.get('total_price'),
-            order_exchange_rate = 1400,
+            subtotal_amount = request.session.get('subtotal_price'),
+            shipping_fee = request.session.get('shipping_fee'),
+            total_amount = request.session.get('total_price'),
         )
 
         for item in cart_items:
@@ -265,7 +264,7 @@ def create_order_and_related_data(request, user, cart_items, record: Idempotency
                 order = user_order,
                 sku = item.sku,
                 quantity = item.quantity,
-                unit_price_usd = item.unit_price
+                unit_price = item.unit_price
             )
 
         OrderAddress.objects.create(
