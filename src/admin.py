@@ -46,10 +46,10 @@ class BookAdmin(admin.ModelAdmin):
 
 class SkuAdmin(admin.ModelAdmin):
     model = Sku
-    list_display = ["book", "code", "publisher", "isbn_number", "price_usd", "quantity", "format", "page_count", "dimensions", "file_size", "published_at", "is_discontinued", "created_at", "updated_at"]
+    list_display = ["book", "code", "publisher", "isbn_number", "price", "quantity", "format", "page_count", "dimensions", "file_size", "published_at", "is_discontinued", "created_at", "updated_at"]
     list_filter = ["publisher", "published_at", "is_discontinued", "created_at", "updated_at"]
 
-    sortable_by = ["price_usd", "book__average_rating"]
+    sortable_by = ["price", "book__average_rating"]
     search_fields = ["book", "code"]
     ordering = ["book"]
 
@@ -96,7 +96,14 @@ class RatingsAdmin(admin.ModelAdmin):
 class CartAdmin(admin.ModelAdmin):
     model = Cart
     list_display = ("public_id", "user")
-    
+
+class OrderAdmin(admin.ModelAdmin):
+    model = Order
+    list_display = ("order_number", "user", "session_id", "total_amount", "status", "created_at")
+    list_filter = ("status", "created_at")
+    search_fields = ("order_number", "user__email")
+    ordering = ("-created_at",)
+
 # Register your models here.
 
 admin.site.register(User, CustomUserAdmin)
