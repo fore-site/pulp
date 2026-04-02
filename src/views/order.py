@@ -1,13 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.views import generic
-from django.db import transaction
+from django.db import IntegrityError
 from django.db.models import Case, When, F, DecimalField
-from src.models import CartItem, Cart, Order, OrderItem, OrderAddress
+from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, IdempotencyKey
 from django_htmx.middleware import HtmxDetails
 from datetime import timedelta
+from ..utils.common import create_order_and_related_data
 import time
 
 class HtmxHttpRequest(HttpRequest):
@@ -74,44 +75,54 @@ def handle_payment_and_order_view(request: HtmxHttpRequest) -> HttpResponse:
         return HttpResponseRedirect(reverse('checkout_shipping'))
     
     request.session['is_payment_processing'] = True
+    key = request.POST.get('idempotency_key')
 
-    with transaction.atomic():
-        user_order = Order.objects.create(
-            user = user,
-            session_id = request.session.session_key,
-            subtotal_amount_usd = request.session.get('subtotal_price'),
-            shipping_fee_usd = request.session.get('shipping_fee'),
-            total_amount_usd = request.session.get('total_price'),
-            order_exchange_rate = 1400,
-        )
+    if not key:
+        return render(request, '404.html', 
+        {'exception': Exception("Idempotency key is required")}, 
+        status=500)
 
-        for item in cart_items:
-            OrderItem.objects.create(
-                order = user_order,
-                sku = item.sku,
-                quantity = item.quantity,
-                unit_price_usd = item.unit_price
-            )
+    # Check if key exists in db
+    record = IdempotencyKey.objects.filter(key=key).first()
 
-        OrderAddress.objects.create(
-            order = user_order,
-            recipient_firstname = request.session.get('firstname'),
-            recipient_lastname = request.session.get('lastname'),
-            recipient_email = request.session.get('email'),
-            recipient_phone_no = request.session.get('phone_no'),
-            address_desc = request.session.get('address_desc'),
-            address_state = request.session.get('address_state'),
-            address_city = request.session.get('address_city')
-        )
+    if record:
+        # If order exists:
+        if record.order_id:
+            order = get_object_or_404(Order, id=record.order_id)
+            return HttpResponseRedirect(reverse('order_confirmed', kwargs={"order_number": order.order_number}))
+        
+        # Key exists but no order
+        try:
+            order = create_order_and_related_data(request, user, cart_items, record)
+        except Exception:
+            return render(request, '404.html', 
+        {'exception': Exception("Idempotency key is required")}, 
+        status=500)
 
-        time.sleep(10)
+    # For first time requests
+    try:
+        order = create_order_and_related_data(request, user, cart_items, key=key, first_time=True)
+    except IntegrityError:
+        # Another request already created the key
+        record = IdempotencyKey.objects.get(key=key)
+        if record.order_id:
+            order = get_object_or_404(Order, id=record.order_id)
+        else:
+        # If order still does not exist
+            return render(request, '404.html', 
+            {'exception': Exception("Idempotency key is required")}, 
+            status=500)
+    except Exception:
+        return render(request, '404.html', 
+        {'exception': Exception("Idempotency key is required")}, 
+        status=500)
 
-    return HttpResponseRedirect(reverse('order_confirmed', kwargs={"track_id": user_order.tracking_id}))
+    return HttpResponseRedirect(reverse('order_confirmed', kwargs={"order_number": order.order_number}))
 
 @require_GET
-def order_confirmed_view(request: HtmxHttpRequest, track_id) -> HttpResponse:
+def order_confirmed_view(request: HtmxHttpRequest, order_number) -> HttpResponse:
     try:
-        order = Order.objects.get(tracking_id=track_id)
+        order = Order.objects.get(order_number=order_number)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
     except Order.DoesNotExist:

@@ -128,6 +128,7 @@
                             </a>
                             <form action="{% url 'handle_order_and_payment' %}" method="post">
                                 {% csrf_token %}
+                                <input type="hidden" name="idempotency_key" id="idempotency_key">
                                 <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
                                     Pay with Paystack
                                     <span class="material-symbols-outlined ml-2 text-lg">lock</span>
@@ -175,3 +176,38 @@
         </div>
     </main>
 {% endblock content %}
+{% block scripts %}
+<script>
+function hashString(str) {
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
+        .then(buffer => {
+            return Array.from(new Uint8Array(buffer))
+                .map(b => b.toString(16).padStart(2, "0"))
+                .join("");
+        });
+}
+
+async function getIdempotencyKey() {
+    const state = {{ checkout_state_json|safe }};
+    const fingerprint = JSON.stringify(state);
+
+    const hash = await hashString(fingerprint);
+
+    const storageKey = "idem_" + hash;
+
+    // Check if we already have a key for this exact state
+    let key = localStorage.getItem(storageKey);
+
+    if (!key) {
+        key = crypto.randomUUID();
+        localStorage.setItem(storageKey, key);
+    }
+
+    return key;
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+    const key = await getIdempotencyKey();
+    document.getElementById("idempotency_key").value = key;
+});
+</script>

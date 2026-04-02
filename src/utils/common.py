@@ -1,5 +1,6 @@
 from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef
-from ..models import Sku, Cart, CartItem, Category
+from ..models import Sku, Cart, CartItem, Category, Order, OrderAddress, OrderItem, IdempotencyKey
+from django.db import transaction
 from django.db.models.manager import BaseManager
 from django.utils import timezone
 from datetime import timedelta
@@ -242,3 +243,46 @@ def distinct_sku(sku: Sku, category: Category | None = None):
                 .values('id')[:1]
             )).values_list('distinct_id', flat=True))
     return distinct_skus
+
+def create_order_and_related_data(request, user, cart_items, record: IdempotencyKey | None = None, 
+                                  key: str | None = None, first_time: bool = False):
+    record_in_func = None
+    with transaction.atomic():
+        if first_time:
+            record_in_func = IdempotencyKey.objects.create(key=key)
+
+        user_order = Order.objects.create(
+            user = user,
+            session_id = request.session.session_key,
+            subtotal_amount_usd = request.session.get('subtotal_price'),
+            shipping_fee_usd = request.session.get('shipping_fee'),
+            total_amount_usd = request.session.get('total_price'),
+            order_exchange_rate = 1400,
+        )
+
+        for item in cart_items:
+            OrderItem.objects.create(
+                order = user_order,
+                sku = item.sku,
+                quantity = item.quantity,
+                unit_price_usd = item.unit_price
+            )
+
+        OrderAddress.objects.create(
+            order = user_order,
+            recipient_firstname = request.session.get('firstname'),
+            recipient_lastname = request.session.get('lastname'),
+            recipient_email = request.session.get('email'),
+            recipient_phone_no = request.session.get('phone_no'),
+            address_desc = request.session.get('address_desc'),
+            address_state = request.session.get('address_state'),
+            address_city = request.session.get('address_city')
+        )
+        if record:
+            record.order_id = user_order.id
+            record.save()
+        else:
+            record_in_func.order_id = user_order.id
+            record_in_func.save()
+
+    return user_order

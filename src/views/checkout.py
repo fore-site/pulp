@@ -7,7 +7,7 @@ from src.models import CartItem, Cart
 from ..forms import ShippingAddressForm
 from datetime import timedelta
 from decimal import Decimal
-import uuid
+import json
 
 class CheckoutShippingView(generic.TemplateView):
     template_name = 'src/checkout_shipping.html'
@@ -128,9 +128,23 @@ class CheckoutReviewView(generic.TemplateView):
         # Revalidate total price before/after shipping fee
         self.request.session['total_price'] = str((Decimal(self.request.session.get('subtotal_price')) + Decimal(self.request.session.get('shipping_fee'))).quantize(Decimal('0.01')))
 
+        # Generate checkout state to use in javascript
+        checkout_state = {
+            'subtotal_amount_usd': request.session.get('subtotal_price'),
+            'shipping_fee_usd': request.session.get('shipping_fee'),
+            'total_amount_usd': request.session.get('total_price'),
+            'recipient_firstname': request.session.get('firstname'),
+            'recipient_lastname': request.session.get('lastname'),
+            'recipient_email': request.session.get('email'),
+            'recipient_phone_no': request.session.get('phone_no'),
+            'address_desc': request.session.get('address_desc'),
+            'address_state': request.session.get('address_state'),
+            'address_city': request.session.get('address_city')
+        }
+
         context["cart_items"] = self.cart_items
         context['delivery_date_1'] = estimated_delivery_dates[0]
         context['delivery_date_2'] = estimated_delivery_dates[1]
-        context['idempotency_key'] = uuid.uuid4()
+        context['checkout_state_json'] = json.dumps(checkout_state)
 
         return context

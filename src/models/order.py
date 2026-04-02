@@ -79,3 +79,8 @@ class OrderAddress(models.Model):
     class Meta:
         db_table = 'order_addresses'
         verbose_name_plural = 'Order Addresses'
+
+class IdempotencyKey(models.Model):
+    key = models.CharField(max_length=255, unique=True)
+    order_id = models.IntegerField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
