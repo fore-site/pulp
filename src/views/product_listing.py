@@ -249,3 +249,37 @@ class NewReleaseView(generic.ListView):
         context['selected_sort'] = self.request.GET.get('sort')
         
         return context
+    
+class HotDeals(generic.ListView):
+    model = Sku
+    template_name = 'src/deals.html'
+    context_object_name = 'hot_deals'
+
+    def get_queryset(self):
+        sort_by = self.request.GET.get('sort')
+        price_range = self.request.GET.get('price')
+        discount = self.request.GET.get('disct')
+
+        base_queryset = base_book_queryset(Sku)
+        
+        distinct = distinct_sku(Sku)
+        base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct)
+        
+        # Apply filter and sort if they exist
+        filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount)
+        hot_deals = filter_sort.filter_skus()
+        
+        return hot_deals
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        categories = Category.objects.all()
+
+        context['selected_sort'] = self.request.GET.get('sort')
+        context['categories'] = categories
+        context['price_range'] = ['10', '20', '50', '100']
+        context['discounts'] = ['lt50', 'gt50']
+        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
+        context['selected_price'] = self.request.GET.get('price')
+        context['selected_discount'] = self.request.GET.get('disct')
+        return context

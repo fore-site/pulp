@@ -1,5 +1,6 @@
+from random import random
 from django.conf import settings
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.utils.translation import gettext_lazy as _
 import uuid
 
@@ -11,11 +12,37 @@ class Order(models.Model):
     shipping_fee_usd = models.DecimalField(max_digits=10, decimal_places=2)
     total_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
     order_exchange_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text='Exchange rate from usd to naira during order placement.')
-    tracking_id = models.UUIDField(unique=True, blank=True, default=uuid.uuid4)
+    public_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    order_number = models.CharField(max_length=20, unique=True, editable=False)
     order_status = models.CharField(max_length=255, blank=True, default='Pending')
     delivered_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, * args, **kwargs) -> None:
+        if not self.order_number:
+            self._save_with_unique_order_number(*args, **kwargs)
+        else:
+            super().save(*args, **kwargs)
+
+    def _save_with_unique_order_number(self, *args, **kwargs):
+        retries = 5
+        while retries > 0:
+            try:
+                self.order_number = self.generate_code()
+                with transaction.atomic():
+                    return super().save(*args, **kwargs)
+            except IntegrityError:
+                retries -= 1
+                if retries == 0:
+                    raise
+
+    @staticmethod
+    def generate_code():
+        chars = "23456789ABCDEFGHJKMNPQRSTUVWXYZ"
+        part1 = ''.join(random.choices(chars, k=4))
+        part2 = ''.join(random.choices(chars, k=4))
+        return f"PULP-{part1}-{part2}"
 
     def __str__(self):
         return self.user

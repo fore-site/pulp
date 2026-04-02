@@ -7,6 +7,7 @@ from src.models import CartItem, Cart
 from ..forms import ShippingAddressForm
 from datetime import timedelta
 from decimal import Decimal
+import uuid
 
 class CheckoutShippingView(generic.TemplateView):
     template_name = 'src/checkout_shipping.html'
@@ -130,5 +131,6 @@ class CheckoutReviewView(generic.TemplateView):
         context["cart_items"] = self.cart_items
         context['delivery_date_1'] = estimated_delivery_dates[0]
         context['delivery_date_2'] = estimated_delivery_dates[1]
+        context['idempotency_key'] = uuid.uuid4()
 
         return context

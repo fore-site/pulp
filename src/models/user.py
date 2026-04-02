@@ -38,7 +38,7 @@ class UserAddress(models.Model):
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.description
+        return self.address_desc
 
     class Meta:
         db_table = 'user_addresses'

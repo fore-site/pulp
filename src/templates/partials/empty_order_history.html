@@ -1,0 +1,40 @@
+<!-- Main Content Area -->
+<main class="flex-grow pt-24 w-full max-w-screen-2xl mx-auto px-6 flex flex-col items-center">
+<!-- Empty State Canvas -->
+<section class="w-full flex flex-col items-center justify-center min-h-[614px] text-center px-4 py-12">
+<div class="relative mb-12">
+<!-- Decorative element for empty state -->
+<div class="w-64 h-64 bg-surface-container-high rounded-full flex items-center justify-center relative overflow-hidden">
+<span class="material-symbols-outlined text-zinc-200 text-9xl absolute -bottom-4 -right-4 rotate-12" data-icon="auto_stories">auto_stories</span>
+<span class="material-symbols-outlined text-primary/10 text-9xl" data-icon="shopping_cart_off">shopping_cart_off</span>
+</div>
+<!-- Subtle Accent Line -->
+<div class="absolute -bottom-4 left-1/2 -translate-x-1/2 w-12 h-1 bg-primary"></div>
+</div>
+<h1 class="text-4xl md:text-5xl font-black tracking-tighter text-zinc-900 mb-4 font-headline uppercase">NO ORDERS YET</h1>
+<p class="text-zinc-500 max-w-md mx-auto mb-10 text-sm leading-relaxed font-body">
+                Your Order is currently a blank page. Start your journey through our curated selection of manga and comics.
+            </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<a href="{% url 'series_index' series_type='manga' %}" class="px-10 py-4 bg-primary text-on-primary font-bold text-sm tracking-widest uppercase rounded shadow-lg shadow-primary/20 hover:bg-zinc-900 transition-all duration-300 scale-100 hover:scale-[1.02] active:scale-95" href="#">
+                    Explore Manga
+                </a>
+<a href="{% url 'series_index' series_type='comic' %}" class="px-10 py-4 border border-outline text-zinc-900 font-bold text-sm tracking-widest uppercase rounded hover:bg-surface-container-high transition-all duration-300" href="#">
+                    Explore Comics
+                </a>
+</div>
+<!-- Suggestion Grid (Bento Lite) -->
+<div class="mt-24 w-full max-w-4xl grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="bg-surface-container-high p-6 rounded text-left group cursor-pointer transition-all hover:shadow-md border-t-2 border-transparent hover:border-primary">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="bolt">bolt</span>
+<h3 class="font-bold text-zinc-900 mb-2 uppercase text-xs tracking-wider">Fast Shipping</h3>
+<p class="text-zinc-500 text-xs">Priority delivery for all rare editions and pre-orders.</p>
+</div>
+<div class="bg-zinc-900 p-6 rounded text-left group cursor-pointer transition-all hover:shadow-md border-t-2 border-transparent hover:border-primary">
+<span class="material-symbols-outlined text-primary mb-4" data-icon="verified">verified</span>
+<h3 class="font-bold text-white mb-2 uppercase text-xs tracking-wider">Curated Quality</h3>
+<p class="text-zinc-400 text-xs">Every volume is inspected for mint condition quality.</p>
+</div>
+</div>
+</section>
+</main>

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET
+from django.views import generic
 from django.db import transaction
 from django.db.models import Case, When, F, DecimalField
 from src.models import CartItem, Cart, Order, OrderItem, OrderAddress
@@ -12,6 +13,22 @@ import time
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
 
+class OrderHistory(generic.ListView):
+    model = Order
+    template_name = 'src/order_history.html'
+    context_object_name = 'user_orders'
+
+    def get_queryset(self):
+        user = self.request.user if self.request.user.is_authenticated else None
+        session_id = self.request.session.session_key
+
+        if user:
+            orders = Order.objects.filter(user=user)
+        else:
+            orders = Order.objects.filter(session_id=session_id)
+
+        return orders
+
 @require_GET
 def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to retrieve order lookup form"""
@@ -20,9 +37,9 @@ def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
 @require_GET
 def order_detail_view(request: HtmxHttpRequest) -> HttpResponse:
     """ View to display order details for real-time tracking """
-    track_id = request.GET.get('track_id')
+    order_number = request.GET.get('order_number')
     try:
-        order = Order.objects.get(tracking_id__iexact=track_id)
+        order = Order.objects.get(order_number__iexact=order_number)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
     except Order.DoesNotExist:

@@ -8,12 +8,18 @@ from ..forms import CartUpdateForm
 from decimal import Decimal, InvalidOperation
 
 class FilterSort:
-    def __init__(self, books: Sku, sort_by: str = None, price: str = None, genres: list[str] = None, publishers: list[str] = None):
+    def __init__(self, books: BaseManager[Sku],
+                  sort_by: str | None = None, 
+                  price: str | None = None, 
+                  genres: list[str] | None = None, 
+                  publishers: list[str] | None = None,
+                  discount: str | None = None):
         self.books = books
         self.sort_by = sort_by
         self.genres = genres
         self.price = price
         self.publishers = publishers
+        self.discount = discount
         self.seven_days = timezone.now().replace(hour=0, minute=0, microsecond=0) - timedelta(days=7)
 
     def filter_skus(self):
@@ -24,6 +30,13 @@ class FilterSort:
             self.books = self.books.filter(publisher__id__in=self.publishers)
         if self.sort_by:
             self.books = self.sort_skus(self.books, self.sort_by)
+        if self.discount:
+            if self.discount == 'lt50':
+                self.books = self.books.filter(discount_percent__lte=50)
+            elif self.discount == 'gt50':
+                self.books = self.books.filter(discount_percent__gte=50)
+            else:
+                self.books = []
         if self.price:
             books = self.books.annotate(
                 current_price=Case(
@@ -53,6 +66,8 @@ class FilterSort:
             books = books.order_by('-published_at')
         elif sort_by == 'reviews':
             books = books.order_by('-book__average_rating')
+        elif sort_by == 'discount':
+            books = books.order_by('-discount_percent')
         else:
             books = books.order_by('book')
             
@@ -208,13 +223,22 @@ def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids,
 
     return related
 
-def distinct_sku(sku: Sku, category: Category):
-    """Create a distinct queryset, one sku per book for a category."""
-    distinct_skus = (sku.objects.filter(book__series__category=category)
-        .distinct('book')
-        .annotate(distinct_id=Subquery(
-            sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
-            .values('id')[:1]
-        )).values_list('distinct_id', flat=True))
+def distinct_sku(sku: Sku, category: Category | None = None):
+
+    """Create a distinct queryset, one sku per book for a category or for any category."""
+    if category:    
+        distinct_skus_with_category = (sku.objects.filter(book__series__category=category)
+            .distinct('book')
+            .annotate(distinct_id=Subquery(
+                sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+                .values('id')[:1]
+            )).values_list('distinct_id', flat=True))
+        return distinct_skus_with_category
     
+    distinct_skus = (sku.objects
+            .distinct('book')
+            .annotate(distinct_id=Subquery(
+                sku.objects.filter(book=OuterRef('book')).order_by('price_usd')
+                .values('id')[:1]
+            )).values_list('distinct_id', flat=True))
     return distinct_skus

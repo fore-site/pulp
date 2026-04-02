@@ -1,23 +1,7 @@
-from django.conf import settings
 from django.db import models
-
-class PaymentMethod(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE)
-    session_id = models.CharField(max_length=255, blank=True)
-    provider = models.CharField(max_length=255)
-    method_type = models.CharField(max_length=255)
-    token = models.CharField(max_length=255, blank=True)
-    last_four_digits = models.CharField(max_length=4, blank=True)
-    is_default = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = 'payment_methods'
 
 class Payment(models.Model):
     order = models.ForeignKey('Order', on_delete=models.RESTRICT)
-    payment_method_id = models.ForeignKey(PaymentMethod, null=True, on_delete=models.SET_NULL)
     transaction_id = models.CharField(max_length=255, unique=True, blank=True, null=True)
     provider = models.CharField(max_length=255)
     method_type = models.CharField(max_length=255)
