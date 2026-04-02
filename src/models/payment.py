@@ -7,8 +7,6 @@ class Payment(models.Model):
     method_type = models.CharField(max_length=255)
     last_four_digits = models.CharField(max_length=4, blank=True)
     amount_paid = models.DecimalField(max_digits=10, decimal_places=2)
-    currency = models.CharField(max_length=5, help_text='Currency the customer paid in')
-    payment_exchange_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text='Exchange rate from usd to naira during payment.')
     payment_status = models.CharField(max_length=255, default='Pending')
     payment_date = models.DateTimeField(null=True, blank=True)
 

@@ -14,8 +14,8 @@
                 Thank you for your purchase. Your taste is impeccable.
             </p>
             <div class="mt-4 bg-text-main text-white px-6 py-3 flex items-center gap-3 shadow-[4px_4px_0px_0px_#9F1239]">
-                <span class="uppercase text-sm tracking-widest opacity-80">Tracking ID:</span>
-                <span class="font-mono text-lg font-bold">{{ order.tracking_id }}</span>
+                <span class="uppercase text-sm tracking-widest opacity-80">Order Number:</span>
+                <span class="font-mono text-lg font-bold">{{ order.order_number }}</span>
             </div>
         </div>
         <!-- Content Grid -->
@@ -42,7 +42,7 @@
                                 {% if item.sku.has_discount %}
                                     <p class="text-sm font-medium mt-2">${{ item.sku.discounted_price }}</p>
                                 {% else %}
-                                    <p class="text-sm font-medium mt-2">${{ item.sku.price_usd }}</p>
+                                    <p class="text-sm font-medium mt-2">${{ item.sku.price }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -50,19 +50,19 @@
                     <div class="h-px bg-gray-300 my-2"></div>
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-text-muted">Subtotal</span>
-                        <span class="font-mono">${{ order.subtotal_amount_usd }}</span>
+                        <span class="font-mono">${{ order.subtotal_amount }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-text-muted">Shipping</span>
-                        {% if order.shipping_fee_usd %}
-                            <span class="font-mono">{{ order.shipping_fee_usd }}</span>
+                        {% if order.shipping_fee %}
+                            <span class="font-mono">{{ order.shipping_fee }}</span>
                         {% else %}
                             <span class="font-mono">Free</span>
                         {% endif %}
                     </div>
                     <div class="flex justify-between items-center text-lg font-bold pt-2 border-t border-gray-300 mt-2">
                         <span>Total</span>
-                        <span class="font-mono">${{ order.total_amount_usd }}</span>
+                        <span class="font-mono">${{ order.total_amount }}</span>
                     </div>
                 </div>
             </div>

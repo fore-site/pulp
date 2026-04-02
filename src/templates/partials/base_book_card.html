@@ -46,10 +46,10 @@
     <!-- Price (always visible, outside hover overlay) -->
     <div class="flex items-center gap-2 text-sm mt-1">
         {% if book_sku.has_discount %}
-            <span class="line-through text-text-muted-light">${{ book_sku.price_usd }}</span>
+            <span class="line-through text-text-muted-light">${{ book_sku.price }}</span>
             <span class="font-bold text-text-main-light">${{ book_sku.discounted_price }}</span>
         {% else %}
-            <span class="font-bold text-text-main-light">${{ book_sku.price_usd }}</span>
+            <span class="font-bold text-text-main-light">${{ book_sku.price }}</span>
         {% endif %}
     </div>
 </div>

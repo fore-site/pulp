@@ -16,7 +16,7 @@
                 <div class="relative group">
                     <form action="{% url 'order_detail' %}" method="get">
                         <label class="block text-[10px] uppercase tracking-widest font-bold text-on-surface mb-2"
-                               for="tracking-id">Tracking ID</label>
+                               for="tracking-id">Order Number</label>
                         <input class="w-full h-16 px-6 bg-surface-container-high border-2 border-black text-xl font-bold placeholder:text-gray-300 focus:ring-0 focus:outline-none focus:border-primary transition-colors"
                                id="tracking-id"
                                name="track_id"
@@ -29,7 +29,7 @@
                         Track Order
                     </button>
                     <div class="flex items-center justify-center md:justify-start gap-2 text-sm">
-                        <span class="text-on-surface-variant">Can't find your tracking ID?</span>
+                        <span class="text-on-surface-variant">Can't find your order number?</span>
                         <p class="font-bold text-black">Check your email</p>
                     </div>
                 </div>

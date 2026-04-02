@@ -19,8 +19,8 @@
             <!-- Order Info Bar -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center bg-white dark:bg-[#1a0e10] p-6 border border-gray-200 dark:border-gray-800 rounded-lg mb-10 shadow-sm">
                 <div class="flex flex-col gap-1 mb-4 md:mb-0">
-                    <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Tracking ID</span>
-                    <span class="text-xl font-bold text-primary tracking-wide">{{ order.tracking_id }}</span>
+                    <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Order Number</span>
+                    <span class="text-xl font-bold text-primary tracking-wide">{{ order.order_number }}</span>
                 </div>
                 <div class="flex flex-col gap-1 md:text-right">
                     <span class="text-xs uppercase tracking-wider text-slate-500 font-semibold">Current Status</span>
@@ -160,7 +160,7 @@
                                     {% if item.sku.has_discount %}
                                         <span class="text-sm font-semibold text-slate-900">${{ item.sku.discounted_price }}</span>
                                     {% else %}
-                                        <span class="text-sm font-semibold text-slate-900">${{ item.sku.price_usd }}</span>
+                                        <span class="text-sm font-semibold text-slate-900">${{ item.sku.price }}</span>
                                     {% endif %}
                                 </div>
                             {% endfor %}

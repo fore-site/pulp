@@ -10,4 +10,5 @@ djlint
 Pillow
 django-tailwind
 whitenoise
-django-htmx (extended update)
+django-htmx
+requests

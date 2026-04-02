@@ -42,10 +42,10 @@
             <div class="flex items-end gap-3 mb-8">
                 {% if default_sku.has_discount %}
                     <span class="text-4xl font-bold text-primary">${{ default_sku.discounted_price }}</span>
-                    <span class="text-xl text-slate-400 line-through mb-1.5">${{ default_sku.price_usd }}</span>
+                    <span class="text-xl text-slate-400 line-through mb-1.5">${{ default_sku.price }}</span>
                     <span class="text-xs font-bold text-white bg-primary px-2 py-1 rounded mb-2 ml-2">{{ default_sku.discount_percent }}% OFF</span>
                 {% else %}
-                    <span class="text-4xl font-bold text-primary">${{ default_sku.price_usd }}</span>
+                    <span class="text-4xl font-bold text-primary">${{ default_sku.price }}</span>
                 {% endif %}
             </div>
             <!-- Format Selection -->

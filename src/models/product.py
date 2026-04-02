@@ -106,7 +106,7 @@ class Sku(models.Model):
     code = models.CharField(max_length=30, unique=True)
     publisher = models.ForeignKey(Publisher, on_delete=models.RESTRICT, related_name='sku')
     isbn_number = models.CharField(max_length=14, unique=True, help_text='isbn 13 number for the book variant')
-    price_usd = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_percent = models.PositiveSmallIntegerField(default=0, blank=True, validators=[MaxValueValidator(100)])
     quantity = models.PositiveIntegerField(default=0, blank=True)
     format = models.CharField(max_length=9, choices=BookFormat)
@@ -129,9 +129,9 @@ class Sku(models.Model):
     def discounted_price(self) -> models.DecimalField:
         """Calculates and returns discounted price"""
         if self.has_discount:
-            discount_amount = Decimal(self.price_usd) * (Decimal(self.discount_percent) / Decimal(100))
-            return (Decimal(self.price_usd) - discount_amount).quantize(Decimal('0.01'))
-        return self.price_usd
+            discount_amount = Decimal(self.price) * (Decimal(self.discount_percent) / Decimal(100))
+            return (Decimal(self.price) - discount_amount).quantize(Decimal('0.01'))
+        return self.price
 
     class Meta:
         db_table = 'sku'

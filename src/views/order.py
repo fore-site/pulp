@@ -9,7 +9,7 @@ from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, Idempoten
 from django_htmx.middleware import HtmxDetails
 from datetime import timedelta
 from ..utils.common import create_order_and_related_data
-import time
+import requests
 
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
@@ -116,11 +116,17 @@ def handle_payment_and_order_view(request: HtmxHttpRequest) -> HttpResponse:
         return render(request, '404.html', 
         {'exception': Exception("Idempotency key is required")}, 
         status=500)
-
+    
+    try:
+        requests.post('https://api.paystack.co/transaction/initialize',
+                      json={'email':order.address.recipient_email, 'amount': int(order.total_amount * 100), 'metadata': {'order_number': order.order_number}},)
+    except Exception:
+        pass
     return HttpResponseRedirect(reverse('order_confirmed', kwargs={"order_number": order.order_number}))
 
 @require_GET
-def order_confirmed_view(request: HtmxHttpRequest, order_number) -> HttpResponse:
+def order_confirmed_view(request: HtmxHttpRequest) -> HttpResponse:
+    """Callback view after successful payment to display order details and estimated delivery date"""
     try:
         order = Order.objects.get(order_number=order_number)
         order_items = OrderItem.objects.filter(order=order)

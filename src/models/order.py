@@ -8,10 +8,9 @@ class Order(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, null=True)
     session_id = models.CharField(max_length=255, blank=True)
-    subtotal_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='Total amount of the sku prices')
-    shipping_fee_usd = models.DecimalField(max_digits=10, decimal_places=2)
-    total_amount_usd = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
-    order_exchange_rate = models.DecimalField(max_digits=10, decimal_places=2, help_text='Exchange rate from usd to naira during order placement.')
+    subtotal_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text='Total amount of the sku prices')
+    shipping_fee = models.DecimalField(max_digits=10, decimal_places=2)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
     public_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     order_number = models.CharField(max_length=20, unique=True, editable=False)
     order_status = models.CharField(max_length=255, blank=True, default='Pending')
@@ -54,7 +53,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.RESTRICT)
     sku = models.ForeignKey('Sku', on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField()
-    unit_price_usd = models.DecimalField(max_digits=10, decimal_places=2)
+    unit_price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.order
@@ -63,7 +62,7 @@ class OrderItem(models.Model):
         db_table = 'order_items'
 
 class OrderAddress(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.RESTRICT)
+    order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name='address')
     recipient_firstname = models.CharField(max_length=255)
     recipient_lastname = models.CharField(max_length=255)
     recipient_phone_no = models.CharField(max_length=255)
