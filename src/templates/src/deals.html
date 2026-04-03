@@ -3,126 +3,137 @@
     Hot Deals
 {% endblock title %}
 {% block content %}
-<!-- HOT DEALS -->
-<main class="pt-16 min-h-screen max-w-screen-2xl mx-auto px-6" id="books">
-<!-- Hero Header -->
-<header class="py-12 border-b border-outline-variant">
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
-<div>
-<span class="text-[10px] uppercase tracking-widest text-primary font-bold">Flash Sale Event</span>
-<h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase font-headline">HOT DEALS</h1>
-</div>
-<p class="max-w-xs text-on-surface-variant text-sm font-medium leading-tight">
+    <!-- HOT DEALS -->
+    <main class="pt-16 min-h-screen max-w-screen-2xl mx-auto px-6" id="books">
+        <!-- Hero Header -->
+        <header class="py-12 border-b border-outline-variant">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-[10px] uppercase tracking-widest text-primary font-bold">Flash Sale Event</span>
+                    <h1 class="text-6xl md:text-8xl font-black tracking-tighter uppercase font-headline">HOT DEALS</h1>
+                </div>
+                <p class="max-w-xs text-on-surface-variant text-sm font-medium leading-tight">
                     Premium manga and limited edition comic runs at curated prices. Updated daily at midnight.
                 </p>
-</div>
-</header>
-<div class="flex flex-col md:flex-row gap-12 py-10">
-<!-- Sticky Sidebar Filters -->
-<aside class="w-full md:w-64 flex-shrink-0">
-<div class="sticky top-28 space-y-10">
-<!-- Sort By -->
-<section>
-<label class="text-[10px] uppercase tracking-widest font-black mb-4 block text-zinc-400">Sort By</label>
-<div class="relative">
-        <select hx-get="{{ request.path }}"
-                hx-target="#books"
-                hx-swap="innerHTML"
-                hx-trigger="change delay:500ms"
-                name="sort"
-                class="w-full bg-surface-container-high border-none text-sm font-bold py-3 px-4 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 rounded-none">
-                <option value="">Default</option>
-                <option value="discount"
-                        {% if 'discount' == selected_sort %}selected{% endif %}>Biggest Discount</option>
-                <option value="price_asc"
-                        {% if 'price_asc' == selected_sort %}selected{% endif %}>Price: Low to High</option>
-                <option value="price_desc"
-                        {% if 'price_desc' == selected_sort %}selected{% endif %}>Price: High to Low</option>
-</select>
-<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">expand_more</span>
-</div>
-</section>
-<section>
-<form hx-get="{{ request.path }}"
-          hx-target="#books"
-          hx-swap="innerHTML"
-          hx-push-url="true"
-          hx-trigger="change delay:500ms"
-          class="space-y-3">
-        <!-- Format -->
-        <div class="space-y-4">
-            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
-            <div class="space-y-2">
-                {% for category in categories %}
-                    <label class="flex items-start gap-3 group cursor-pointer">
-                        <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
-                               type="checkbox"
-                               name="format"
-                               value="{{ category.id }}"
-                               {% if category.id in selected_categories %}checked{% endif %} />
-                        <div class="flex flex-col">
-                            <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ category.name }}</span>
+            </div>
+        </header>
+        <div class="flex flex-col md:flex-row gap-12 py-10">
+            <!-- Sticky Sidebar Filters -->
+            <aside class="w-full md:w-64 flex-shrink-0">
+                <div class="sticky top-28 space-y-10">
+                    <!-- Sort By -->
+                    <section>
+                        <label class="text-[10px] uppercase tracking-widest font-black mb-4 block text-zinc-400">Sort By</label>
+                        <div class="relative">
+                            <select hx-get="{{ request.path }}"
+                                    hx-target="#books"
+                                    hx-swap="innerHTML"
+                                    hx-trigger="change delay:500ms"
+                                    name="sort"
+                                    class="w-full bg-surface-container-high border-none text-sm font-bold py-3 px-4 appearance-none cursor-pointer focus:ring-2 focus:ring-primary/20 rounded-none">
+                                <option value="">Default</option>
+                                <option value="discount"
+                                        {% if 'discount' == selected_sort %}selected{% endif %}>
+                                    Biggest Discount
+                                </option>
+                                <option value="price_asc"
+                                        {% if 'price_asc' == selected_sort %}selected{% endif %}>
+                                    Price: Low to High
+                                </option>
+                                <option value="price_desc"
+                                        {% if 'price_desc' == selected_sort %}selected{% endif %}>
+                                    Price: High to Low
+                                </option>
+                            </select>
+                            <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400">expand_more</span>
                         </div>
-                    </label>
+                    </section>
+                    <section>
+                        <form hx-get="{{ request.path }}"
+                              hx-target="#books"
+                              hx-swap="innerHTML"
+                              hx-push-url="true"
+                              hx-trigger="change delay:500ms"
+                              class="space-y-3">
+                            <!-- Format -->
+                            <div class="space-y-4">
+                                <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
+                                <div class="space-y-2">
+                                    {% for category in categories %}
+                                        <label class="flex items-start gap-3 group cursor-pointer">
+                                            <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                                                   type="checkbox"
+                                                   name="format"
+                                                   value="{{ category.id }}"
+                                                   {% if category.id in selected_categories %}checked{% endif %} />
+                                            <div class="flex flex-col">
+                                                <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ category.name }}</span>
+                                            </div>
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+                            <!-- Price Range -->
+                            <div class="space-y-4">
+                                <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Price Range</h3>
+                                {% for price in price_range %}
+                                    <label class="flex items-start gap-3 group cursor-pointer">
+                                        <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                                               type="radio"
+                                               name="price"
+                                               value="{{ price }}"
+                                               {% if price == selected_price %}checked{% endif %} />
+                                        <div class="flex flex-col">
+                                            <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">₦{{ price }} and below</span>
+                                        </div>
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+                            {% for discount in discounts %}
+                                <label class="flex items-start gap-3 group cursor-pointer">
+                                    <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                                           type="radio"
+                                           name="disct"
+                                           value="{{ discount }}"
+                                           {% if discount == selected_discount %}checked{% endif %} />
+                                    <div class="flex flex-col">
+                                        <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">
+                                            {% if discount == 'lt50' %}
+                                                5-50%
+                                            {% else %}
+                                                50%+
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </label>
+                            {% endfor %}
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </aside>
+        <!-- Product Grid -->
+        <div class="flex-1">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                {% for book in hot_deals %}
+                    {% include 'partials/base_book_card.html' with book_sku=book %}
+                {% empty %}
+                    <p class="text-center text-text-muted-light dark:text-text-muted-dark">No books available</p>
                 {% endfor %}
             </div>
+            <!-- Pagination -->
+            <div class="mt-20 flex justify-center items-center gap-4">
+                <button class="w-12 h-12 flex items-center justify-center border border-outline-variant hover:bg-zinc-100 transition-colors">
+                    <span class="material-symbols-outlined">chevron_left</span>
+                </button>
+                <span class="text-sm font-black">01 / 12</span>
+                <button class="w-12 h-12 flex items-center justify-center border border-primary bg-primary text-white shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined">chevron_right</span>
+                </button>
+            </div>
         </div>
-        <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
-        <!-- Price Range -->
-        <div class="space-y-4">
-            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Price Range</h3>
-            {% for price in price_range %}
-                <label class="flex items-start gap-3 group cursor-pointer">
-                    <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
-                           type="radio"
-                           name="price"
-                           value="{{ price }}"
-                           {% if price == selected_price %}checked{% endif %} />
-                    <div class="flex flex-col">
-                        <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">${{ price }} and below</span>
-                    </div>
-                </label>
-            {% endfor %}
-        </div>
-        <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
-        {% for discount in discounts %}
-                <label class="flex items-start gap-3 group cursor-pointer">
-                    <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
-                           type="radio"
-                           name="disct"
-                           value="{{ discount }}"
-                           {% if discount == selected_discount %}checked{% endif %} />
-                    <div class="flex flex-col">
-                        <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{%if discount == 'lt50' %} 5-50% {% else %} 50%+ {% endif %}</span>
-                    </div>
-                </label>
-            {% endfor %}
-        </div>
-    </form>
-</section>
-</div>
-</aside>
-<!-- Product Grid -->
-<div class="flex-1">
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-    {% for book in hot_deals %}
-    {% include 'partials/base_book_card.html' with book_sku=book %}
-    {% empty %}
-    <p class="text-center text-text-muted-light dark:text-text-muted-dark">No books available</p>
-    {% endfor %}
-</div>
-<!-- Pagination -->
-<div class="mt-20 flex justify-center items-center gap-4">
-<button class="w-12 h-12 flex items-center justify-center border border-outline-variant hover:bg-zinc-100 transition-colors">
-<span class="material-symbols-outlined">chevron_left</span>
-</button>
-<span class="text-sm font-black">01 / 12</span>
-<button class="w-12 h-12 flex items-center justify-center border border-primary bg-primary text-white shadow-lg shadow-primary/20">
-<span class="material-symbols-outlined">chevron_right</span>
-</button>
-</div>
-</div>
-</div>
+    </div>
 </main>
-
 {% endblock content %}

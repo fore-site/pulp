@@ -40,9 +40,9 @@
                                 <h4 class="font-bold text-lg leading-tight">{{ item.sku.book.title }}</h4>
                                 <p class="text-sm text-text-muted mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
                                 {% if item.sku.has_discount %}
-                                    <p class="text-sm font-medium mt-2">${{ item.sku.discounted_price }}</p>
+                                    <p class="text-sm font-medium mt-2">₦{{ item.sku.discounted_price }}</p>
                                 {% else %}
-                                    <p class="text-sm font-medium mt-2">${{ item.sku.price }}</p>
+                                    <p class="text-sm font-medium mt-2">₦{{ item.sku.price }}</p>
                                 {% endif %}
                             </div>
                         </div>
@@ -50,7 +50,7 @@
                     <div class="h-px bg-gray-300 my-2"></div>
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-text-muted">Subtotal</span>
-                        <span class="font-mono">${{ order.subtotal_amount }}</span>
+                        <span class="font-mono">₦{{ order.subtotal_amount }}</span>
                     </div>
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-text-muted">Shipping</span>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="flex justify-between items-center text-lg font-bold pt-2 border-t border-gray-300 mt-2">
                         <span>Total</span>
-                        <span class="font-mono">${{ order.total_amount }}</span>
+                        <span class="font-mono">₦{{ order.total_amount }}</span>
                     </div>
                 </div>
             </div>

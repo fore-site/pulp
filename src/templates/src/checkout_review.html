@@ -96,9 +96,9 @@
                                             </p>
                                         </div>
                                         {% if item.sku.has_discount %}
-                                            <span class="font-bold text-slate-900">${{ item.sku.discounted_price }}</span>
+                                            <span class="font-bold text-slate-900">₦{{ item.sku.discounted_price }}</span>
                                         {% else %}
-                                            <span class="font-bold text-slate-900">${{ item.sku.price }}</span>
+                                            <span class="font-bold text-slate-900">₦{{ item.sku.price }}</span>
                                         {% endif %}
                                     </div>
                                     <div class="flex items-center gap-4 mt-4">
@@ -128,7 +128,8 @@
                             </a>
                             <form action="{% url 'create_order_and_init_payment' %}" method="post">
                                 <input type="hidden" name="idempotency_key" id="idempotency_key">
-                                <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2" id="pay-button">
+                                <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
+                                        id="pay-button">
                                     Pay with Paystack
                                     <span class="material-symbols-outlined ml-2 text-lg">lock</span>
                                 </button>
@@ -144,15 +145,15 @@
                     <div class="mt-6 space-y-4 border-t border-stone-200 dark:border-stone-800 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Subtotal</p>
-                            <p class="font-medium text-slate-900 dark:text-white">${{ request.session.subtotal_price }}</p>
+                            <p class="font-medium text-slate-900 dark:text-white">₦{{ request.session.subtotal_price }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Shipping</p>
-                            <p class="font-medium text-slate-900">${{ request.session.shipping_fee }}</p>
+                            <p class="font-medium text-slate-900">₦{{ request.session.shipping_fee }}</p>
                         </div>
                         <div class="flex items-center justify-between border-t border-stone-200 pt-4">
                             <p class="text-base font-bold text-slate-900">Total</p>
-                            <p class="text-base font-bold text-primary">${{ request.session.total_price }}</p>
+                            <p class="text-base font-bold text-primary">₦{{ request.session.total_price }}</p>
                         </div>
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">
@@ -176,50 +177,56 @@
     </main>
 {% endblock content %}
 {% block scripts %}
-<script>
-function hashString(str) {
-    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
-        .then(buffer => {
-            return Array.from(new Uint8Array(buffer))
-                .map(b => b.toString(16).padStart(2, "0"))
-                .join("");
+    <script>
+        function hashString(str) {
+            return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str))
+                .then(buffer => {
+                    return Array.from(new Uint8Array(buffer))
+                        .map(b => b.toString(16).padStart(2, "0"))
+                        .join("");
+                });
+        }
+
+        async function getIdempotencyKey() {
+            const state = {
+                {
+                    checkout_state_json | safe
+                }
+            };
+            const fingerprint = JSON.stringify(state);
+
+            const hash = await hashString(fingerprint);
+
+            const storageKey = "idem_" + hash;
+
+            // Check if we already have a key for this exact state
+            let key = localStorage.getItem(storageKey);
+
+            if (!key) {
+                key = crypto.randomUUID();
+                localStorage.setItem(storageKey, key);
+            }
+
+            return key;
+        }
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            const key = await getIdempotencyKey();
+            document.getElementById("idempotency_key").value = key;
         });
-}
 
-async function getIdempotencyKey() {
-    const state = {{ checkout_state_json|safe }};
-    const fingerprint = JSON.stringify(state);
-
-    const hash = await hashString(fingerprint);
-
-    const storageKey = "idem_" + hash;
-
-    // Check if we already have a key for this exact state
-    let key = localStorage.getItem(storageKey);
-
-    if (!key) {
-        key = crypto.randomUUID();
-        localStorage.setItem(storageKey, key);
-    }
-
-    return key;
-}
-
-document.addEventListener("DOMContentLoaded", async () => {
-    const key = await getIdempotencyKey();
-    document.getElementById("idempotency_key").value = key;
-});
-
-document.getElementById('pay-button').addEventListener('click', function() {
-    fetch("{% url 'create_order_and_init_payment' %}", {
-        method: "POST",
-        headers: { "X-CSRFToken": "{{ csrf_token }}" },
-    })
-    .then(res => res.json())
-    .then(data => {
-        // Here you receive the access_code and can use it to redirect to Paystack's payment page
-        const popup = new PaystackPop();
-        popup.resumeTransaction(data.access_code);
-    });
-});
-</script>
+        document.getElementById('pay-button').addEventListener('click', function() {
+            fetch("{% url 'create_order_and_init_payment' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                })
+                .then(res => res.json())
+                .then(data => {
+                    // Here you receive the access_code and can use it to redirect to Paystack's payment page
+                    const popup = new PaystackPop();
+                    popup.resumeTransaction(data.access_code);
+                });
+        });
+    </script>

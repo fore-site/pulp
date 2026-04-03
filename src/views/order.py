@@ -1,7 +1,12 @@
+import hashlib
+import hmac
+import json
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET
+from django.views.decorators.csrf import csrf_exempt
 from django.views import generic
 from django.db import IntegrityError
 from django.db.models import Case, When, F, DecimalField
@@ -126,8 +131,9 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
                             'callback_url': request.build_absolute_uri(reverse('payment_callback'))},
                       headers={'Authorization': f'Bearer {settings.paystack_test_secret_key}'})
     except Exception:
-        pass
-    return JsonResponse({'access_code': res.json().get('data', {}).get('access_code', '')})
+        return render(request, 'src/payment_failed.html')
+    else:
+        return JsonResponse({'access_code': res.json().get('data', {}).get('access_code', '')})
 
 @require_GET
 def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
@@ -148,6 +154,11 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
         order = Order.objects.get(order_number=reference)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
+        if order.order_status != 'Paid':
+            order.order_status = 'Paid'
+            order.save()
+            request.session['is_payment_processing'] = False
+            request.session['item_count'] = 0
     except Order.DoesNotExist:
         return redirect('home')
     except OrderAddress.DoesNotExist:
@@ -155,9 +166,7 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
     
     if not order_items:
         return redirect('home')
-
-    request.session['is_payment_processing'] = False
-    request.session['item_count'] = 0
+    
     order_created_at = order.created_at
     estimated_delivery_dates = (order_created_at + timedelta(days=2)).strftime("%b, %d"), (order_created_at + timedelta(days=3)).strftime("%b, %d")
 
@@ -166,3 +175,25 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
                    'order_address': order_address,
                    'delivery_date1': estimated_delivery_dates[0],
                    'delivery_date2': estimated_delivery_dates[1]})
+
+@csrf_exempt
+def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
+    """Webhook view to handle Paystack events such as payment verification and update order status accordingly"""
+    # Verify webhook signature
+    signature = request.headers.get('x-Paystack-Signature')
+    hash = hmac.new(settings.paystack_test_secret_key.encode(), json.dumps(request.body), hashlib.sha256).hexdigest()
+    verified = hmac.compare_digest(signature, hash)
+    if verified:
+        payload = json.loads(request.body)
+        event = payload.get('event')
+        if event == 'charge.success':
+            reference = payload.get('data', {}).get('reference')
+            try:
+                order = Order.objects.get(order_number=reference)
+                if order.order_status != 'Paid':
+                    order.order_status = 'Paid'
+                    order.save()
+            except Order.DoesNotExist:
+                pass
+            finally:
+                return HttpResponse(status=200)
