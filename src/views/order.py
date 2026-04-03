@@ -65,7 +65,7 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
         if user:
             cart = Cart.objects.get(user=user)
         else:
-            cart = Cart.objects.get(id = request.session.get('cart_id'))
+            cart = Cart.objects.get(session_id = request.session.session_key)
     except Cart.DoesNotExist:
         return HttpResponseRedirect(reverse('cart'))
 
@@ -183,6 +183,7 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
     signature = request.headers.get('x-Paystack-Signature')
     hash = hmac.new(settings.paystack_test_secret_key.encode(), json.dumps(request.body), hashlib.sha256).hexdigest()
     verified = hmac.compare_digest(signature, hash)
+    
     if verified:
         payload = json.loads(request.body)
         event = payload.get('event')
@@ -197,3 +198,4 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
                 pass
             finally:
                 return HttpResponse(status=200)
+    return HttpResponse(status=400)

@@ -53,7 +53,7 @@ class CartView(generic.TemplateView):
             self.request.session.create()
         session_id = self.request.session.session_key
 
-        context['cart_items_and_forms'] = get_cart_items_and_forms(user, session_id, self.request)
+        context['cart_items_and_forms'] = get_cart_items_and_forms(user, session_id)
         
         # Curate trending books for empty cart state
         base_queryset = base_book_queryset(Sku)
@@ -71,11 +71,11 @@ class CartView(generic.TemplateView):
         sku = get_object_or_404(Sku, public_id=sku_id)
         
         # Get cart related to user or session_id, create cart if it doesn't exist
-        cart = get_cart(user, session_id, request)
+        cart = get_cart(user, session_id)
 
         # Check if item already exists in cart, for idempotency
         try:
-            item = CartItem.objects.get(sku=sku, cart=cart)
+            CartItem.objects.get(sku=sku, cart=cart)
 
         # Create cart item entry if item does not exist in cart        
         except CartItem.DoesNotExist:
@@ -116,7 +116,7 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to update cart contents or clear cart"""
 
     user, session_id = get_user_and_session(request)
-    cart = get_cart(user, session_id, request)
+    cart = get_cart(user, session_id)
 
     action = request.POST.get('action')
     sku_id = request.POST.get('sku_id')

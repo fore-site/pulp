@@ -4,7 +4,7 @@ from django.core.validators import MaxValueValidator
 import uuid
 
 class Cart(models.Model):
-    public_id = models.UUIDField(unique=True,blank=True, default=uuid.uuid4, null=True)
+    public_id = models.UUIDField(unique=True, blank=True, default=uuid.uuid4, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
     session_id = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
