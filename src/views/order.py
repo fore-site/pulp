@@ -70,8 +70,8 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
         return HttpResponseRedirect(reverse('cart'))
 
     cart_items = CartItem.objects.filter(cart=cart).annotate(unit_price=Case(
-                    When(sku__discount_percent__gt=0, then=(F('sku__price_usd') - (F('sku__price_usd') * F('sku__discount_percent') / 100))),
-                    default=F('sku__price_usd'),
+                    When(sku__discount_percent__gt=0, then=(F('sku__price') - (F('sku__price') * F('sku__discount_percent') / 100))),
+                    default=F('sku__price'),
                     output_field=DecimalField(max_digits=10, decimal_places=2)
                 ))
     if not cart_items:
@@ -95,34 +95,38 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
         # If order exists:
         if record.order_id:
             order = get_object_or_404(Order, id=record.order_id)
-            return HttpResponseRedirect(reverse('order_confirmed', kwargs={"order_number": order.order_number}))
+            return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
         
         # Key exists but no order
         try:
             order = create_order_and_related_data(request, user, cart_items, record)
         except Exception:
             return render(request, '404.html', 
-        {'exception': Exception("Idempotency key is required")}, 
-        status=500)
-
-    # For first time requests
-    try:
-        order = create_order_and_related_data(request, user, cart_items, key=key, first_time=True)
-    except IntegrityError:
-        # Another request already created the key
-        record = IdempotencyKey.objects.get(key=key)
-        if record.order_id:
-            order = get_object_or_404(Order, id=record.order_id)
-        else:
-        # If order still does not exist
+                            {'exception': Exception("Unexpected error occurred while creating order")}, 
+                            status=500)
+    else:
+        # If key does not exist. First time request.
+        try:
+            order = create_order_and_related_data(request, user, cart_items, key=key, first_time=True)
+        except IntegrityError:
+            # Another request already created the key
+            record = IdempotencyKey.objects.get(key=key)
+            if record.order_id:
+                order = get_object_or_404(Order, id=record.order_id)
+                return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
+            else:
+            # If order still does not exist
+                try:
+                    order = create_order_and_related_data(request, user, cart_items, record)
+                except Exception:
+                    return render(request, '404.html', 
+                            {'exception': Exception("Idempotency key is required")}, 
+                            status=500)
+        except Exception:
             return render(request, '404.html', 
-            {'exception': Exception("Idempotency key is required")}, 
+            {'exception': Exception("Unexpected error occurred while creating order")}, 
             status=500)
-    except Exception:
-        return render(request, '404.html', 
-        {'exception': Exception("Idempotency key is required")}, 
-        status=500)
-    
+        
     try:
         res = requests.post('https://api.paystack.co/transaction/initialize',
                       json={'email': order.address.recipient_email, 
@@ -145,7 +149,7 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
     res = requests.get(f'https://api.paystack.co/transaction/verify/{reference}',
                       headers={'Authorization': f'Bearer {settings.paystack_test_secret_key}'})
 
-    if res.status_code != 200 or res.json().get('data', {}).get('status') in ('failed', 'abandoned'):
+    if res.status_code != 200 or res.json().get('data', {}).get('status') in ['failed', 'abandoned']:
         return render(request, 'src/payment_failed.html')
     elif res.json().get('data', {}).get('status') == 'pending':
         return render(request, 'src/payment_processing.html')
@@ -181,8 +185,8 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
     """Webhook view to handle Paystack events such as payment verification and update order status accordingly"""
     # Verify webhook signature
     signature = request.headers.get('x-Paystack-Signature')
-    hash = hmac.new(settings.paystack_test_secret_key.encode(), json.dumps(request.body), hashlib.sha256).hexdigest()
-    verified = hmac.compare_digest(signature, hash)
+    hash = hmac.new(settings.paystack_test_secret_key.encode(), request.body, hashlib.sha256).hexdigest()
+    verified = signature == hash
     
     if verified:
         payload = json.loads(request.body)

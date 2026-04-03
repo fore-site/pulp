@@ -37,8 +37,8 @@ class SeriesAdmin(admin.ModelAdmin):
 
 class BookAdmin(admin.ModelAdmin):
     model = Book
-    list_display = ["series", "title", "description", "cover_image", "trending_score", "bestseller_score", "average_rating", "reviewer_count", "is_featured", "is_deleted",  "is_shipping_free", "created_at"]
-    list_filter = ["series", "created_at",  "is_shipping_free", "is_deleted", "authors"]
+    list_display = ["series", "title", "page_count", "cover_image", "trending_score", "bestseller_score", "average_rating", "reviewer_count", "is_featured", "is_deleted", "created_at"]
+    list_filter = ["series", "created_at", "is_deleted", "authors"]
 
     search_fields = ["title"]
     ordering = ["title"]
@@ -46,7 +46,7 @@ class BookAdmin(admin.ModelAdmin):
 
 class SkuAdmin(admin.ModelAdmin):
     model = Sku
-    list_display = ["book", "code", "publisher", "isbn_number", "price", "quantity", "format", "page_count", "dimensions", "file_size", "published_at", "is_discontinued", "created_at", "updated_at"]
+    list_display = ["book", "code", "publisher", "isbn_number", "price", "quantity", "format", "dimensions", "file_size", "published_at", "is_discontinued", "created_at", "updated_at"]
     list_filter = ["publisher", "published_at", "is_discontinued", "created_at", "updated_at"]
 
     sortable_by = ["price", "book__average_rating"]

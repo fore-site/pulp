@@ -86,13 +86,6 @@
                 </div>
             </form>
             <hr class="border-slate-200 dark:border-slate-800 mb-8" />
-            <!-- Synopsis -->
-            <div class="mb-10">
-                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-4">Synopsis</h3>
-                <div class="prose prose-slate dark:prose-invert max-w-none text-slate-600 dark:text-slate-300 leading-relaxed">
-                    <p class="mb-4">{{ default_sku.book.description }}</p>
-                </div>
-            </div>
             <!-- Details -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-8 py-6">
                 <div>
@@ -105,7 +98,7 @@
                 </div>
                 <div>
                     <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Pages</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.page_count }}</span>
+                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.book.page_count }}</span>
                 </div>
                 <div>
                     <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">ISBN</span>
