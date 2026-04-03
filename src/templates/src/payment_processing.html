@@ -1,0 +1,21 @@
+# Generate a payment processing page html and tailwind css for the e-commerce project. The page should have a message indicating that the payment is being processed, and a spinner animation to indicate that the user should wait. The page should also have a link to return to the checkout page in case the user wants to cancel the payment. The page should be responsive and look good on both desktop and mobile devices. The color scheme should be consistent with the rest of the e-commerce site. The page should extend a base template and include any necessary blocks for content. The link to return to the checkout page should link to the checkout page.
+
+{% extends "src/base.html" %}
+{% block title %}
+Pulp - Payment Processing
+{% endblock title %}
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
+    <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center">
+        <div class="spinner-border animate-spin inline-block w-12 h-12 border-4 border-primary rounded-full mb-4" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h2 class="text-2xl font bold mb-2">Processing Payment</h2>
+        <p class="text-gray-600 mb-6">Please wait while we process your payment. This may take a few moments.</p>
+        <a href="{% url 'home' %}" class="text-primary hover:underline">
+            <span class="material-symbols-outlined text-lg">arrow_back</span>
+            Return Home
+        </a>
+    </div>
+</div>
+{% endblock %}

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_POST, require_GET
 from django.views import generic
@@ -9,6 +9,7 @@ from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, Idempoten
 from django_htmx.middleware import HtmxDetails
 from datetime import timedelta
 from ..utils.common import create_order_and_related_data
+from django.conf import settings
 import requests
 
 class HtmxHttpRequest(HttpRequest):
@@ -52,7 +53,7 @@ def order_detail_view(request: HtmxHttpRequest) -> HttpResponse:
                    {'order': order, 'order_items': order_items, 'order_address': order_address})
 
 @require_POST
-def handle_payment_and_order_view(request: HtmxHttpRequest) -> HttpResponse:
+def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpResponse:
     """ Create order in database and redirect to payment provider"""
     user = request.user if request.user.is_authenticated else None
     try:
@@ -118,17 +119,33 @@ def handle_payment_and_order_view(request: HtmxHttpRequest) -> HttpResponse:
         status=500)
     
     try:
-        requests.post('https://api.paystack.co/transaction/initialize',
-                      json={'email':order.address.recipient_email, 'amount': int(order.total_amount * 100), 'metadata': {'order_number': order.order_number}},)
+        res = requests.post('https://api.paystack.co/transaction/initialize',
+                      json={'email': order.address.recipient_email, 
+                            'amount': int(order.total_amount * 100),
+                            'reference': order.order_number,
+                            'callback_url': request.build_absolute_uri(reverse('payment_callback'))},
+                      headers={'Authorization': f'Bearer {settings.paystack_test_secret_key}'})
     except Exception:
         pass
-    return HttpResponseRedirect(reverse('order_confirmed', kwargs={"order_number": order.order_number}))
+    return JsonResponse({'access_code': res.json().get('data', {}).get('access_code', '')})
 
 @require_GET
-def order_confirmed_view(request: HtmxHttpRequest) -> HttpResponse:
+def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
     """Callback view after successful payment to display order details and estimated delivery date"""
+    
+    reference = request.GET.get('reference')
+
+    # Verify payment with Paystack
+    res = requests.get(f'https://api.paystack.co/transaction/verify/{reference}',
+                      headers={'Authorization': f'Bearer {settings.paystack_test_secret_key}'})
+
+    if res.status_code != 200 or res.json().get('data', {}).get('status') in ('failed', 'abandoned'):
+        return render(request, 'src/payment_failed.html')
+    elif res.json().get('data', {}).get('status') == 'pending':
+        return render(request, 'src/payment_processing.html')
+    
     try:
-        order = Order.objects.get(order_number=order_number)
+        order = Order.objects.get(order_number=reference)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
     except Order.DoesNotExist:

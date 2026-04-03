@@ -126,10 +126,9 @@
                                 <span class="material-symbols-outlined text-lg">arrow_back</span>
                                 Return to shipping
                             </a>
-                            <form action="{% url 'handle_order_and_payment' %}" method="post">
-                                {% csrf_token %}
+                            <form action="{% url 'create_order_and_init_payment' %}" method="post">
                                 <input type="hidden" name="idempotency_key" id="idempotency_key">
-                                <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2">
+                                <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2" id="pay-button">
                                     Pay with Paystack
                                     <span class="material-symbols-outlined ml-2 text-lg">lock</span>
                                 </button>
@@ -209,5 +208,18 @@ async function getIdempotencyKey() {
 document.addEventListener("DOMContentLoaded", async () => {
     const key = await getIdempotencyKey();
     document.getElementById("idempotency_key").value = key;
+});
+
+document.getElementById('pay-button').addEventListener('click', function() {
+    fetch("{% url 'create_order_and_init_payment' %}", {
+        method: "POST",
+        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+    })
+    .then(res => res.json())
+    .then(data => {
+        // Here you receive the access_code and can use it to redirect to Paystack's payment page
+        const popup = new PaystackPop();
+        popup.resumeTransaction(data.access_code);
+    });
 });
 </script>

@@ -12,3 +12,4 @@ django-tailwind
 whitenoise
 django-htmx
 requests
+faker

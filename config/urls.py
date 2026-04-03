@@ -25,8 +25,8 @@ urlpatterns = [
     path('checkout/review/', CheckoutReviewView.as_view(), name='checkout_review'),
     path('orders/lookup/', order_lookup_view, name='order_lookup'),
     path('orders/', order_detail_view, name='order_detail'),
-    path('order/success/', order_confirmed_view, name='order_confirmed'),
-    path('order/creation/', handle_payment_and_order_view, name='handle_order_and_payment')
+    path('order/success/', payment_callback_view, name='payment_callback'),
+    path('order/creation/', create_order_and_initialize_payment, name='create_order_and_init_payment')
 ]
 
 if settings.DEBUG:
