@@ -1,3 +1,5 @@
+from multiprocessing import context
+
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
@@ -9,26 +11,6 @@ from django.db.models import Q, Count
 from django.views import generic
 from datetime import timedelta
 
-def partial_rendering(request):
-    # Standard Django pagination
-    page_num = request.GET.get("page", "1")
-    page = Paginator(object_list='', per_page=10).get_page(page_num)
-
-    # The htmx magic - render just the `#table-section` partial for htmx
-    # requests, allowing us to skip rendering the unchanging parts of the
-    # template.
-    template_name = "partial-rendering.html"
-    if request.htmx:
-        template_name += "#table-section"
-
-    return render(
-        request,
-        template_name,
-        {
-            "page": page,
-        },
-    )
-
 class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
     seven_days = timezone.now().replace(hour=0, minute=0, microsecond=0) - timedelta(days=7)
@@ -36,32 +18,35 @@ class IndexView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # Get current date and date from one year ago
+        today = timezone.now().replace(hour=0, second=0, minute=0, microsecond=0)
+        one_year = (today - timedelta(weeks=52)).date()
+
         base_queryset = base_book_queryset(Sku)
         
-        comic_category = Category.objects.get(name='comic')
-        manga_category = Category.objects.get(name='manga')
+        comic_category = Category.objects.get(name__iexact='comic')
+        manga_category = Category.objects.get(name__iexact='manga')
         
         manga_distinct_skus = distinct_sku(Sku, manga_category)
         comic_distinct_skus = distinct_sku(Sku, comic_category)
+        combined_distinct_skus = manga_distinct_skus | comic_distinct_skus
 
-        manga = (base_queryset.filter(book__is_featured=True, book__series__category__name='manga', published_at__gte=self.seven_days)
-                 .order_by('book')
-                 .distinct('book'))
-        comic = (base_queryset.filter(book__is_featured=True, book__series__category__name='comic', published_at__gte=self.seven_days)
-                 .order_by('book')
-                 .distinct('book'))
+        manga = (base_queryset.filter(published_at__gte=one_year, book__series__category__name__iexact='manga', id__in=manga_distinct_skus)
+                 .order_by('-published_at'))[:10]
+        comic = (base_queryset.filter(published_at__gte=one_year, book__series__category__name__iexact='comic', id__in=comic_distinct_skus)
+                 .order_by('-published_at'))[:10]
         hot_deals = base_queryset.filter(book__is_featured=True, discount_percent__gt=0).order_by('-discount_percent')[:10]
 
-        trending = (base_queryset.filter(book__trending_score__gt=0).order_by('book').distinct('book')[:10]
+        trending = (base_queryset.filter(book__trending_score__gt=0, id__in=combined_distinct_skus).order_by('-book__trending_score')[:10]
                      )
         
         comic_bestselling = (base_queryset
-                              .filter(book__series__category__name='comic', book__bestseller_score__gt=0, id__in=comic_distinct_skus)
-                              .order_by('book__bestseller_score')[:10])
+                              .filter(book__series__category__name__iexact='comic', book__bestseller_score__gt=0, id__in=comic_distinct_skus)
+                              .order_by('-book__bestseller_score')[:10])
 
         manga_bestselling = (base_queryset
-                              .filter(book__series__category__name='manga', book__bestseller_score__gt=0, id__in=manga_distinct_skus)
-                              .order_by('book__bestseller_score')[:10])
+                              .filter(book__series__category__name__iexact='manga', book__bestseller_score__gt=0, id__in=manga_distinct_skus)
+                              .order_by('-book__bestseller_score')[:10])
 
         context['new_manga_release'] = manga
         context['new_comic_release'] = comic
@@ -86,7 +71,7 @@ class ProductDetailView(generic.TemplateView):
         BookEvent.objects.create(sku=default_format_sku, event_type='view')
         
         # More books in the series
-        books_in_series = Book.objects.filter(series=default_format_sku.book.series, is_deleted=False).exclude(sku=default_format_sku)[:5]
+        books_in_series = Book.objects.filter(series=default_format_sku.book.series, is_deleted=False).exclude(sku=default_format_sku)[:10]
 
         # Related books/sku - Filter by category        
         base_queryset = (base_book_queryset(Sku).filter(
@@ -108,6 +93,7 @@ class SeriesIndexView(generic.ListView):
     model = Series
     context_object_name = 'series_list'
     template_name = 'src/series_index.html'
+    paginate_by = 10
 
     def get_queryset(self):
         series_type = self.kwargs.get('series_type')
@@ -139,28 +125,49 @@ class SeriesDetailView(generic.TemplateView):
 @require_GET
 def search_results_view(request):  
     query = request.GET.get('q')
+    genre_filters = request.GET.getlist('genre')
+    publisher_filters = request.GET.getlist('publisher')
+    price = request.GET.get('price')
+    sort_by = request.GET.get('sort')
+    price_range = ['10000', '20000', '50000', '100000']
+    selected_price = request.GET.get('price')
+    selected_sort = request.GET.get('sort')
+
     if len(query) > 20:
         query = query[:20] + "..."
     base_queryset = base_book_queryset(Sku)
 
+    # Get a list of all distinct Sku
+    distinct = distinct_sku(Sku)
+
     try:
         results = (base_queryset
-                   .filter(Q(book__title__icontains=query) | Q(book__authors__name__icontains=query) | Q(isbn_number__icontains=query))
+                   .filter(Q(book__title__icontains=query) | Q(book__authors__name__icontains=query) | Q(isbn_number__icontains=query), id__in=distinct)
                    .distinct('book'))
+        result_count = results.count()
     except Sku.DoesNotExist:
-        return render(request, 'src/search_results.html', {"results": None, "query": query})
+        return render(request, 'src/search_results.html', {"page": None, "query": query})
     else:
-        return render(request, 'src/search_results.html', {"results": results, "query": query})
+        # Apply filters and sort if they exist
+        filter_sort = FilterSort(results, sort_by, price=price, genres=genre_filters, publishers=publisher_filters)
+        search_results = filter_sort.filter_skus()
+        
+        page_num = request.GET.get("page", "1")
+        page = Paginator(object_list=search_results, per_page=10).get_page(page_num)
+        
+        return render(request, 'src/search_results.html', 
+                      {"page": page, "query": query, 
+                       "result_count": result_count, "selected_price": selected_price, 
+                       "selected_sort": selected_sort, "price_range": price_range})
 
 class BestsellingView(generic.ListView):
     model = Sku
     template_name = 'src/bestseller.html'
     context_object_name = 'bestselling_books'
+    paginate_by = 10
 
     def get_queryset(self):
         # Get query parameters for filter/sort
-        genre_filters = self.request.GET.getlist('genre')
-        publisher_filters = self.request.GET.getlist('publisher')
         price_range = self.request.GET.get('price')
         sort_by = self.request.GET.get('sort')
 
@@ -191,7 +198,7 @@ class BestsellingView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
-        context['price_range'] = ['10', '20', '50', '100']
+        context['price_range'] = ['10000', '20000', '50000', '100000']
         context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
         context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('publisher')]
         context['selected_price'] = self.request.GET.get('price')
@@ -203,11 +210,12 @@ class NewReleaseView(generic.ListView):
     model = Sku
     template_name = 'src/new_release.html'
     context_object_name = 'new_releases'
+    paginate_by = 10
 
     def get_queryset(self):
-        # Get current date and date from two weeks ago
+        # Get current date and date from one year ago
         today = timezone.now().replace(hour=0, second=0, minute=0, microsecond=0)
-        two_weeks = (today - timedelta(days=14)).date()
+        one_year = (today - timedelta(weeks=52)).date()
 
         # Get query parameters for filter/sort
         genre_filters = self.request.GET.getlist('genre')
@@ -222,7 +230,7 @@ class NewReleaseView(generic.ListView):
         
         base_queryset = base_book_queryset(Sku)
         
-        base_new_releases = (base_queryset.filter(published_at__gte=two_weeks,
+        base_new_releases = (base_queryset.filter(published_at__gte=one_year,
         book__series__category=self.category, id__in=distinct))
 
         # Apply filters and sort if they exist
@@ -242,7 +250,7 @@ class NewReleaseView(generic.ListView):
         context['category'] = self.category.name.capitalize()
         context['genres'] = genres
         context['publishers'] = publishers
-        context['price_range'] = ['10', '20', '50', '100']
+        context['price_range'] = ['10000', '20000', '50000', '100000']
         context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
         context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('publisher')]
         context['selected_price'] = self.request.GET.get('price')
@@ -254,6 +262,7 @@ class HotDeals(generic.ListView):
     model = Sku
     template_name = 'src/deals.html'
     context_object_name = 'hot_deals'
+    paginate_by = 10
 
     def get_queryset(self):
         sort_by = self.request.GET.get('sort')
@@ -277,9 +286,10 @@ class HotDeals(generic.ListView):
 
         context['selected_sort'] = self.request.GET.get('sort')
         context['categories'] = categories
-        context['price_range'] = ['10', '20', '50', '100']
+        context['price_range'] = ['10000', '20000', '50000', '100000']
         context['discounts'] = ['lt50', 'gt50']
         context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
         context['selected_price'] = self.request.GET.get('price')
         context['selected_discount'] = self.request.GET.get('disct')
+        
         return context

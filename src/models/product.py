@@ -107,7 +107,7 @@ class Sku(models.Model):
     isbn_number = models.CharField(max_length=14, unique=True, help_text='isbn 13 number for the book variant')
     price = models.DecimalField(max_digits=10, decimal_places=2)
     discount_percent = models.PositiveSmallIntegerField(default=0, blank=True, validators=[MaxValueValidator(100)])
-    quantity = models.PositiveIntegerField(default=0, blank=True)
+    quantity = models.PositiveIntegerField(default=0, blank=True, null=True)
     format = models.CharField(max_length=9, choices=BookFormat)
     dimensions = models.CharField(blank=True, max_length=255, help_text='Dimensions of hardcover or paperback formats, otherwise empty')
     file_size = models.CharField(blank=True, max_length=50, help_text='Download size of digital format, otherwise empty')

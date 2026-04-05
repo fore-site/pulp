@@ -3,7 +3,7 @@
     Pulp - Search results
 {% endblock title %}
 {% block content %}
-    {% if not results %}
+    {% if not page %}
         <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 md:py-32 w-full max-w-[1440px] mx-auto">
             <div class="w-full max-w-3xl flex flex-col items-center text-center space-y-10 animate-fade-in-up">
                 <!-- Illustration Area -->
@@ -50,7 +50,10 @@
         </div>
     </main>
 {% else %}
-    <h2>Here are the results of your query '{{ query }}'</h2>
-    {% include "partials/book_card_scroll.html" with books=results %}
+   <!-- Main Content -->
+    <main class="flex-grow bg-white">
+        {% include 'partials/book_display.html' with page=page page_title='Results for' %}
+</main>
+
 {% endif %}
 {% endblock content %}

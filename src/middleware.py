@@ -1,4 +1,4 @@
-from models import Order
+from .models import Order
 
 class PaymentStateSyncMiddleware:
     """ Middleware to synchronize payment state between the session and the database after webhook is hit"""

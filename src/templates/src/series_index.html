@@ -91,25 +91,51 @@
         {% endfor %}
     </div>
     <!-- Pagination -->
-    <div class="mt-16 flex justify-center items-center gap-4">
-        <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 text-gray-400 hover:text-primary hover:border-primary transition-all">
-            <span class="material-symbols-outlined">chevron_left</span>
-        </button>
-        <div class="flex items-center gap-2">
-            <button class="flex items-center justify-center size-10 rounded bg-primary text-white font-bold">1</button>
-            <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
-                2
+    <div class="flex justify-center mt-16">
+        <div class="flex gap-2">
+            {% if page.number != 1 %}
+                <a href="{% querystring page=page.previous_page_number %}"
+                   class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-sm">arrow_back_ios_new</span>
+                </a>
+                <a href="{% querystring page=1 %}"
+                   class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">1
+                </a>
+            {% endif %}
+            {% if page.has_previous %}
+                {% if page.previous_page_number != 1 %}
+                    <a href="{% querystring page=page.previous_page_number %}"
+                       class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                        {{ page.previous_page_number }}
+                    </a>
+                {% endif %}
+            {% endif %}
+            <button class="size-10 flex items-center justify-center rounded bg-primary text-white font-bold">
+                {{ page.number }}
             </button>
-            <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
-                3
-            </button>
-            <span class="text-gray-400">...</span>
-            <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 font-medium">
-                12
-            </button>
+            {% if page.has_next %}
+                <a href="{% querystring page=page.next_page_number %}"
+                   class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                    {{ page.next_page_number }}
+                </a>
+            {% endif %}
+            {% if page.paginator.num_pages > page.next_page_number %}
+                <span class="size-10 flex items-center justify-center text-text-muted">...</span>
+            {% endif %}
+            {% if page.number != page.paginator.num_pages %}
+                {% if page.next_page_number != page.paginator.num_pages %}
+                    <a href="{% querystring page=page.paginator.num_pages %}"
+                       class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                        {{ page.paginator.num_pages }}
+                    </a>
+                {% endif %}
+            {% endif %}
+            {% if page.has_next %}
+                <a href="{% querystring page=page.next_page_number %}"
+                   class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                    <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                </a>
+            {% endif %}
         </div>
-        <button class="flex items-center justify-center size-10 rounded border border-gray-200 dark:border-gray-800 text-gray-900 dark:text-gray-200 hover:text-primary hover:border-primary transition-all">
-            <span class="material-symbols-outlined">chevron_right</span>
-        </button>
     </div>
 {% endblock content %}

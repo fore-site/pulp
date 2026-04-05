@@ -1,4 +1,4 @@
-from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef
+from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef, Q
 from ..models import Sku, Cart, CartItem, Category, Order, OrderAddress, OrderItem, IdempotencyKey
 from django.db import transaction
 from django.db.models.manager import BaseManager
@@ -77,8 +77,8 @@ class FilterSort:
 def base_book_queryset(sku: Sku):
     """Function that acts as the base queryset for subsequent queries on the Sku model. Fundamental filters have been applied"""
 
-    return (sku.objects.filter(is_discontinued=False, quantity__gt=0, book__is_deleted=False, book__series__is_deleted=False)
-                         .select_related('book__series')
+    return (sku.objects.filter(Q(quantity__gt=0) | Q(quantity__isnull=True), is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False)
+                         .select_related('book__series__category')
                          .prefetch_related('book__authors')
                          .only(
                              'book__title',
@@ -142,7 +142,7 @@ def store_price_and_count(request, cart):
     except CartItem.DoesNotExist:
         request.session['item_count'] = 0
 
-def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids, limit=6):
+def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids, limit=10):
     """Function to get sku related to a current book/sku"""
     related = []
     used_ids = {book_sku.id}

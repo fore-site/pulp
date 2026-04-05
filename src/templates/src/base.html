@@ -159,24 +159,26 @@
                 </footer>
                 <script>
                     document.addEventListener('DOMContentLoaded', () => {
-                        const container = document.querySelector('.scroll-container');
-                        const leftBtn = document.querySelector('.scroll-left');
-                        const rightBtn = document.querySelector('.scroll-right');
+                        document.querySelectorAll('.scroll-container').forEach((container) => {
+                            const leftBtn = container.parentElement.querySelector('.scroll-left');
+                            const rightBtn = container.parentElement.querySelector('.scroll-right');
+                            const scrollAmount = 300;
 
-                        const scrollAmount = 300; // adjust per card width
+                            if (leftBtn && rightBtn) {
+                                leftBtn.addEventListener('click', () => {
+                                    container.scrollBy({
+                                        left: -scrollAmount,
+                                        behavior: 'smooth'
+                                    });
+                                });
 
-                        leftBtn.addEventListener('click', () => {
-                            container.scrollBy({
-                                left: -scrollAmount,
-                                behavior: 'smooth'
-                            });
-                        });
-
-                        rightBtn.addEventListener('click', () => {
-                            container.scrollBy({
-                                left: scrollAmount,
-                                behavior: 'smooth'
-                            });
+                                rightBtn.addEventListener('click', () => {
+                                    container.scrollBy({
+                                        left: scrollAmount,
+                                        behavior: 'smooth'
+                                    });
+                                });
+                            }
                         });
                     });
                 </script>

@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*', '.ngrok-free.app']
 
 # Application definition
 
@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'nigerian_states',
     'tailwind',
     'theme',
@@ -153,3 +154,5 @@ NPM_BIN_PATH = "/usr/bin/npm"
 AUTHENTICATION_BACKENDS = [
     'src.backends.CustomAuthBackend'
 ]
+
+CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev']  

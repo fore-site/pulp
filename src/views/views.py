@@ -69,7 +69,7 @@ class CartView(generic.TemplateView):
         # Get and validate form data
         sku_id = request.POST.get('sku_id')
         sku = get_object_or_404(Sku, public_id=sku_id)
-        
+
         # Get cart related to user or session_id, create cart if it doesn't exist
         cart = get_cart(user, session_id)
 
@@ -81,7 +81,7 @@ class CartView(generic.TemplateView):
         except CartItem.DoesNotExist:
             # Ensure user is not currently processing payment in a separate window
             # Ensure sku is not out of stock
-            if not request.session.get('is_payment_processing') and sku.quantity > 0:
+            if not request.session.get('is_payment_processing') and (sku.quantity > 0 if sku.format != 'Digital' else sku.quantity == None):
                 CartItem.objects.create(sku=sku, cart=cart, quantity=1)
 
         # Get total item count in a cart and store it in user session

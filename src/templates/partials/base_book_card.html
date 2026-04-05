@@ -1,4 +1,5 @@
 {% load pulp_tags %}
+{% load humanize %}
 <div class="group relative flex flex-col gap-2">
     <!-- Image Container -->
     <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
@@ -46,10 +47,10 @@
     <!-- Price (always visible, outside hover overlay) -->
     <div class="flex items-center gap-2 text-sm mt-1">
         {% if book_sku.has_discount %}
-            <span class="line-through text-text-muted-light">₦{{ book_sku.price }}</span>
-            <span class="font-bold text-text-main-light">₦{{ book_sku.discounted_price }}</span>
+            <span class="line-through text-text-muted-light">₦{{ book_sku.price|intcomma }}</span>
+            <span class="font-bold text-text-main-light">₦{{ book_sku.discounted_price|intcomma }}</span>
         {% else %}
-            <span class="font-bold text-text-main-light">₦{{ book_sku.price }}</span>
+            <span class="font-bold text-text-main-light">₦{{ book_sku.price|intcomma }}</span>
         {% endif %}
     </div>
 </div>

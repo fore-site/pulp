@@ -6,6 +6,6 @@
 {% block content %}
     <!-- Main Content -->
     <main class="flex-grow bg-white">
-        {% include 'partials/book_display.html' with book_list=new_releases page_title='New Releases' %}
+        {% include 'partials/book_display.html' with page=page_obj page_title='New Releases' %}
 </main>
 {% endblock content %}
