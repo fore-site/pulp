@@ -27,20 +27,6 @@ def signup(request: HtmxHttpRequest) -> HttpResponse:
         form = CustomUserCreationForm()
         return render(request, 'src/signup.html', {"form": form})
 
-class HotDealsView(generic.TemplateView):
-    template_name = 'src/deals.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        base_queryset = base_book_queryset(Sku)
-
-        manga_deals = base_queryset.filter(book__series__category__name='manga', discount_percent__gte=50).order_by('discount_percent')
-        comic_deals = base_queryset.filter(book__series__category__name='comic', discount_percent__gte=50).order_by('discount_percent')
-
-        context['manga_deals'] = manga_deals
-        context['comic_deals'] = comic_deals
-        return context
-
 class CartView(generic.TemplateView):
     template_name = 'src/cart.html'
     http_method_names = ['get', 'post']

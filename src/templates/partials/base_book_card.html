@@ -24,11 +24,7 @@
             </form>
         </div>
         <!-- Discount / Limited Badges -->
-        {% if book_sku.discount_percent > 40 %}
-            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm flex items-center gap-1">
-                <span class="material-symbols-outlined text-[12px]">local_fire_department</span> HOT DEAL
-            </span>
-        {% elif book_sku.has_discount and book_sku.discount_percent < 40 %}
+        {% if book_sku.has_discount and book_sku.discount_percent > 0 %}
             <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm">{{ book_sku.discount_percent }}% OFF</span>
         {% elif book_sku.quantity < 11 %}
             <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-white rounded-sm shadow-sm">Limited</span>

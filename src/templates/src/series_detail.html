@@ -34,48 +34,64 @@
         <!-- Filter & Sort -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <h3 class="text-2xl font-bold text-slate-900">Books</h3>
-            <div class="flex items-center gap-4">
-                <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
-                    <span class="material-symbols-outlined text-[20px]">sort</span>
-                    Sort by:
-                    <select class="border-none bg-transparent py-0 pl-2 pr-8 text-sm font-bold text-primary focus:ring-0 cursor-pointer">
-                        <option>Newest First</option>
-                        <option>Oldest First</option>
-                        <option>Price: Low to High</option>
-                        <option>Price: High to Low</option>
-                    </select>
-                </label>
-            </div>
         </div>
         <!-- Product Grid -->
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-10">
             <!-- Card 1 -->
-            {% for book_sku in sku_list %}
+            {% for book_sku in page %}
                 <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with books=book_sku %}</div>
             {% endfor %}
         </div>
         <!-- Pagination -->
-        <div class="flex justify-center mt-20">
-            <nav aria-label="Pagination" class="flex items-center gap-1">
-                <a class="p-2 text-slate-500 hover:text-primary" href="#">
-                    <span class="sr-only">Previous</span>
-                    <span class="material-symbols-outlined">chevron_left</span>
-                </a>
-                <a aria-current="page"
-                   class="h-10 w-10 flex items-center justify-center rounded bg-primary text-white font-bold"
-                   href="#">1</a>
-                <a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium"
-                   href="#">2</a>
-                <a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium"
-                   href="#">3</a>
-                <span class="h-10 w-10 flex items-center justify-center text-slate-500">...</span>
-                <a class="h-10 w-10 flex items-center justify-center rounded text-slate-700 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-800 font-medium"
-                   href="#">5</a>
-                <a class="p-2 text-slate-500 hover:text-primary" href="#">
-                    <span class="sr-only">Next</span>
-                    <span class="material-symbols-outlined">chevron_right</span>
-                </a>
-            </nav>
+        <div class="flex justify-center mt-16">
+            <div class="flex gap-2">
+                {% if page.number != 1 %}
+                    <a href="{% querystring page=page.previous_page_number %}"
+                       class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-sm">arrow_back_ios_new</span>
+                    </a>
+                    <a href="{% querystring page=1 %}"
+                       class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">1
+                    </a>
+                {% endif %}
+                {% if page.previous_page_number > 1|add:1 %}
+                    <span class="size-10 flex items-center justify-center text-text-muted">...</span>
+                {% endif %}
+                {% if page.has_previous %}
+                    {% if page.previous_page_number != 1 %}
+                        <a href="{% querystring page=page.previous_page_number %}"
+                           class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                            {{ page.previous_page_number }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+                <button class="size-10 flex items-center justify-center rounded bg-primary text-white font-bold">
+                    {{ page.number }}
+                </button>
+                {% if page.has_next %}
+                    <a href="{% querystring page=page.next_page_number %}"
+                       class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                        {{ page.next_page_number }}
+                    </a>
+                {% endif %}
+                {% if page.paginator.num_pages > page.next_page_number|add:1 %}
+                    <span class="size-10 flex items-center justify-center text-text-muted">...</span>
+                {% endif %}
+                {% if page.number != page.paginator.num_pages %}
+                    {% if page.next_page_number != page.paginator.num_pages %}
+                        <a href="{% querystring page=page.paginator.num_pages %}"
+                           class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">
+                            {{ page.paginator.num_pages }}
+                        </a>
+                    {% endif %}
+                {% endif %}
+                {% if page.has_next %}
+                    <a href="{% querystring page=page.next_page_number %}"
+                       class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors">
+                        <span class="material-symbols-outlined text-sm">arrow_forward_ios</span>
+                    </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </main>

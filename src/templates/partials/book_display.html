@@ -38,6 +38,9 @@
                            class="size-10 flex items-center justify-center rounded border border-gray-200 hover:border-primary text-text-main hover:text-primary transition-colors font-medium">1
                         </a>
                     {% endif %}
+                    {% if page.previous_page_number > 1|add:1 %}
+                        <span class="size-10 flex items-center justify-center text-text-muted">...</span>
+                    {% endif %}
                     {% if page.has_previous %}
                         {% if page.previous_page_number != 1 %}
                             <a href="{% querystring page=page.previous_page_number %}"
@@ -55,7 +58,7 @@
                             {{ page.next_page_number }}
                         </a>
                     {% endif %}
-                    {% if page.paginator.num_pages > page.next_page_number %}
+                    {% if page.paginator.num_pages > page.next_page_number|add:1 %}
                         <span class="size-10 flex items-center justify-center text-text-muted">...</span>
                     {% endif %}
                     {% if page.number != page.paginator.num_pages %}

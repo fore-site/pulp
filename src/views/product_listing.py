@@ -1,5 +1,4 @@
-from multiprocessing import context
-
+from django.db.models import Subquery, OuterRef, F
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
@@ -100,7 +99,7 @@ class SeriesIndexView(generic.ListView):
         category = get_object_or_404(Category, name__iexact=series_type)
         series = (Series.objects.filter(category=category).annotate(
             book_count=Count('books')
-        ))
+        ).order_by('title'))
         return series
     
     def get_context_data(self, **kwargs):
@@ -114,9 +113,13 @@ class SeriesDetailView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         series = get_object_or_404(Series, public_id=self.kwargs.get('public_id'), is_deleted=False)
-        sku_list = Sku.objects.filter(book__series=series, is_discontinued=False, book__is_deleted=False).order_by('book', 'book__series__title').distinct('book')
+        sku_list = Sku.objects.filter(book__series=series, is_discontinued=False, book__is_deleted=False).order_by('book').distinct('book')
         book_count = Book.objects.filter(series=series, sku__in=sku_list, is_deleted=False).count()
-        context['sku_list'] = sku_list
+        
+        page_num = self.request.GET.get('page', '1')
+        page = Paginator(object_list=sku_list, per_page=10).get_page(page_num)
+        
+        context['page'] = page
         context['book_count'] = book_count
         context['series'] = series
 
@@ -258,7 +261,7 @@ class NewReleaseView(generic.ListView):
         
         return context
     
-class HotDeals(generic.ListView):
+class HotDealsView(generic.ListView):
     model = Sku
     template_name = 'src/deals.html'
     context_object_name = 'hot_deals'
@@ -271,9 +274,17 @@ class HotDeals(generic.ListView):
 
         base_queryset = base_book_queryset(Sku)
         
-        distinct = distinct_sku(Sku)
-        base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct)
-        
+        distinct_sku_func = (Sku.objects.filter(discount_percent__gt=0)
+            .distinct('book')
+            .annotate(distinct_id=Subquery(
+                Sku.objects.filter(book=OuterRef('book'))
+                .annotate(discounted_price=(F('price') - (F('price') * F('discount_percent') / 100)))
+                .order_by('discounted_price')
+                .values('id')[:1]
+            )).values_list('distinct_id', flat=True))
+
+        base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct_sku_func)
+
         # Apply filter and sort if they exist
         filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount)
         hot_deals = filter_sort.filter_skus()

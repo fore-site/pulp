@@ -1,7 +1,6 @@
 import hashlib
 import hmac
 import json
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -10,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views import generic
 from django.db import IntegrityError
 from django.db.models import Case, When, F, DecimalField
-from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, IdempotencyKey
+from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, IdempotencyKey, Sku
 from django_htmx.middleware import HtmxDetails
 from datetime import timedelta
 from ..utils.common import create_order_and_related_data
@@ -158,11 +157,23 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
         order = Order.objects.get(order_number=reference)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
+
         if order.order_status != 'Paid':
             order.order_status = 'Paid'
             order.save()
             request.session['is_payment_processing'] = False
             request.session['item_count'] = 0
+
+            # Update stock quantity in database
+            sku_to_update = []
+            for item in order_items:
+                stock_left = item.sku.quantity - item.quantity
+                item.sku.quantity = stock_left
+                sku_to_update.append(item.sku)
+
+            rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
+            print(f'{rows_updated} stocks updated after successful purchase')
+
     except Order.DoesNotExist:
         return redirect('home')
     except OrderAddress.DoesNotExist:
@@ -198,6 +209,17 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
                 if order.order_status != 'Paid':
                     order.order_status = 'Paid'
                     order.save()
+
+                    # Update stock quantity in database
+                    order_items = OrderItem.objects.filter(order=order)
+                    sku_to_update = []
+                    for item in order_items:
+                        stock_left = item.sku.quantity - item.quantity
+                        item.sku.quantity = stock_left
+                        sku_to_update.append(item.sku)
+
+                    rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
+                    print(f'{rows_updated} stocks updated after successful purchase')
             except Order.DoesNotExist:
                 pass
             finally:
