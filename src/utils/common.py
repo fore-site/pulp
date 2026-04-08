@@ -13,13 +13,13 @@ class FilterSort:
                   sort_by: str | None = None, 
                   price: str | None = None, 
                   genres: list[str] | None = None, 
-                  publishers: list[str] | None = None,
+                  publisher: str | None = None,
                   discount: str | None = None):
         self.books = books
         self.sort_by = sort_by
         self.genres = genres
         self.price = price
-        self.publishers = publishers
+        self.publisher = publisher
         self.discount = discount
         self.seven_days = timezone.now().replace(hour=0, minute=0, microsecond=0) - timedelta(days=7)
 
@@ -27,8 +27,8 @@ class FilterSort:
         """Filter sku/books by specified parameter"""
         if self.genres:
             self.books = self.books.filter(book__series__genres__id__in=self.genres)
-        if self.publishers:
-            self.books = self.books.filter(publisher__id__in=self.publishers)
+        if self.publisher:
+            self.books = self.books.filter(publisher__id=self.publisher)
         if self.sort_by:
             self.books = self.sort_skus(self.books, self.sort_by)
         if self.discount:

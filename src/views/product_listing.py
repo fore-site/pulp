@@ -1,4 +1,8 @@
+from typing import Any
+
 from django.db.models import Subquery, OuterRef, F
+from django.http import HttpRequest
+from django.http.response import HttpResponse as HttpResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
@@ -129,13 +133,14 @@ class SeriesDetailView(generic.TemplateView):
 def search_results_view(request):  
     query = request.GET.get('q')
     genre_filters = request.GET.getlist('genre')
-    publisher_filters = request.GET.getlist('publisher')
+    publisher_filter = request.GET.get('publisher')
     price = request.GET.get('price')
     sort_by = request.GET.get('sort')
     price_range = ['10000', '20000', '50000', '100000']
     selected_price = request.GET.get('price')
     selected_sort = request.GET.get('sort')
-
+    
+    print(query)
     if len(query) > 20:
         query = query[:20] + "..."
     base_queryset = base_book_queryset(Sku)
@@ -152,16 +157,18 @@ def search_results_view(request):
         return render(request, 'src/search_results.html', {"page": None, "query": query})
     else:
         # Apply filters and sort if they exist
-        filter_sort = FilterSort(results, sort_by, price=price, genres=genre_filters, publishers=publisher_filters)
+        filter_sort = FilterSort(results, sort_by, price=price, genres=genre_filters, publisher=publisher_filter)
         search_results = filter_sort.filter_skus()
         
         page_num = request.GET.get("page", "1")
         page = Paginator(object_list=search_results, per_page=10).get_page(page_num)
         
-        return render(request, 'src/search_results.html', 
-                      {"page": page, "query": query, 
+        response = render(request, 'src/search_results.html', 
+                      {"page_obj": page, "query": query, 
                        "result_count": result_count, "selected_price": selected_price, 
                        "selected_sort": selected_sort, "price_range": price_range})
+        response['Vary'] = 'HX-Request'
+        return response
 
 class BestsellingView(generic.ListView):
     model = Sku
@@ -169,8 +176,15 @@ class BestsellingView(generic.ListView):
     context_object_name = 'bestselling_books'
     paginate_by = 10
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        response = super().dispatch(request, *args, **kwargs)
+        response['Vary'] = 'HX-Request'
+        return response
+
     def get_queryset(self):
-        # Get query parameters for filter/sort
+        # Get query parameters for filter/sort]
+        genre_filters = self.request.GET.getlist('genre')
+        publisher_filters = self.request.GET.get('publisher')
         price_range = self.request.GET.get('price')
         sort_by = self.request.GET.get('sort')
 
@@ -185,11 +199,11 @@ class BestsellingView(generic.ListView):
                         .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0))
         
         # Apply filters and sort if they exist
-        filter_sort = FilterSort(base_bestselling, sort_by, price=price_range, genres=genre_filters, publishers=publisher_filters)
+        filter_sort = FilterSort(base_bestselling, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filters)
         bestselling = filter_sort.filter_skus()
 
         if self.request.htmx:
-            self.template_name = 'partials/book_display.html'
+            self.template_name = 'partials/book_grid.html'
 
         return bestselling
 
@@ -198,7 +212,10 @@ class BestsellingView(generic.ListView):
         genres = Genre.objects.filter(categories__name__icontains=self.category.name)
         publishers = Publisher.objects.filter(sku__book__series__category=self.category).distinct('name')
 
+        print(self.request.GET.getlist('genre'))
+
         context['category'] = self.category.name.capitalize()
+        context['page_title'] = 'Bestseller'
         context['genres'] = genres
         context['publishers'] = publishers
         context['price_range'] = ['10000', '20000', '50000', '100000']
@@ -215,6 +232,11 @@ class NewReleaseView(generic.ListView):
     context_object_name = 'new_releases'
     paginate_by = 10
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        response = super().dispatch(request, *args, **kwargs)
+        response['Vary'] = 'HX-Request'
+        return response
+
     def get_queryset(self):
         # Get current date and date from one year ago
         today = timezone.now().replace(hour=0, second=0, minute=0, microsecond=0)
@@ -222,7 +244,7 @@ class NewReleaseView(generic.ListView):
 
         # Get query parameters for filter/sort
         genre_filters = self.request.GET.getlist('genre')
-        publisher_filters = self.request.GET.getlist('publisher')
+        publisher_filters = self.request.GET.get('publisher')
         price_range = self.request.GET.get('price')
         sort_by = self.request.GET.get('sort')
 
@@ -237,11 +259,11 @@ class NewReleaseView(generic.ListView):
         book__series__category=self.category, id__in=distinct))
 
         # Apply filters and sort if they exist
-        filter_sort = FilterSort(base_new_releases, sort_by, price=price_range, genres=genre_filters, publishers=publisher_filters)
+        filter_sort = FilterSort(base_new_releases, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filters)
         new_releases = filter_sort.filter_skus()
 
         if self.request.htmx:
-            self.template_name = 'partials/book_display.html'
+            self.template_name = 'partials/book_grid.html'
 
         return new_releases
 
@@ -251,6 +273,7 @@ class NewReleaseView(generic.ListView):
         publishers = Publisher.objects.filter(sku__book__series__category=self.category).distinct('name')
         
         context['category'] = self.category.name.capitalize()
+        context['page_title'] = 'New Releases'
         context['genres'] = genres
         context['publishers'] = publishers
         context['price_range'] = ['10000', '20000', '50000', '100000']

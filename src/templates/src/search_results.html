@@ -3,7 +3,7 @@
     Pulp - Search results
 {% endblock title %}
 {% block content %}
-    {% if not page %}
+    {% if not page_obj %}
         <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 md:py-32 w-full max-w-[1440px] mx-auto">
             <div class="w-full max-w-3xl flex flex-col items-center text-center space-y-10 animate-fade-in-up">
                 <!-- Illustration Area -->
@@ -50,10 +50,18 @@
         </div>
     </main>
 {% else %}
-   <!-- Main Content -->
+    <!-- Main Content -->
     <main class="flex-grow bg-white">
-        {% include 'partials/book_display.html' with page=page page_title='Results for' %}
-</main>
-
+        <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-8" id="books">
+            <div class="flex flex-col lg:flex-row gap-10">
+                <!-- Sticky Sidebar Filters -->
+                <!-- Product Grid Area -->
+                <div class="flex-1">
+                    <!-- Header Section -->
+                    {% include 'partials/book_grid.html' %}
+                </div>
+            </div>
+        </div>
+    </main>
 {% endif %}
 {% endblock content %}

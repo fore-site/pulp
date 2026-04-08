@@ -8,24 +8,24 @@
           class="space-y-3">
         <!-- Genres -->
         {% if genres %}
-        <div class="space-y-4">
-            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
-            <div class="space-y-2">
-                {% for genre in genres %}
-                    <label class="flex items-start gap-3 group cursor-pointer">
-                        <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
-                               type="checkbox"
-                               name="genre"
-                               value="{{ genre.id }}"
-                               {% if genre.id in selected_genres %}checked{% endif %} />
-                        <div class="flex flex-col">
-                            <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
-                        </div>
-                    </label>
-                {% endfor %}
+            <div class="space-y-4">
+                <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
+                <div class="space-y-2">
+                    {% for genre in genres %}
+                        <label class="flex items-start gap-3 group cursor-pointer">
+                            <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
+                                   type="checkbox"
+                                   name="genre"
+                                   value="{{ genre.id }}"
+                                   {% if genre.id in selected_genres %}checked{% endif %} />
+                            <div class="flex flex-col">
+                                <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-        <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
         {% endif %}
         <!-- Price Range -->
         <div class="space-y-4">
@@ -44,23 +44,23 @@
             {% endfor %}
         </div>
         {% if publishers %}
-        <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
-        <!-- Publishers -->
-        <div class="space-y-4">
-            <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Publisher</h3>
-            <div class="space-y-2">
-                {% for publisher in publishers %}
-                    <label class="flex items-center gap-3 group cursor-pointer">
-                        <input class="size-4 rounded border-[#e5dcde]  text-primary focus:ring-primary bg-transparent"
-                               type="checkbox"
-                               name="publisher"
-                               value="{{ publisher.id }}"
-                               {% if publisher.id in selected_publishers %}checked{% endif %} />
-                        <span class="text-slate-700 dark:text-slate-300 text-sm group-hover:text-primary transition-colors">{{ publisher.name }}</span>
-                    </label>
-                {% endfor %}
+            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+            <!-- Publishers -->
+            <div class="space-y-4">
+                <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Publisher</h3>
+                <div class="space-y-2">
+                    {% for publisher in publishers %}
+                        <label class="flex items-center gap-3 group cursor-pointer">
+                            <input class="size-4 rounded border-[#e5dcde]  text-primary focus:ring-primary bg-transparent"
+                                   type="radio"
+                                   name="publisher"
+                                   value="{{ publisher.id }}"
+                                   {% if publisher.id in selected_publishers %}checked{% endif %} />
+                            <span class="text-slate-700 dark:text-slate-300 text-sm group-hover:text-primary transition-colors">{{ publisher.name }}</span>
+                        </label>
+                    {% endfor %}
+                </div>
             </div>
-        </div>
         {% endif %}
     </form>
 </aside>
