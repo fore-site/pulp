@@ -14,21 +14,27 @@ class FilterSort:
                   price: str | None = None, 
                   genres: list[str] | None = None, 
                   publisher: str | None = None,
-                  discount: str | None = None):
+                  discount: str | None = None,
+                  cat_filter: list[str] | None = None):
         self.books = books
         self.sort_by = sort_by
         self.genres = genres
         self.price = price
         self.publisher = publisher
         self.discount = discount
+        self.cat_filter = cat_filter
         self.seven_days = timezone.now().replace(hour=0, minute=0, microsecond=0) - timedelta(days=7)
 
     def filter_skus(self):
         """Filter sku/books by specified parameter"""
         if self.genres:
-            self.books = self.books.filter(book__series__genres__id__in=self.genres)
+            self.books = self.books.filter(book__series__genres__name__in=self.genres)
+            print(self.books)
+            print(self.genres)
         if self.publisher:
-            self.books = self.books.filter(publisher__id=self.publisher)
+            self.books = self.books.filter(publisher__name=self.publisher)
+        if self.cat_filter:
+            self.books = self.books.filter(book__series__category__name__in=self.cat_filter)
         if self.sort_by:
             self.books = self.sort_skus(self.books, self.sort_by)
         if self.discount:
@@ -63,7 +69,7 @@ class FilterSort:
                 )
             )
             books = books.order_by('current_price') if sort_by == 'price_asc' else books.order_by('-current_price')
-        elif sort_by == 'newest':
+        elif sort_by == 'newest_first':
             books = books.order_by('-published_at')
         elif sort_by == 'reviews':
             books = books.order_by('-book__average_rating')

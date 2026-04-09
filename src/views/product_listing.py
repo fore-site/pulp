@@ -1,5 +1,4 @@
 from typing import Any
-
 from django.db.models import Subquery, OuterRef, F
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
@@ -13,6 +12,7 @@ from ..utils.common import FilterSort, base_book_queryset, get_related_books, di
 from django.db.models import Q, Count
 from django.views import generic
 from datetime import timedelta
+from ..forms import SearchBarForm
 
 class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
@@ -131,44 +131,56 @@ class SeriesDetailView(generic.TemplateView):
 
 @require_GET
 def search_results_view(request):  
-    query = request.GET.get('q')
     genre_filters = request.GET.getlist('genre')
     publisher_filter = request.GET.get('publisher')
-    price = request.GET.get('price')
-    sort_by = request.GET.get('sort')
     price_range = ['10000', '20000', '50000', '100000']
     selected_price = request.GET.get('price')
     selected_sort = request.GET.get('sort')
+    template_name = 'src/search_results.html'
+
+    form = SearchBarForm({'q': request.GET.get('q')})
+
+    if request.htmx:
+        template_name = 'partials/book_grid.html'
     
-    print(query)
-    if len(query) > 20:
-        query = query[:20] + "..."
     base_queryset = base_book_queryset(Sku)
 
     # Get a list of all distinct Sku
     distinct = distinct_sku(Sku)
+    
+    if form.is_valid():
+        query = form.cleaned_data.get('q')
+        public_query = query[:20] + "..." if len(query) > 20 else query
+        try:
+            results = (base_queryset
+                    .filter(Q(book__title__icontains=query) | Q(book__authors__name__icontains=query) | Q(isbn_number__icontains=query), id__in=distinct))
+            result_count = results.count()
+        except Sku.DoesNotExist:
+            return render(request, template_name, {"page": None, "query": public_query})
+        else:
+            # Apply filters and sort if they exist
+            filter_sort = FilterSort(results, sort_by=selected_sort, price=selected_price, genres=genre_filters, publisher=publisher_filter)
+            search_results = filter_sort.filter_skus()
+            
+            page_num = request.GET.get("page", "1")
+            page = Paginator(object_list=search_results, per_page=10).get_page(page_num)
+            response = render(request, template_name, 
+                        {"page_obj": page, "query": public_query, 
+                        "result_count": result_count, "selected_price": selected_price, 
+                        "selected_sort": selected_sort, "price_range": price_range,
+                        'search_bar_form': form})
+        
+            # Add response header to indicate that the content varies based on the presence of the HX-Request header
+            response['Vary'] = 'HX-Request'
 
-    try:
-        results = (base_queryset
-                   .filter(Q(book__title__icontains=query) | Q(book__authors__name__icontains=query) | Q(isbn_number__icontains=query), id__in=distinct)
-                   .distinct('book'))
-        result_count = results.count()
-    except Sku.DoesNotExist:
-        return render(request, 'src/search_results.html', {"page": None, "query": query})
-    else:
-        # Apply filters and sort if they exist
-        filter_sort = FilterSort(results, sort_by, price=price, genres=genre_filters, publisher=publisher_filter)
-        search_results = filter_sort.filter_skus()
-        
-        page_num = request.GET.get("page", "1")
-        page = Paginator(object_list=search_results, per_page=10).get_page(page_num)
-        
-        response = render(request, 'src/search_results.html', 
-                      {"page_obj": page, "query": query, 
-                       "result_count": result_count, "selected_price": selected_price, 
-                       "selected_sort": selected_sort, "price_range": price_range})
-        response['Vary'] = 'HX-Request'
-        return response
+            #   Add headers to prevent caching of the response, ensuring that users always see the most up-to-date search results
+            response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+            response['Pragma'] = 'no-cache'
+            response['Expires'] = '0'
+
+            return response
+    return render(request, template_name, {"page": None, "query": None,
+                                           'search_bar_form': form})
 
 class BestsellingView(generic.ListView):
     model = Sku
@@ -178,13 +190,19 @@ class BestsellingView(generic.ListView):
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         response = super().dispatch(request, *args, **kwargs)
+        # Add response header to indicate that the content varies based on the presence of the HX-Request header
         response['Vary'] = 'HX-Request'
+
+        #   Add headers to prevent caching of the response, ensuring that users always see the most up-to-date bestseller listings
+        response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
         return response
 
     def get_queryset(self):
         # Get query parameters for filter/sort]
         genre_filters = self.request.GET.getlist('genre')
-        publisher_filters = self.request.GET.get('publisher')
+        publisher_filter = self.request.GET.get('publisher')
         price_range = self.request.GET.get('price')
         sort_by = self.request.GET.get('sort')
 
@@ -199,7 +217,7 @@ class BestsellingView(generic.ListView):
                         .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0))
         
         # Apply filters and sort if they exist
-        filter_sort = FilterSort(base_bestselling, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filters)
+        filter_sort = FilterSort(base_bestselling, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filter)
         bestselling = filter_sort.filter_skus()
 
         if self.request.htmx:
@@ -212,15 +230,13 @@ class BestsellingView(generic.ListView):
         genres = Genre.objects.filter(categories__name__icontains=self.category.name)
         publishers = Publisher.objects.filter(sku__book__series__category=self.category).distinct('name')
 
-        print(self.request.GET.getlist('genre'))
-
         context['category'] = self.category.name.capitalize()
         context['page_title'] = 'Bestseller'
         context['genres'] = genres
         context['publishers'] = publishers
         context['price_range'] = ['10000', '20000', '50000', '100000']
-        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
-        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('publisher')]
+        context['selected_genres'] = [g for g in self.request.GET.getlist('genre')]
+        context['selected_publisher'] = self.request.GET.get('publisher')
         context['selected_price'] = self.request.GET.get('price')
         context['selected_sort'] = self.request.GET.get('sort')
 
@@ -234,7 +250,14 @@ class NewReleaseView(generic.ListView):
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         response = super().dispatch(request, *args, **kwargs)
+        # Add response header to indicate that the content varies based on the presence of the HX-Request header
         response['Vary'] = 'HX-Request'
+
+        #   Add headers to prevent caching of the response, ensuring that users always see the most up-to-date new releases
+        response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
+        
         return response
 
     def get_queryset(self):
@@ -244,9 +267,11 @@ class NewReleaseView(generic.ListView):
 
         # Get query parameters for filter/sort
         genre_filters = self.request.GET.getlist('genre')
-        publisher_filters = self.request.GET.get('publisher')
+        publisher_filter = self.request.GET.get('publisher')
         price_range = self.request.GET.get('price')
         sort_by = self.request.GET.get('sort')
+
+        print(genre_filters)
 
         self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
         
@@ -259,7 +284,7 @@ class NewReleaseView(generic.ListView):
         book__series__category=self.category, id__in=distinct))
 
         # Apply filters and sort if they exist
-        filter_sort = FilterSort(base_new_releases, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filters)
+        filter_sort = FilterSort(base_new_releases, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filter)
         new_releases = filter_sort.filter_skus()
 
         if self.request.htmx:
@@ -277,8 +302,8 @@ class NewReleaseView(generic.ListView):
         context['genres'] = genres
         context['publishers'] = publishers
         context['price_range'] = ['10000', '20000', '50000', '100000']
-        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
-        context['selected_publishers'] = [int(pub) for pub in self.request.GET.getlist('publisher')]
+        context['selected_genres'] = [g for g in self.request.GET.getlist('genre')]
+        context['selected_publisher'] = self.request.GET.getlist('publisher')
         context['selected_price'] = self.request.GET.get('price')
         context['selected_sort'] = self.request.GET.get('sort')
         
@@ -289,11 +314,24 @@ class HotDealsView(generic.ListView):
     template_name = 'src/deals.html'
     context_object_name = 'hot_deals'
     paginate_by = 10
+    
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        response = super().dispatch(request, *args, **kwargs)
+        # Add response header to indicate that the content varies based on the presence of the HX-Request header
+        response['Vary'] = 'HX-Request'
+
+        #   Add headers to prevent caching of the response, ensuring that users always see the most up-to-date new releases
+        response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
+        return response
 
     def get_queryset(self):
         sort_by = self.request.GET.get('sort')
         price_range = self.request.GET.get('price')
         discount = self.request.GET.get('disct')
+        category_filter = self.request.GET.getlist('cat')
+        action = self.request.GET.get('action')
 
         base_queryset = base_book_queryset(Sku)
         
@@ -309,9 +347,12 @@ class HotDealsView(generic.ListView):
         base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct_sku_func)
 
         # Apply filter and sort if they exist
-        filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount)
+        filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount, cat_filter=category_filter, action=action)
         hot_deals = filter_sort.filter_skus()
         
+        if self.request.htmx:
+            self.template_name = 'partials/book_grid.html'
+
         return hot_deals
     
     def get_context_data(self, **kwargs):
@@ -320,9 +361,10 @@ class HotDealsView(generic.ListView):
 
         context['selected_sort'] = self.request.GET.get('sort')
         context['categories'] = categories
+        context['page_title'] = 'Hot Deals'
         context['price_range'] = ['10000', '20000', '50000', '100000']
         context['discounts'] = ['lt50', 'gt50']
-        context['selected_genres'] = [int(g) for g in self.request.GET.getlist('genre')]
+        context['selected_categories'] = [c for c in self.request.GET.getlist('cat')]
         context['selected_price'] = self.request.GET.get('price')
         context['selected_discount'] = self.request.GET.get('disct')
         

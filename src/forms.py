@@ -47,6 +47,20 @@ class CustomLoginForm(AuthenticationForm):
         'inactive': _('This account is currently disabled'),
     }
 
+class SearchBarForm(forms.Form):
+    q = forms.CharField(
+        max_length=100,
+        min_length=1,
+        required=True,
+        widget=forms.TextInput(
+            attrs={
+                'class': 'flex-1 h-11 px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-sm placeholder:text-text-muted-light transition-all',
+                'placeholder': 'Search titles, authors, isbn number...',
+                'type': 'search',
+                'id': 'search-bar'
+            }
+        )
+    )
 
 class CartUpdateForm(forms.Form):
     quantity = forms.IntegerField(

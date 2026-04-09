@@ -1,12 +1,14 @@
 <div class="flex items-center gap-2">
         <span class="text-sm font-medium text-[#88636d]">Sort by:</span>
-        <select hx-get="{{ request.path }}"
-                hx-target="#books"
-                hx-swap="innerHTML"
-                hx-trigger="change delay:500ms"
+        <select id="sort-select"
                 name="sort"
-                class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg text-sm font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer">
+                class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg text-sm font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer"
+                onchange="document.getElementById('sidebar-sort-value').value = this.value; document.querySelector('.sidebar-filter-form').dispatchEvent(new Event('change', {bubbles:true}));">
                 <option value="">Default</option>
+                {% if page_title == 'Hot Deals' %}
+                        <option value="discount"
+                                {% if 'discount' == selected_sort %}selected{% endif %}>Biggest Discount</option>
+                {% endif %}
                 <option value="newest_first"
                         {% if 'newest_first' == selected_sort %}selected{% endif %}>Newest Arrivals</option>
                 <option value="price_asc"

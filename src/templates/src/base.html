@@ -48,11 +48,8 @@
                     </a>
                     <div class="hidden md:flex flex-1 max-w-2xl mx-auto">
                         <form action="{% url 'search_results' %}" method="get" class="flex w-full">
-                            <input class="flex-1 h-11 px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-sm placeholder:text-text-muted-light transition-all"
-                                   placeholder="Search titles, authors, isbn number..."
-                                   type="search"
-                                   name="q"
-                                   id="search-bar" />
+                            {{ search_bar_form.q }}
+                            {% if search_bar_form.q.errors %}{{ search_bar_form.q.errors }}{% endif %}
                             <button type="submit"
                                     class="h-11 px-4 rounded-r-full bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center border border-primary border-l-0">
                                 <svg xmlns="http://www.w3.org/2000/svg"

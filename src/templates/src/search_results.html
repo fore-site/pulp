@@ -28,11 +28,19 @@
                 <!-- Text Content -->
                 <div class="space-y-6 max-w-2xl mt-8">
                     <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-text-main uppercase leading-none">No Titles Found</h2>
-                    <p class="text-lg md:text-xl text-text-muted font-normal leading-relaxed">
-                        Your search for "<span class="text-primary font-body">{{ query }}</span>" did not yield any results.
-                        <br class="hidden md:block" />
-                        Try adjusting your filters or checking your spelling.
-                    </p>
+                    {% if query %}
+                        <p class="text-lg md:text-xl text-text-muted font-normal leading-relaxed">
+                            Your search for "<span class="text-primary font-body">{{ query }}</span>" did not yield any results.
+                            <br class="hidden md:block" />
+                            Try adjusting your filters or checking your spelling.
+                        </p>
+                    {% else %}
+                        <p class="text-lg md:text-xl text-text-muted font-normal leading-relaxed">
+                            You have entered an invalid search query.
+                            <br class="hidden md:block" />
+                            Try checking your spelling and try again.
+                        </p>
+                    {% endif %}
                 </div>
                 <!-- Actions -->
                 <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full pt-4">
