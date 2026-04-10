@@ -1,77 +1,71 @@
 {% extends "src/base.html" %}
 {% block title %}
-    Not Found
+    Pulp - Error
 {% endblock title %}
 {% block content %}
-{% if exception == 'Resolver404' %}
-<!-- Error Canvas -->
-<main class="flex-grow flex flex-col items-center justify-center px-6 text-center pt-24 pb-12">
-<div class="max-w-4xl w-full">
-<!-- Asymmetric Ink Spill Aesthetic Decor -->
-<div class="relative inline-block mb-8">
-<h1 class="text-[12rem] md:text-[18rem] font-black leading-none tracking-tighter text-slate-900 select-none font-headline">
-                    404
-                </h1>
-<div class="absolute -top-4 -right-4 w-24 h-24 bg-primary rounded-full mix-blend-multiply opacity-10 blur-2xl"></div>
-</div>
-<!-- Error Message Content -->
-<div class="space-y-6">
-<p class="text-xl md:text-2xl font-medium text-slate-900 max-w-xl mx-auto leading-relaxed">
-                    Page could not be found.
-                </p>
-<!-- Metadata Label -->
-<p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">
-                    ERRORCODE_NOT_FOUND
-                </p>
-<!-- Action Button -->
-<div class="pt-8 flex flex-col md:flex-row items-center justify-center gap-4">
-<a href="{% url 'home' %}" class="bg-white text-slate-900 px-10 py-4 font-bold text-sm uppercase tracking-widest border border-slate-900 hover:bg-slate-50 transition-all duration-300 scale-100 active:scale-95 rounded-none">
-                        Go Home
-                    </button>
-</div>
-</div>
-</div>
-<!-- Background Stylized Graphic -->
-<div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-<div class="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-slate-50 rounded-full blur-[100px] opacity-50"></div>
-<div class="absolute bottom-[10%] right-[5%] w-[300px] h-[300px] bg-[#a1123a]/5 rounded-full blur-[80px]"></div>
-</div>
-</main>
-            <a href="{% url 'home' %}">Continue shopping</a>
-        </h4>
-    {% else %}
+    {% if exception == 'Resolver404' %}
+        <!-- Error Canvas -->
+        <main class="flex-grow flex flex-col items-center justify-center px-6 text-center pt-24 pb-12">
+            <div class="max-w-4xl w-full">
+                <!-- Asymmetric Ink Spill Aesthetic Decor -->
+                <div class="relative inline-block mb-8">
+                    <h1 class="text-[12rem] md:text-[18rem] font-black leading-none tracking-tighter text-slate-900 select-none font-headline">
+                        404
+                    </h1>
+                    <div class="absolute -top-4 -right-4 w-24 h-24 bg-primary rounded-full mix-blend-multiply opacity-10 blur-2xl"></div>
+                </div>
+                <!-- Error Message Content -->
+                <div class="space-y-6">
+                    <p class="text-xl md:text-2xl font-medium text-slate-900 max-w-xl mx-auto leading-relaxed">Page could not be found.</p>
+                    <!-- Metadata Label -->
+                    <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">ERRORCODE_NOT_FOUND</p>
+                    <!-- Action Button -->
+                    <div class="pt-8 flex flex-col md:flex-row items-center justify-center gap-4">
+                        <a href="{% url 'home' %}"
+                           class="bg-white text-slate-900 px-10 py-4 font-bold text-sm uppercase tracking-widest border border-slate-900 hover:bg-slate-50 transition-all duration-300 scale-100 active:scale-95 rounded-none">
+                            Go Home
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Background Stylized Graphic -->
+            <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+                <div class="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-slate-50 rounded-full blur-[100px] opacity-50"></div>
+                <div class="absolute bottom-[10%] right-[5%] w-[300px] h-[300px] bg-[#a1123a]/5 rounded-full blur-[80px]"></div>
+            </div>
+        </main>
+        <a href="{% url 'home' %}">Continue shopping</a>
+    </h4>
+{% else %}
     <!-- Error Canvas -->
-<main class="flex-grow flex flex-col items-center justify-center px-6 text-center pt-24 pb-12">
-<div class="max-w-4xl w-full">
-<!-- Asymmetric Ink Spill Aesthetic Decor -->
-<div class="relative inline-block mb-8">
-<h1 class="text-[12rem] md:text-[18rem] font-black leading-none tracking-tighter text-slate-900 select-none font-headline">
+    <main class="flex-grow flex flex-col items-center justify-center px-6 text-center pt-24 pb-12">
+        <div class="max-w-4xl w-full">
+            <!-- Asymmetric Ink Spill Aesthetic Decor -->
+            <div class="relative inline-block mb-8">
+                <h1 class="text-[12rem] md:text-[18rem] font-black leading-none tracking-tighter text-slate-900 select-none font-headline">
                     500
                 </h1>
-<div class="absolute -top-4 -right-4 w-24 h-24 bg-primary rounded-full mix-blend-multiply opacity-10 blur-2xl"></div>
-</div>
-<!-- Error Message Content -->
-<div class="space-y-6">
-<p class="text-xl md:text-2xl font-medium text-slate-900 max-w-xl mx-auto leading-relaxed">
-                    Internal Server Error
-                </p>
-<!-- Metadata Label -->
-<p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">
-                    ERRORCODE_SERVER_INTERNAL_05
-                </p>
-<!-- Action Button -->
-<div class="pt-8 flex flex-col md:flex-row items-center justify-center gap-4">
-<a href="{% url 'home' %}" class="bg-white text-slate-900 px-10 py-4 font-bold text-sm uppercase tracking-widest border border-slate-900 hover:bg-slate-50 transition-all duration-300 scale-100 active:scale-95 rounded-none">
+                <div class="absolute -top-4 -right-4 w-24 h-24 bg-primary rounded-full mix-blend-multiply opacity-10 blur-2xl"></div>
+            </div>
+            <!-- Error Message Content -->
+            <div class="space-y-6">
+                <p class="text-xl md:text-2xl font-medium text-slate-900 max-w-xl mx-auto leading-relaxed">Internal Server Error</p>
+                <!-- Metadata Label -->
+                <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-slate-400">ERRORCODE_SERVER_INTERNAL_05</p>
+                <!-- Action Button -->
+                <div class="pt-8 flex flex-col md:flex-row items-center justify-center gap-4">
+                    <a href="{% url 'home' %}"
+                       class="bg-white text-slate-900 px-10 py-4 font-bold text-sm uppercase tracking-widest border border-slate-900 hover:bg-slate-50 transition-all duration-300 scale-100 active:scale-95 rounded-none">
                         Go home
-</a>
-</div>
-</div>
-</div>
-<!-- Background Stylized Graphic -->
-<div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-<div class="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-slate-50 rounded-full blur-[100px] opacity-50"></div>
-<div class="absolute bottom-[10%] right-[5%] w-[300px] h-[300px] bg-[#a1123a]/5 rounded-full blur-[80px]"></div>
-</div>
-</main>
-    {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- Background Stylized Graphic -->
+        <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+            <div class="absolute top-[20%] left-[10%] w-[400px] h-[400px] bg-slate-50 rounded-full blur-[100px] opacity-50"></div>
+            <div class="absolute bottom-[10%] right-[5%] w-[300px] h-[300px] bg-[#a1123a]/5 rounded-full blur-[80px]"></div>
+        </div>
+    </main>
+{% endif %}
 {% endblock content %}

@@ -29,8 +29,6 @@ class FilterSort:
         """Filter sku/books by specified parameter"""
         if self.genres:
             self.books = self.books.filter(book__series__genres__name__in=self.genres)
-            print(self.books)
-            print(self.genres)
         if self.publisher:
             self.books = self.books.filter(publisher__name=self.publisher)
         if self.cat_filter:

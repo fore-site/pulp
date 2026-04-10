@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.views import generic
+from django.contrib.humanize.templatetags.humanize import intcomma
 from django.utils import timezone
 from src.models import CartItem, Cart
 from ..forms import ShippingAddressForm
@@ -19,24 +20,24 @@ class CheckoutShippingView(generic.TemplateView):
             request.session['address_state'] = state
             subtotal = Decimal(request.session.get('subtotal_price'))
             if state == 'Lagos':
-                request.session['shipping_fee'] = '3.00'
-                total_price = (subtotal + Decimal('3.00')).quantize(Decimal('0.01'))
+                request.session['shipping_fee'] = '3000.00'
+                total_price = (subtotal + Decimal('3000.00')).quantize(Decimal('0.01'))
                 request.session['total_price'] = str(total_price)
-                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price')}</span>"
-                return HttpResponse('$3.00' + total_price_oob)
+                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>₦{intcomma(request.session.get('total_price'))}</span>"
+                return HttpResponse('₦3,000.00' + total_price_oob)
             else:
-                request.session['shipping_fee'] = '5.00'
-                total_price = (subtotal + Decimal('5.00')).quantize(Decimal('0.01'))
+                request.session['shipping_fee'] = '5000.00'
+                total_price = (subtotal + Decimal('5000.00')).quantize(Decimal('0.01'))
                 request.session['total_price'] = str(total_price)
-                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>{request.session.get('total_price')}</span>"
-                return HttpResponse('$5.00' + total_price_oob)
+                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>₦{intcomma(request.session.get('total_price'))}</span>"
+                return HttpResponse('₦5,000.00' + total_price_oob)
             
         self.user = request.user if request.user.is_authenticated else None
         try:
             if self.user:
                 cart = Cart.objects.get(user=self.user)
             else:
-                cart = Cart.objects.get(id = request.session.get('cart_id'))
+                cart = Cart.objects.get(session_id = request.session.session_key)
         except Cart.DoesNotExist:
             return HttpResponseRedirect(reverse('cart'))
         
@@ -102,7 +103,7 @@ class CheckoutReviewView(generic.TemplateView):
             if self.user:
                 cart = Cart.objects.get(user=self.user)
             else:
-                cart = Cart.objects.get(id = request.session.get('cart_id'))
+                cart = Cart.objects.get(session_id = request.session.session_key)
         except Cart.DoesNotExist:
             return HttpResponseRedirect(reverse('cart'))
         

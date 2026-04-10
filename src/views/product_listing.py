@@ -131,8 +131,6 @@ class SeriesDetailView(generic.TemplateView):
 
 @require_GET
 def search_results_view(request):  
-    genre_filters = request.GET.getlist('genre')
-    publisher_filter = request.GET.get('publisher')
     price_range = ['10000', '20000', '50000', '100000']
     selected_price = request.GET.get('price')
     selected_sort = request.GET.get('sort')
@@ -159,7 +157,7 @@ def search_results_view(request):
             return render(request, template_name, {"page": None, "query": public_query})
         else:
             # Apply filters and sort if they exist
-            filter_sort = FilterSort(results, sort_by=selected_sort, price=selected_price, genres=genre_filters, publisher=publisher_filter)
+            filter_sort = FilterSort(results, sort_by=selected_sort, price=selected_price)
             search_results = filter_sort.filter_skus()
             
             page_num = request.GET.get("page", "1")
@@ -215,7 +213,6 @@ class BestsellingView(generic.ListView):
 
         base_bestselling = (base_queryset
                         .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0))
-        
         # Apply filters and sort if they exist
         filter_sort = FilterSort(base_bestselling, sort_by, price=price_range, genres=genre_filters, publisher=publisher_filter)
         bestselling = filter_sort.filter_skus()
@@ -227,8 +224,8 @@ class BestsellingView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        genres = Genre.objects.filter(categories__name__icontains=self.category.name)
-        publishers = Publisher.objects.filter(sku__book__series__category=self.category).distinct('name')
+        genres = Genre.objects.filter(categories__name__iexact=self.category.name).order_by('name')
+        publishers = Publisher.objects.filter(sku__book__series__category=self.category).order_by('name').distinct('name')
 
         context['category'] = self.category.name.capitalize()
         context['page_title'] = 'Bestseller'
@@ -294,8 +291,8 @@ class NewReleaseView(generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        genres = Genre.objects.filter(categories__name__icontains=self.category.name)
-        publishers = Publisher.objects.filter(sku__book__series__category=self.category).distinct('name')
+        genres = Genre.objects.filter(categories__name__iexact=self.category.name).order_by('name')
+        publishers = Publisher.objects.filter(sku__book__series__category=self.category).order_by('name').distinct('name')
         
         context['category'] = self.category.name.capitalize()
         context['page_title'] = 'New Releases'
@@ -331,7 +328,6 @@ class HotDealsView(generic.ListView):
         price_range = self.request.GET.get('price')
         discount = self.request.GET.get('disct')
         category_filter = self.request.GET.getlist('cat')
-        action = self.request.GET.get('action')
 
         base_queryset = base_book_queryset(Sku)
         
@@ -347,9 +343,9 @@ class HotDealsView(generic.ListView):
         base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct_sku_func)
 
         # Apply filter and sort if they exist
-        filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount, cat_filter=category_filter, action=action)
+        filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount, cat_filter=category_filter)
         hot_deals = filter_sort.filter_skus()
-        
+         
         if self.request.htmx:
             self.template_name = 'partials/book_grid.html'
 

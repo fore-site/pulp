@@ -1,4 +1,5 @@
 {% extends 'src/base.html' %}
+{% load humanize %}
 {% block title %}
     Pulp - Checkout
 {% endblock title %}
@@ -106,13 +107,13 @@
                     <div class="mt-6 space-y-4 border-t border-stone-200 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500">Subtotal</p>
-                            <p class="font-medium text-slate-900">₦{{ request.session.subtotal_price }}</p>
+                            <p class="font-medium text-slate-900">₦{{ request.session.subtotal_price|intcomma }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500">Shipping</p>
                             <p class="font-medium text-slate-900" id="shipping_fee">
                                 {% if request.session.shipping_fee %}
-                                    ₦{{ request.session.shipping_fee }}
+                                    ₦{{ request.session.shipping_fee|intcomma }}
                                 {% else %}
                                     To be calculated
                                 {% endif %}
@@ -122,7 +123,7 @@
                             <p class="text-base font-bold text-slate-900">Total</p>
                             <span class="text-base font-bold text-primary"
                                   id="total_price"
-                                  hx-swap-oob="true">₦{{ request.session.total_price }}</span>
+                                  hx-swap-oob="true">₦{{ request.session.total_price|intcomma }}</span>
                         </div>
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">

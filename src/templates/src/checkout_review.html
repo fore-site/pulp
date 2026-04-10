@@ -1,4 +1,5 @@
 {% extends 'src/base.html' %}
+{% load humanize %}
 {% block title %}
     Pulp - Checkout
 {% endblock title %}
@@ -96,9 +97,9 @@
                                             </p>
                                         </div>
                                         {% if item.sku.has_discount %}
-                                            <span class="font-bold text-slate-900">₦{{ item.sku.discounted_price }}</span>
+                                            <span class="font-bold text-slate-900">₦{{ item.sku.discounted_price|intcomma }}</span>
                                         {% else %}
-                                            <span class="font-bold text-slate-900">₦{{ item.sku.price }}</span>
+                                            <span class="font-bold text-slate-900">₦{{ item.sku.price|intcomma }}</span>
                                         {% endif %}
                                     </div>
                                     <div class="flex items-center gap-4 mt-4">
@@ -127,6 +128,7 @@
                                 Return to shipping
                             </a>
                             <form action="{% url 'create_order_and_init_payment' %}" method="post">
+                                {% csrf_token %}
                                 <input type="hidden" name="idempotency_key" id="idempotency_key">
                                 <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
                                         id="pay-button">
@@ -145,15 +147,15 @@
                     <div class="mt-6 space-y-4 border-t border-stone-200 dark:border-stone-800 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Subtotal</p>
-                            <p class="font-medium text-slate-900 dark:text-white">₦{{ request.session.subtotal_price }}</p>
+                            <p class="font-medium text-slate-900 dark:text-white">₦{{ request.session.subtotal_price|intcomma }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Shipping</p>
-                            <p class="font-medium text-slate-900">₦{{ request.session.shipping_fee }}</p>
+                            <p class="font-medium text-slate-900">₦{{ request.session.shipping_fee|intcomma }}</p>
                         </div>
                         <div class="flex items-center justify-between border-t border-stone-200 pt-4">
                             <p class="text-base font-bold text-slate-900">Total</p>
-                            <p class="text-base font-bold text-primary">₦{{ request.session.total_price }}</p>
+                            <p class="text-base font-bold text-primary">₦{{ request.session.total_price|intcomma }}</p>
                         </div>
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">
@@ -212,6 +214,8 @@
 
         document.addEventListener("DOMContentLoaded", async () => {
             const key = await getIdempotencyKey();
+            console.log(key)
+            console.log(checkout_state_json)
             document.getElementById("idempotency_key").value = key;
         });
 
@@ -230,3 +234,4 @@
                 });
         });
     </script>
+{% endblock scripts %}

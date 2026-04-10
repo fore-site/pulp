@@ -14,25 +14,18 @@ fake = Faker()
 
 CATEGORY = ['Manga', 'Comic']
 
-GENRES = [
-    'Action', 'Adventure', 'Comedy', 'Superhero', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller', 'Shonen', 'Shoujo', 'Seinen',
-    'Slice of Life', 'Drama', 'Sports', 'Martial Arts', 'Psychological', 'Historical', 'School', 'Mecha', 'Josei', 'Shojo Ai', 'Shonen Ai',
-    'Ecchi', 'Seinen', 'Isekai', 'Magic', 'Parody','Military', 'Police', 'Kids',
-    'Western', 'Crime', 'Biography', 'Science', 'Detective', 'Family', 'War', 'Medical', 'Cooking', 'Business', 'Romantic Comedy',
-    'Supernatural', 'Mystery Thriller', 'Cyberpunk', 'Post-Apocalyptic', 'Steampunk', 'Harem', 'Reverse Harem', 'Yaoi', 'Yuri', 'Sports', 'Magic Girl', 'Adventure Comedy',
-    'Dark Fantasy', 'Mythology', 'Political',
-    'Music', 'Game', 'Psychological Thriller',
+MANGA_GENRES = ['Action', 'Adventure', 'Biography', 'Comedy', 'Cooking', 'Drama', 
+          'Fantasy', 'Harem', 'Historical', 'Horror', 'Josei', 'Music', 'Mystery', 
+          'Psychological', 'Romance', 'School', 'Sci-Fi', 'Seinen', 'Shonen', 
+          'Shoujo', 'Slice of Life', 'Sports', 'Superhero', 'Supernatural', 'Thriller'
 ]
 
-COMIC_GENRES = [
-    'Action', 'Adventure', 'Comedy', 'Superhero', 'Fantasy', 'Horror', 'Mystery', 'Romance', 'Sci-Fi', 'Thriller',
-    'Slice of Life', 'Drama', 'Sports', 'Martial Arts', 'Psychological', 'Historical', 'School', 'Mecha'
-    'Magic', 'Music', 'Parody', 'Military', 'Kids',
-    'Western', 'Crime', 'Biography', 'Science', 'Detective', 'Family', 'War', 'Medical', 'Cooking', 'Business',
-    'Supernatural', 'Mystery Thriller', 'Cyberpunk', 'Post-Apocalyptic', 'Steampunk', 'Sports',
-    'Dark Fantasy', 'Mythology', 'Political',
-    'Game', 'Psychological Thriller',
+COMIC_GENRES = ['Action', 'Adventure', 'Biography', 'Comedy', 'Crime', 'Drama', 'Fantasy', 'Historical', 
+                'Horror', 'Mystery', 'Parody', 'Political', 'Romance', 'Sci-Fi', 'Slice of Life', 'Superhero', 
+                'Supernatural', 'Thriller', 'Western'
 ]
+
+GENRES = list(set(MANGA_GENRES + COMIC_GENRES))
 
 FORMATS = ['Hardcover', 'Paperback', 'Digital']
 
@@ -60,7 +53,7 @@ class Command(BaseCommand):
                     category_objs[category], _ = Category.objects.get_or_create(name=category)
 
             # Link categories to their genres
-            manga_genres = [genre_objs[g] for g in GENRES if g in genre_objs]
+            manga_genres = [genre_objs[g] for g in MANGA_GENRES if g in genre_objs]
             comic_genres = [genre_objs[g] for g in COMIC_GENRES if g in genre_objs]
             for cat_name, cat_obj in category_objs.items():
                 if cat_name == 'Manga':

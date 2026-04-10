@@ -71,7 +71,19 @@
         {% endif %}
         <!-- Price Range -->
         <div class="space-y-4">
-            <h3 class="font-display font-bold text-lg text-slate-900">Price Range</h3>
+            {% if price_range and not categories and not genres %}
+                <div class="flex items-center justify-between w-full">
+                    <h3 class="font-display font-bold text-lg text-slate-900">Price Range</h3>
+                    <!-- Clear Filters Button moved inline with first heading -->
+                    <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
+                       class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
+                       name="action"
+                       value="clear"
+                       aria-label="Clear all filters">Clear filters</a>
+                </div>
+            {% else %}
+                <h3 class="font-display font-bold text-lg text-slate-900">Price Range</h3>
+            {% endif %}
             {% for price in price_range %}
                 <label class="flex items-start gap-3 group cursor-pointer">
                     <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"

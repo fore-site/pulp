@@ -7,7 +7,7 @@ from django.contrib.auth import login
 from src.models import Sku, CartItem
 from ..forms import CustomUserCreationForm, CartUpdateForm
 from django_htmx.middleware import HtmxDetails
-from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books
+from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books, distinct_sku
 from django.utils.http import url_has_allowed_host_and_scheme
 
 class HtmxHttpRequest(HttpRequest):
@@ -40,12 +40,14 @@ class CartView(generic.TemplateView):
         session_id = self.request.session.session_key
 
         context['cart_items_and_forms'] = get_cart_items_and_forms(user, session_id)
-        
-        # Curate trending books for empty cart state
-        base_queryset = base_book_queryset(Sku)
-        trending = (base_queryset.filter(book__trending_score__gt=0).order_by('book').distinct('book')[:10]
+
+        if not context['cart_items_and_forms']:        
+            # Curate trending books for empty cart state
+            base_queryset = base_book_queryset(Sku)
+            distinct = distinct_sku(Sku)
+            trending = (base_queryset.filter(book__trending_score__gt=0, id__in=distinct).order_by('-book__trending_score')[:10]
                      )
-        context['trending'] = trending
+            context['trending'] = trending
         return context
     
     def post(self, request):
@@ -106,11 +108,11 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
 
     action = request.POST.get('action')
     sku_id = request.POST.get('sku_id')
-    if sku_id:
-        sku = get_object_or_404(Sku, public_id=sku_id)
+
+    sku = get_object_or_404(Sku, public_id=sku_id) if sku_id else None
     
     form = CartUpdateForm({'quantity': request.POST.get('quantity')})
-    if request.session.get('is_payment_processing') or sku.quantity < 1:
+    if request.session.get('is_payment_processing') or (sku.quantity < 1 if sku else False):
         pass
     elif action == 'clear':
         CartItem.objects.filter(cart=cart).delete()
