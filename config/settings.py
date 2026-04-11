@@ -10,7 +10,7 @@ load_dotenv(dotenv_path=BASE_DIR / '.env')
 database_password = os.getenv('DATABASE_PASSWORD')
 database_user = os.getenv('DATABASE_USER')
 database_name = os.getenv('DATABASE_NAME')
-paystack_test_secret_key = os.getenv('PAYSTACK_TEST_SECRET_KEY')
+PAYSTACK_TEST_SECRET_KEY = os.getenv('PAYSTACK_TEST_SECRET_KEY')
 
 # Quick-start development settings - unsuitable for production
 
@@ -45,9 +45,9 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'src.middleware.PaymentStateSyncMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'src.middleware.PaymentStateSyncMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
@@ -156,4 +156,5 @@ AUTHENTICATION_BACKENDS = [
     'src.backends.CustomAuthBackend'
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev']  
+CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev']
+CORS_ALLOW_HEADERS = ['Idempotency-Key']

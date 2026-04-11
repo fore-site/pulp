@@ -283,3 +283,44 @@ def create_order_and_related_data(request, user, cart_items, record: Idempotency
             record_in_func.save()
 
     return user_order
+
+def update_db_after_payment(order: Order, 
+                            request,
+                            payment_status: str,
+                            order_items: BaseManager[OrderItem] | None = None):
+    """Database operations to carry out depending on payment status."""
+    if payment_status == 'Paid':
+            order.payment_status = 'Paid'
+            order.save()
+            request.session['is_payment_processing'] = False
+            request.session['item_count'] = 0
+
+            # Clear cart items
+            user = order.user if order.user else order.session_id
+            try:
+                cart = Cart.objects.get(user)
+            except Cart.DoesNotExist:
+                pass
+            else:
+                item_deleted, _ = CartItem.objects.filter(user=user, cart=cart).delete()
+                print(f'{item_deleted} items cleared from cart after successful purchase.')
+
+            # Update stock quantity in database
+            sku_to_update = []
+            for item in order_items:
+                stock_left = item.sku.quantity - item.quantity
+                item.sku.quantity = stock_left
+                sku_to_update.append(item.sku)
+
+            rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
+            print(f'{rows_updated} stocks updated after successful purchase')
+
+            # Delete corresponding idempotency key
+            deleted, _ = IdempotencyKey.objects.filter(order_id=order.id).delete()
+            print(f'{deleted} idempotency key(s) deleted after successful purchase')
+    elif payment_status == 'Processing':
+        order.payment_status = 'Processing'
+        order.save()
+    else:
+        order.payment_status = payment_status
+        order.save()

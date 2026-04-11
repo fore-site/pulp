@@ -12,7 +12,7 @@ from django.db.models import Case, When, F, DecimalField
 from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, IdempotencyKey, Sku
 from django_htmx.middleware import HtmxDetails
 from datetime import timedelta
-from ..utils.common import create_order_and_related_data
+from ..utils.common import create_order_and_related_data, update_db_after_payment
 from django.conf import settings
 import requests
 
@@ -79,9 +79,8 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
     if not request.session.get('firstname'):
         return HttpResponseRedirect(reverse('checkout_shipping'))
     
-    request.session['is_payment_processing'] = True
-    key = request.POST.get('idempotency_key')
-
+    key = request.headers.get('Idempotency-Key')
+    
     if not key:
         return render(request, '404.html', 
         {'exception': Exception("Idempotency key is required")}, 
@@ -94,15 +93,20 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
         # If order exists:
         if record.order_id:
             order = get_object_or_404(Order, id=record.order_id)
-            return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
-        
+            if order.payment_status == 'Pending':
+                pass
+            elif order.payment_status == 'Failed':
+                return render(request, 'src/payment_failed.html')
+            else:
+                return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
+        else:
         # Key exists but no order
-        try:
-            order = create_order_and_related_data(request, user, cart_items, record)
-        except Exception:
-            return render(request, '404.html', 
-                            {'exception': Exception("Unexpected error occurred while creating order")}, 
-                            status=500)
+            try:
+                order = create_order_and_related_data(request, user, cart_items, record)
+            except:
+                return render(request, '404.html', 
+                                {'exception': Exception("Unexpected error occurred while creating order")}, 
+                                status=500)
     else:
         # If key does not exist. First time request.
         try:
@@ -127,15 +131,17 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
             status=500)
         
     try:
+        print(order.address.recipient_email)
         res = requests.post('https://api.paystack.co/transaction/initialize',
                       json={'email': order.address.recipient_email, 
                             'amount': int(order.total_amount * 100),
                             'reference': order.order_number,
                             'callback_url': request.build_absolute_uri(reverse('payment_callback'))},
-                      headers={'Authorization': f'Bearer {settings.paystack_test_secret_key}'})
-    except Exception:
+                      headers={'Authorization': f'Bearer {settings.PAYSTACK_TEST_SECRET_KEY}'})
+    except:
         return render(request, 'src/payment_failed.html')
     else:
+        request.session['is_payment_processing'] = True
         return JsonResponse({'access_code': res.json().get('data', {}).get('access_code', '')})
 
 @require_GET
@@ -143,37 +149,12 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
     """Callback view after successful payment to display order details and estimated delivery date"""
     
     reference = request.GET.get('reference')
-
-    # Verify payment with Paystack
-    res = requests.get(f'https://api.paystack.co/transaction/verify/{reference}',
-                      headers={'Authorization': f'Bearer {settings.paystack_test_secret_key}'})
-
-    if res.status_code != 200 or res.json().get('data', {}).get('status') in ['failed', 'abandoned']:
-        return render(request, 'src/payment_failed.html')
-    elif res.json().get('data', {}).get('status') == 'pending':
-        return render(request, 'src/payment_processing.html')
     
+    # Fetch order
     try:
         order = Order.objects.get(order_number=reference)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
-
-        if order.order_status != 'Paid':
-            order.order_status = 'Paid'
-            order.save()
-            request.session['is_payment_processing'] = False
-            request.session['item_count'] = 0
-
-            # Update stock quantity in database
-            sku_to_update = []
-            for item in order_items:
-                stock_left = item.sku.quantity - item.quantity
-                item.sku.quantity = stock_left
-                sku_to_update.append(item.sku)
-
-            rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
-            print(f'{rows_updated} stocks updated after successful purchase')
-
     except Order.DoesNotExist:
         return redirect('home')
     except OrderAddress.DoesNotExist:
@@ -185,6 +166,26 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
     order_created_at = order.created_at
     estimated_delivery_dates = (order_created_at + timedelta(days=2)).strftime("%b, %d"), (order_created_at + timedelta(days=3)).strftime("%b, %d")
 
+    # Check if payment has already been settled
+    if order.payment_status == 'Paid':
+        pass
+    elif order.payment_status == 'Failed':
+        return render(request, 'src/payment_failed.html')
+    else:
+        # Verify payment with Paystack and update payment status accordingly
+        res = requests.get(f'https://api.paystack.co/transaction/verify/{reference}',
+                        headers={'Authorization': f'Bearer {settings.PAYSTACK_TEST_SECRET_KEY}'})
+
+        if res.status_code != 200 or res.json().get('data', {}).get('status') in ['failed', 'abandoned']:
+            print(res.json())
+            update_db_after_payment(order, request, 'Failed', order_items)
+            return render(request, 'src/payment_failed.html')
+        elif res.json().get('data', {}).get('status') == 'pending':
+            update_db_after_payment(order, request, 'Processing', order_items)
+            return render(request, 'src/payment_processing.html')
+        else:
+            update_db_after_payment(order, request, 'Paid', order_items)
+        
     return render(request, 'src/order_confirmed.html', 
                   {'order': order, 'order_items': order_items, 
                    'order_address': order_address,
@@ -196,7 +197,7 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
     """Webhook view to handle Paystack events such as payment verification and update order status accordingly"""
     # Verify webhook signature
     signature = request.headers.get('x-Paystack-Signature')
-    hash = hmac.new(settings.paystack_test_secret_key.encode(), request.body, hashlib.sha256).hexdigest()
+    hash = hmac.new(settings.PAYSTACK_TEST_SECRET_KEY.encode(), request.body, hashlib.sha256).hexdigest()
     verified = signature == hash
     
     if verified:
@@ -206,20 +207,14 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
             reference = payload.get('data', {}).get('reference')
             try:
                 order = Order.objects.get(order_number=reference)
-                if order.order_status != 'Paid':
-                    order.order_status = 'Paid'
-                    order.save()
-
-                    # Update stock quantity in database
-                    order_items = OrderItem.objects.filter(order=order)
-                    sku_to_update = []
-                    for item in order_items:
-                        stock_left = item.sku.quantity - item.quantity
-                        item.sku.quantity = stock_left
-                        sku_to_update.append(item.sku)
-
-                    rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
-                    print(f'{rows_updated} stocks updated after successful purchase')
+                order_items = OrderItem.objects.filter(order=order)
+                # Check if payment has already been settled
+                if order.payment_status == 'Paid':
+                    pass
+                elif order.payment_status == 'Failed':
+                    pass
+                else:
+                    update_db_after_payment(order, request, 'Paid', order_items)
             except Order.DoesNotExist:
                 pass
             finally:

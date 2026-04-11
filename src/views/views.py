@@ -109,10 +109,15 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
     action = request.POST.get('action')
     sku_id = request.POST.get('sku_id')
 
-    sku = get_object_or_404(Sku, public_id=sku_id) if sku_id else None
+    if sku_id:
+        # Ensure Sku is not out of stock
+        try:
+            sku = Sku.objects.get(public_id=sku_id, quantity__gte=1)
+        except Sku.DoesNotExist:
+            return redirect('cart')
     
     form = CartUpdateForm({'quantity': request.POST.get('quantity')})
-    if request.session.get('is_payment_processing') or (sku.quantity < 1 if sku else False):
+    if request.session.get('is_payment_processing'):
         pass
     elif action == 'clear':
         CartItem.objects.filter(cart=cart).delete()

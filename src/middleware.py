@@ -11,14 +11,14 @@ class PaymentStateSyncMiddleware:
         # Logic before the view
         if not request.session.get("is_payment_processing", False):
             return self.get_response(request)
-        
+
         user = request.user if request.user.is_authenticated else None
         session_id = request.session.session_key
         
         order = Order.objects.filter(
             user=user,
             session_id=session_id,
-            order_status="pending"
+            payment_status__iexact="Processing"
         ).order_by("-created_at").first()
 
         if not order:

@@ -127,15 +127,11 @@
                                 <span class="material-symbols-outlined text-lg">arrow_back</span>
                                 Return to shipping
                             </a>
-                            <form action="{% url 'create_order_and_init_payment' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="idempotency_key" id="idempotency_key">
-                                <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
-                                        id="pay-button">
-                                    Pay with Paystack
-                                    <span class="material-symbols-outlined ml-2 text-lg">lock</span>
-                                </button>
-                            </form>
+                            <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
+                                    id="pay-button">
+                                Pay with Paystack
+                                <span class="material-symbols-outlined ml-2 text-lg">lock</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -190,11 +186,7 @@
         }
 
         async function getIdempotencyKey() {
-            const state = {
-                {
-                    checkout_state_json | safe
-                }
-            };
+            const state = '{{ checkout_state_json|safe }}';
             const fingerprint = JSON.stringify(state);
 
             const hash = await hashString(fingerprint);
@@ -207,31 +199,61 @@
             if (!key) {
                 key = crypto.randomUUID();
                 localStorage.setItem(storageKey, key);
+
             }
 
             return key;
         }
 
         document.addEventListener("DOMContentLoaded", async () => {
-            const key = await getIdempotencyKey();
-            console.log(key)
-            console.log(checkout_state_json)
-            document.getElementById("idempotency_key").value = key;
-        });
+            const button = document.getElementById('pay-button');
 
-        document.getElementById('pay-button').addEventListener('click', function() {
-            fetch("{% url 'create_order_and_init_payment' %}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
-                })
-                .then(res => res.json())
-                .then(data => {
-                    // Here you receive the access_code and can use it to redirect to Paystack's payment page
-                    const popup = new PaystackPop();
-                    popup.resumeTransaction(data.access_code);
-                });
+            const key = await getIdempotencyKey();
+
+            button.addEventListener('click', async function(e) {
+                await fetch("{% url 'create_order_and_init_payment' %}", {
+                        method: "POST",
+                        headers: {
+                            "X-CSRFToken": "{{ csrf_token }}",
+                            "Idempotency-Key": key
+                        },
+                    })
+                    .then(async response => {
+                        // Check if response is JSON
+                        const contentType = response.headers.get('content-type');
+                        if (contentType && contentType.includes('application/json')) {
+                            const data = await response.json();
+                            return {
+                                data,
+                                redirected: false
+                            };
+                        } else if (response.redirected) {
+                            // Fetch followed a redirect – we may need to navigate manually
+                            return {
+                                redirected: true,
+                                url: response.url
+                            };
+                        } else {
+                            // Probably an error page HTML
+                            const html = await response.text();
+                            throw new Error(`Server returned HTML: ${html.substring(0, 200)}`);
+                        }
+                    })
+                    .then(result => {
+                        if (result.redirected) {
+                            // Manually navigate to the redirect URL
+                            window.location.href = result.url;
+                        } else {
+                            const data = result.data;
+                            if (data.access_code) {
+                                const popup = new PaystackPop();
+                                popup.resumeTransaction(data.access_code);
+                            } else {
+                                // handle other JSON responses
+                            }
+                        }
+                    });
+            });
         });
     </script>
 {% endblock scripts %}

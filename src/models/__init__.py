@@ -1,6 +1,6 @@
 from .cart import CartItem, Cart
 from .order import OrderItem, Order, OrderAddress, IdempotencyKey
-from .payment import Payment, TransactionLog
+from .payment import TransactionLog
 from .product import (Publisher,
                       Book,    
                       Author, 

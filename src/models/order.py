@@ -14,6 +14,7 @@ class Order(models.Model):
     public_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     order_number = models.CharField(max_length=20, unique=True, editable=False)
     order_status = models.CharField(max_length=255, blank=True, default='Pending')
+    payment_status = models.CharField(max_length=255, blank=True, default='Pending')
     delivered_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
