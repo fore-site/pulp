@@ -75,14 +75,18 @@
                                   id="cart-count"
                                   hx-swap-oob="true">{{ request.session.item_count|default:0 }}</span>
                         </a>
-                        <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                        <button onclick="document.getElementById('user-menu').classList.toggle('hidden')"
+                                class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
                             <span class="material-symbols-outlined">person</span>
                         </button>
                         <!-- Dropdown -->
-                        <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150 z-50">
+                        <div id="user-menu"
+                             class="hidden absolute right-4 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
                             <!-- Orders -->
-                            <a href="/orders/" class="block px-4 py-2 text-sm hover:bg-gray-50">Orders</a>
-                            <a href="/track-order/" class="block px-4 py-2 text-sm hover:bg-gray-50">Track Order</a>
+                            <a href="{% url 'order_history' %}"
+                               class="block px-4 py-2 text-sm hover:bg-gray-50">Orders</a>
+                            <a href="{% url 'order_lookup' %}"
+                               class="block px-4 py-2 text-sm hover:bg-gray-50">Track Order</a>
                             <!-- Divider -->
                             <div class="border-t my-1"></div>
                             <!-- Auth Action -->

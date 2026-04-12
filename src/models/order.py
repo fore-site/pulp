@@ -51,7 +51,7 @@ class Order(models.Model):
         db_table = 'orders'
 
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.RESTRICT)
+    order = models.ForeignKey(Order, on_delete=models.RESTRICT, related_name='order_items')
     sku = models.ForeignKey('Sku', on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField()
     unit_price = models.DecimalField(max_digits=10, decimal_places=2)

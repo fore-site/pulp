@@ -21,6 +21,7 @@ class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
 
 class OrderHistoryView(generic.ListView):
+    """ View to display order history for authenticated users and guest users based on session id"""
     model = Order
     template_name = 'src/order_history.html'
     context_object_name = 'user_orders'
@@ -32,11 +33,11 @@ class OrderHistoryView(generic.ListView):
         if user:
             orders = Order.objects.filter(user=user)
         else:
-            orders = Order.objects.filter(session_id=session_id)
-
+            orders = (Order.objects
+                      .filter(session_id=session_id)
+                      .prefetch_related('order_items__sku__book').order_by('-created_at'))
         return orders
 
-@require_GET
 def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to retrieve order lookup form"""
     if request.POST:
@@ -51,7 +52,7 @@ def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
 
 @require_GET
 def order_detail_view(request: HtmxHttpRequest, order_number) -> HttpResponse:
-    """ View to display order details for real-time tracking """
+    """ View to display order details for real-time tracking or for settled orders"""
     try:
         order = Order.objects.get(order_number__iexact=order_number)
         order_items = OrderItem.objects.filter(order=order)

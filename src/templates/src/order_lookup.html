@@ -14,18 +14,20 @@
             <!-- Lookup Form -->
             <div class="space-y-8">
                 <div class="relative group">
-                    <form action="{% url 'order_lookup' %}" method="post">
+                    <form action="{% url 'order_lookup' %}"
+                          method="post"
+                          class="flex flex-col gap-4">
                         {% csrf_token %}
                         <label class="block text-[10px] uppercase tracking-widest font-bold text-on-surface mb-2"
                                for="order_no">Order Number</label>
                         {{ form.order_number }}
                         {% if form.order_number.errors %}<p class="text-red-500 text-sm mt-1">{{ form.order_number.errors.0 }}</p>{% endif %}
+                        <button class="w-full h-16 bg-primary text-white font-bold text-lg tracking-tight hover:opacity-90 active:scale-[0.98] transition-all rounded-none">
+                            Track Order
+                        </button>
                     </form>
                 </div>
                 <div class="flex flex-col gap-6">
-                    <button class="w-full h-16 bg-primary text-white font-bold text-lg tracking-tight hover:opacity-90 active:scale-[0.98] transition-all rounded-none">
-                        Track Order
-                    </button>
                     <div class="flex items-center justify-center md:justify-start gap-2 text-sm">
                         <span class="text-on-surface-variant">Can't find your order number?</span>
                         <p class="font-bold text-black">Check your email</p>
