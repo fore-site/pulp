@@ -4,7 +4,7 @@
 {% endblock title %}
 {% block content %}
     {% if not page_obj %}
-        <main class="flex-grow flex flex-col items-center justify-center px-6 py-20 md:py-32 w-full max-w-[1440px] mx-auto">
+        <main class="page-shell py-20 md:py-32 flex-grow flex flex-col items-center justify-center">
             <div class="w-full max-w-3xl flex flex-col items-center text-center space-y-10 animate-fade-in-up">
                 <!-- Illustration Area -->
                 <div class="relative group">
@@ -55,12 +55,11 @@
                     </a>
                 </div>
             </div>
-        </div>
     </main>
 {% else %}
     <!-- Main Content -->
     <main class="flex-grow bg-white">
-        <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-8" id="books">
+        <div class="page-shell py-8" id="books">
             <div class="flex flex-col lg:flex-row gap-10">
                 <!-- Sticky Sidebar Filters -->
                 <!-- Product Grid Area -->

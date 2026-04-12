@@ -67,6 +67,12 @@ input[type='range']::-webkit-slider-thumb {
 }
 
 @layer utilities {
+    .page-shell {
+        @apply w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-10;
+    }
+    .page-shell-narrow {
+        @apply w-full max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8;
+    }
     .custom-scrollbar::-webkit-scrollbar {
         height: 2px;
     }
