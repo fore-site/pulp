@@ -27,7 +27,7 @@
           hx-ext="event_header">
         <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
             <header class="sticky top-0 z-50 w-full bg-surface-light/95 backdrop-blur supports-[backdrop-filter]:bg-surface-light/80 border-b border-gray-100 dark:border-surface-dark/50">
-                <div class="px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-6">
+                <div class="page-shell py-4 flex items-center justify-between gap-4 sm:gap-6">
                     <a class="relative flex items-center gap-2 group shrink-0 h-20 w-auto"
                        href="{% url 'home' %}"
                        role="img"
@@ -104,19 +104,21 @@
                         </button>
                     </div>
                 </div>
-                <nav class="hidden md:flex items-center justify-center gap-8 py-3 border-t border-gray-100">
+                <nav class="hidden md:block border-t border-gray-100">
+                    <div class="page-shell flex items-center justify-center gap-8 py-3">
                     <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'series_index' series_type='comic' %}">Comics</a>
                     <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'series_index' series_type='manga' %}">Manga</a>
                     <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                        href="{% url 'deals' %}">Sales</a>
+                    </div>
                 </nav>
             </header>
             {% block content %}
             {% endblock content %}
             <footer class="bg-background-dark text-white py-10 border-t border-white/10">
-                <div class="w-full max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12">
+                <div class="page-shell">
                     <div class="flex flex-col lg:flex-row gap-8 mb-8">
                         <!-- Brand/Description -->
                         <div class="flex-1 min-w-[220px] flex flex-col gap-6">
