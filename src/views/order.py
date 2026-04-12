@@ -12,6 +12,7 @@ from django.db.models import Case, When, F, DecimalField
 from src.models import CartItem, Cart, Order, OrderItem, OrderAddress, IdempotencyKey, Sku
 from django_htmx.middleware import HtmxDetails
 from datetime import timedelta
+from ..forms import OrderLookupForm
 from ..utils.common import create_order_and_related_data, update_db_after_payment
 from django.conf import settings
 import requests
@@ -19,7 +20,7 @@ import requests
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
 
-class OrderHistory(generic.ListView):
+class OrderHistoryView(generic.ListView):
     model = Order
     template_name = 'src/order_history.html'
     context_object_name = 'user_orders'
@@ -38,12 +39,19 @@ class OrderHistory(generic.ListView):
 @require_GET
 def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to retrieve order lookup form"""
-    return render(request, 'src/order_lookup.html')
+    if request.POST:
+        form = OrderLookupForm(request.POST)
+        if form.is_valid():
+            order_number = form.cleaned_data['order_number']
+            return HttpResponseRedirect(reverse('order_detail', kwargs={'order_number': order_number.strip()}))
+        return render(request, 'src/order_lookup.html', {"form": form})
+    else:
+        form = OrderLookupForm()
+        return render(request, 'src/order_lookup.html', {"form": form})
 
 @require_GET
-def order_detail_view(request: HtmxHttpRequest) -> HttpResponse:
+def order_detail_view(request: HtmxHttpRequest, order_number) -> HttpResponse:
     """ View to display order details for real-time tracking """
-    order_number = request.GET.get('order_number')
     try:
         order = Order.objects.get(order_number__iexact=order_number)
         order_items = OrderItem.objects.filter(order=order)
@@ -96,11 +104,14 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
             if order.payment_status == 'Pending':
                 pass
             elif order.payment_status == 'Failed':
+                print('Payment failed for existing order')
                 return render(request, 'src/payment_failed.html')
             else:
+                print('Order already exists for key, redirecting to payment callback')
                 return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
         else:
         # Key exists but no order
+            print('Key exists, but no order')
             try:
                 order = create_order_and_related_data(request, user, cart_items, record)
             except:
@@ -109,6 +120,7 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
                                 status=500)
     else:
         # If key does not exist. First time request.
+        print('Key does not exist')
         try:
             order = create_order_and_related_data(request, user, cart_items, key=key, first_time=True)
         except IntegrityError:
@@ -129,17 +141,18 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
             return render(request, '404.html', 
             {'exception': Exception("Unexpected error occurred while creating order")}, 
             status=500)
-        
+
     try:
-        print(order.address.recipient_email)
         res = requests.post('https://api.paystack.co/transaction/initialize',
-                      json={'email': order.address.recipient_email, 
+                      json={'email': OrderAddress.objects.get(order=order).recipient_email, 
                             'amount': int(order.total_amount * 100),
                             'reference': order.order_number,
                             'callback_url': request.build_absolute_uri(reverse('payment_callback'))},
                       headers={'Authorization': f'Bearer {settings.PAYSTACK_TEST_SECRET_KEY}'})
     except:
-        return render(request, 'src/payment_failed.html')
+        return render(request, '404.html', 
+            {'exception': Exception("Unexpected error occurred while initializing payment")}, 
+            status=500)
     else:
         request.session['is_payment_processing'] = True
         return JsonResponse({'access_code': res.json().get('data', {}).get('access_code', '')})
@@ -183,8 +196,11 @@ def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
         elif res.json().get('data', {}).get('status') == 'pending':
             update_db_after_payment(order, request, 'Processing', order_items)
             return render(request, 'src/payment_processing.html')
-        else:
+        elif res.json().get('data', {}).get('status') == 'success':
             update_db_after_payment(order, request, 'Paid', order_items)
+        else:
+            print(res.json())
+            return redirect('home')
         
     return render(request, 'src/order_confirmed.html', 
                   {'order': order, 'order_items': order_items, 

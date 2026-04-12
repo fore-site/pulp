@@ -16,8 +16,6 @@
         {% htmx_script %}
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
               rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css2?family=Satoshi:wght@400;500;700;900&amp;display=swap"
-              rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
               rel="stylesheet" />
         <link rel="icon"
@@ -66,20 +64,37 @@
                                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                                 </svg>
                             </button>
-                            {% if search_bar_form.q.errors %}{{ search_bar_form.q.errors }}{% endif %}
+                            {% if search_bar_form.q.errors %}<p class="text-red-500 text-sm mt-1">{{ search_bar_form.q.errors.0 }}</p>{% endif %}
                         </form>
                     </div>
                     <div class="flex items-center gap-1 sm:gap-2 shrink-0">
                         <a href="{% url 'cart' %}"
                            class="relative p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
                             <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
-                            <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white dark:ring-surface-dark"
+                            <span class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white"
                                   id="cart-count"
                                   hx-swap-oob="true">{{ request.session.item_count|default:0 }}</span>
                         </a>
                         <button class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
                             <span class="material-symbols-outlined">person</span>
                         </button>
+                        <!-- Dropdown -->
+                        <div class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-150 z-50">
+                            <!-- Orders -->
+                            <a href="/orders/" class="block px-4 py-2 text-sm hover:bg-gray-50">Orders</a>
+                            <a href="/track-order/" class="block px-4 py-2 text-sm hover:bg-gray-50">Track Order</a>
+                            <!-- Divider -->
+                            <div class="border-t my-1"></div>
+                            <!-- Auth Action -->
+                            <!-- Replace condition with Django template logic -->
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'logout' %}"
+                                   class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-50">Logout</a>
+                            {% else %}
+                                <a href="{% url 'login' %}"
+                                   class="block px-4 py-2 text-sm hover:bg-gray-50">Sign In</a>
+                            {% endif %}
+                        </div>
                         <button class="md:hidden p-2 text-text-main-light">
                             <span class="material-symbols-outlined">menu</span>
                         </button>

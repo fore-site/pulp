@@ -236,7 +236,10 @@
                         } else {
                             // Probably an error page HTML
                             const html = await response.text();
-                            throw new Error(`Server returned HTML: ${html.substring(0, 200)}`);
+                            // Display error page
+                            document.open();
+                            document.write(html);
+                            document.close();
                         }
                     })
                     .then(result => {

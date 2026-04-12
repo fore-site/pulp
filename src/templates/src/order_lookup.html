@@ -14,14 +14,12 @@
             <!-- Lookup Form -->
             <div class="space-y-8">
                 <div class="relative group">
-                    <form action="{% url 'order_detail' %}" method="get">
+                    <form action="{% url 'order_lookup' %}" method="post">
+                        {% csrf_token %}
                         <label class="block text-[10px] uppercase tracking-widest font-bold text-on-surface mb-2"
-                               for="tracking-id">Order Number</label>
-                        <input class="w-full h-16 px-6 bg-surface-container-high border-2 border-black text-xl font-bold placeholder:text-gray-300 focus:ring-0 focus:outline-none focus:border-primary transition-colors"
-                               id="tracking-id"
-                               name="track_id"
-                               placeholder="#PULP-8921-X"
-                               type="text" />
+                               for="order_no">Order Number</label>
+                        {{ form.order_number }}
+                        {% if form.order_number.errors %}<p class="text-red-500 text-sm mt-1">{{ form.order_number.errors.0 }}</p>{% endif %}
                     </form>
                 </div>
                 <div class="flex flex-col gap-6">

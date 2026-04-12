@@ -108,13 +108,25 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
 
     action = request.POST.get('action')
     sku_id = request.POST.get('sku_id')
-
+    
     if sku_id:
-        # Ensure Sku is not out of stock
+        # Ensure Sku exists
         try:
-            sku = Sku.objects.get(public_id=sku_id, quantity__gte=1)
+            sku = Sku.objects.get(public_id=sku_id)
         except Sku.DoesNotExist:
+            if request.htmx:
+                response = HttpResponse()
+                response['HX-Redirect'] = reverse('cart')
+                return response
             return redirect('cart')
+        else:
+            # Ensure Sku is not out of stock if it's a physical format
+            if sku.format != 'Digital' and sku.quantity == 0:
+                if request.htmx:
+                    response = HttpResponse()
+                    response['HX-Redirect'] = reverse('cart')
+                    return response
+                return redirect('cart')
     
     form = CartUpdateForm({'quantity': request.POST.get('quantity')})
     if request.session.get('is_payment_processing'):
@@ -156,9 +168,9 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
         response['HX-Redirect'] = next_url if next_url and is_safe else reverse('cart')
         return response
     elif request.htmx and action != 'delete':
-        context = {"cart_items_and_forms": get_cart_items_and_forms(user, session_id, request)}
+        context = {"cart_items_and_forms": get_cart_items_and_forms(user, session_id)}
         cart_main_target = render(request, 'src/cart.html#cart_items', context).content.decode()
-        cart_count_oob = f'<span id="cart-count" hx-swap-oob="true">{request.session.get('item_count')}</span>'
+        cart_count_oob = f'<span id="cart-count" hx-swap-oob="true" class="absolute top-1 right-0 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-white ring-2 ring-white">{request.session.get('item_count')}</span>'
         return HttpResponse(cart_main_target + cart_count_oob)
         # return render(request, 'src/cart.html#cart_items', context)
     elif request.htmx and action == 'delete':

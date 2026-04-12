@@ -278,7 +278,7 @@ def create_order_and_related_data(request, user, cart_items, record: Idempotency
         if record:
             record.order_id = user_order.id
             record.save()
-        else:
+        elif record_in_func:
             record_in_func.order_id = user_order.id
             record_in_func.save()
 
@@ -287,7 +287,7 @@ def create_order_and_related_data(request, user, cart_items, record: Idempotency
 def update_db_after_payment(order: Order, 
                             request,
                             payment_status: str,
-                            order_items: BaseManager[OrderItem] | None = None):
+                            order_items: BaseManager[OrderItem]):
     """Database operations to carry out depending on payment status."""
     if payment_status == 'Paid':
             order.payment_status = 'Paid'

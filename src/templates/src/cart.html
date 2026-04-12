@@ -6,9 +6,9 @@
 {% block content %}
     <!-- Main Content -->
     <main class="px-4 md:px-10 lg:px-40 flex flex-1 justify-center py-10 w-full">
-        {% partialdef cart_items inline %}
         <div class="layout-content-container flex flex-col w-full max-w-[1200px] flex-1"
              id="cart-container">
+            {% partialdef cart_items inline %}
             {% if not cart_items_and_forms %}
                 {% include 'partials/empty_cart.html' with trending=trending %}
             {% else %}

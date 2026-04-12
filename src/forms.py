@@ -132,3 +132,10 @@ class ShippingAddressForm(forms.ModelForm):
                                                         'id': 'address',
                                                         'placeholder': '123, Sesame street.'}),
         }
+
+class OrderLookupForm(forms.Form):
+    order_number = forms.CharField(max_length=20, required=True,
+                                   widget=forms.TextInput(attrs={'class': 'w-full h-16 px-6 bg-surface-container-high border-2 border-black text-xl font-bold placeholder:text-gray-300 focus:ring-0 focus:outline-none focus:border-primary transition-colors',
+                                                                 'id': 'order_no',
+                                                                 'name': 'order_number',
+                                                                 'placeholder': '#PULP-8921-X'}))

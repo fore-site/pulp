@@ -24,9 +24,7 @@
                             <span class="material-symbols-outlined text-[20px]">mail</span>
                         </div>
                         {{ form.username }}
-                        <!-- <input class="w-full h-12 pl-11 pr-4 bg-transparent border-2 border-slate-200 dark:border-slate-700 rounded text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-slate-100 focus:ring-0 placeholder:text-slate-400 transition-all duration-200"
-        placeholder="name@example.com"
-        type="email" /> -->
+                        {% if form.username.errors %}<p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>{% endif %}
                     </div>
                 </label>
                 <!-- Password Input -->
@@ -39,10 +37,8 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">lock</span>
                         </div>
-                        <!-- <input class="w-full h-12 pl-11 pr-4 bg-transparent border-2 border-slate-200 dark:border-slate-700 rounded text-slate-900 dark:text-white font-medium focus:outline-none focus:border-slate-900 dark:focus:border-slate-100 focus:ring-0 placeholder:text-slate-400 transition-all duration-200"
-        placeholder="Enter your password"
-        type="password" /> -->
                         {{ form.password }}
+                        {% if form.password.errors %}<p class="text-red-500 text-sm mt-1">{{ form.password.errors.0 }}</p>{% endif %}
                     </div>
                 </label>
                 <!-- Action Buttons -->

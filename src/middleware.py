@@ -1,4 +1,4 @@
-from .models import Order
+from .models import Order, Cart, CartItem
 
 class PaymentStateSyncMiddleware:
     """ Middleware to synchronize payment state between the session and the database after webhook is hit"""
@@ -20,9 +20,20 @@ class PaymentStateSyncMiddleware:
             session_id=session_id,
             payment_status__iexact="Processing"
         ).order_by("-created_at").first()
+        
+        try:
+            if user:
+                cart = Cart.objects.get(user=user)
+            else:
+                cart = Cart.objects.get(session_id=session_id)
+        except Cart.DoesNotExist:
+            cart = None
+
+        cart_items = CartItem.objects.filter(cart=cart)
 
         if not order:
             request.session["is_payment_processing"] = False
+        if not cart_items:
             request.session["item_count"] = 0
 
         response = self.get_response(request)
