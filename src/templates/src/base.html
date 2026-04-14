@@ -11,7 +11,7 @@
             {% endblock title %}
         </title>
         <script src="{% static 'src/ext/event_header.js' %}" defer></script>
-        <script src="{% static 'src/app.js' %}" defer></script>
+        <script src="{% static 'src/app.js' %}"></script>
         <script src="https://js.paystack.co/v2/inline.js" defer></script>
         {% htmx_script %}
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
@@ -93,7 +93,7 @@
                             <a href="{% url 'order_lookup' %}"
                                class="block px-4 py-2 text-sm hover:bg-gray-50">Track Order</a>
                             <!-- Divider -->
-                            <div class="border-t my-1"></div>
+                            <hr class="border-[#e5dcde]" />
                             <!-- Auth Action -->
                             {% if user.is_authenticated %}
                                 <a href="{% url 'logout' %}"

@@ -4,7 +4,7 @@ from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from datetime import timedelta
 from src.models import Series, Sku, Book, BookEvent, Genre, Category, Publisher
 from django.views.decorators.http import require_GET
@@ -99,10 +99,18 @@ class SeriesIndexView(generic.ListView):
 
     def get_queryset(self):
         series_type = self.kwargs.get('series_type')
+        letter = self.request.GET.get('letter')
         category = get_object_or_404(Category, name__iexact=series_type)
         series = (Series.objects.filter(category=category).annotate(
             book_count=Count('books')
         ).order_by('title'))
+
+        if letter:
+            if len(letter) > 1:
+                return series
+            else:
+                series = series.filter(title__istartswith=letter)
+
         return series
     
     def get_context_data(self, **kwargs):

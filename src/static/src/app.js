@@ -1,6 +1,3 @@
-// log all htmx events to the console.
-htmx.logAll();
-
 document.addEventListener("DOMContentLoaded", () => {
     const dropdownRoots = Array.from(document.querySelectorAll("[data-dropdown-root]"));
 
@@ -74,3 +71,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+// log all htmx events to the console.
+htmx.logAll();

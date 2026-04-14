@@ -125,16 +125,16 @@
                     <!-- Right Column: Order Summary -->
                     <div class="w-full lg:w-1/4">
                         <div class="sticky top-24 rounded-lg border border-stone-200 bg-white p-6 shadow-sm lg:p-8">
-                            <h3 class="type-heading-4 font-bold">Order Summary</h3>
+                            <h3 class="type-heading-3">Order Summary</h3>
                             <div class="grid grid-cols-2 gap-y-2 pb-6 border-b border-dashed border-slate-300 dark:border-slate-700">
                                 <span class="text-text-muted text-sm">{{ request.session.item_count }} items</span>
-                                <span class="font-medium text-text-main text-right text-sm">₦{{ request.session.subtotal_price|intcomma }}</span>
+                                <span class="text-text-muted text-right text-sm">₦{{ request.session.subtotal_price|intcomma }}</span>
                                 <span class="text-text-muted text-sm">Shipping</span>
-                                <span class="font-medium text-text-main text-right text-sm">Calculated at next step</span>
+                                <span class="text-text-muted text-right text-sm">pending</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="type-heading-4 font-bold">Subtotal</span>
-                                <span class="type-heading-3 font-bold text-primary">₦{{ request.session.subtotal_price|intcomma }}</span>
+                                <span class="font-body">Subtotal</span>
+                                <span class="text-primary font-bold text-lg font-body">₦{{ request.session.subtotal_price|intcomma }}</span>
                             </div>
                             <a class="w-full bg-primary hover:bg-[#880d2f] text-white font-bold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2 group mt-2"
                                href="{% url 'checkout_shipping' %}">

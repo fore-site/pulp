@@ -14,8 +14,7 @@
             </div>
             <!-- Filters -->
             {% with active_letter=request.GET.letter|default:'' %}
-                <div class="relative flex flex-wrap gap-2"
-                     data-dropdown-root>
+                <div class="relative flex flex-wrap gap-2" data-dropdown-root>
                     <button type="button"
                             name="filter"
                             class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-text-main transition-all hover:border-primary hover:text-primary"
@@ -24,74 +23,30 @@
                             aria-expanded="false"
                             aria-controls="series-az-menu">
                         <span>A-Z</span>
-                        {% if active_letter %}
+                        {% if active_letter and active_letter|length == 1 %}
                             <span class="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">
                                 {{ active_letter|upper }}
                             </span>
+                        {% elif active_letter == '0-9' %}
+                            <span class="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-semibold text-primary">{{ active_letter }}</span>
                         {% endif %}
                         <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
                     </button>
                     <div id="series-az-menu"
                          class="dropdown-menu-panel dropdown-menu-panel-wide hidden absolute right-0 top-full mt-3 z-40"
                          data-dropdown-menu>
-                        <div class="mb-3 flex items-center justify-between gap-3 border-b border-slate-200 px-4 pb-3">
-                            <span class="type-overline font-bold">Browse by Letter</span>
-                            <a href="{% querystring letter=None page=None %}"
-                               class="series-az-link {% if not active_letter %}series-az-link-active{% endif %}">All</a>
-                        </div>
+                        <div class="mb-3 flex items-center justify-between gap-3 border-slate-200 px-4 pb-3"></div>
                         <div class="grid grid-cols-5 gap-2 px-4 pb-4 sm:grid-cols-7">
-                            <a href="{% querystring letter='A' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'A' %}series-az-link-active{% endif %}">A</a>
-                            <a href="{% querystring letter='B' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'B' %}series-az-link-active{% endif %}">B</a>
-                            <a href="{% querystring letter='C' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'C' %}series-az-link-active{% endif %}">C</a>
-                            <a href="{% querystring letter='D' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'D' %}series-az-link-active{% endif %}">D</a>
-                            <a href="{% querystring letter='E' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'E' %}series-az-link-active{% endif %}">E</a>
-                            <a href="{% querystring letter='F' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'F' %}series-az-link-active{% endif %}">F</a>
-                            <a href="{% querystring letter='G' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'G' %}series-az-link-active{% endif %}">G</a>
-                            <a href="{% querystring letter='H' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'H' %}series-az-link-active{% endif %}">H</a>
-                            <a href="{% querystring letter='I' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'I' %}series-az-link-active{% endif %}">I</a>
-                            <a href="{% querystring letter='J' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'J' %}series-az-link-active{% endif %}">J</a>
-                            <a href="{% querystring letter='K' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'K' %}series-az-link-active{% endif %}">K</a>
-                            <a href="{% querystring letter='L' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'L' %}series-az-link-active{% endif %}">L</a>
-                            <a href="{% querystring letter='M' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'M' %}series-az-link-active{% endif %}">M</a>
-                            <a href="{% querystring letter='N' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'N' %}series-az-link-active{% endif %}">N</a>
-                            <a href="{% querystring letter='O' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'O' %}series-az-link-active{% endif %}">O</a>
-                            <a href="{% querystring letter='P' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'P' %}series-az-link-active{% endif %}">P</a>
-                            <a href="{% querystring letter='Q' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'Q' %}series-az-link-active{% endif %}">Q</a>
-                            <a href="{% querystring letter='R' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'R' %}series-az-link-active{% endif %}">R</a>
-                            <a href="{% querystring letter='S' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'S' %}series-az-link-active{% endif %}">S</a>
-                            <a href="{% querystring letter='T' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'T' %}series-az-link-active{% endif %}">T</a>
-                            <a href="{% querystring letter='U' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'U' %}series-az-link-active{% endif %}">U</a>
-                            <a href="{% querystring letter='V' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'V' %}series-az-link-active{% endif %}">V</a>
-                            <a href="{% querystring letter='W' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'W' %}series-az-link-active{% endif %}">W</a>
-                            <a href="{% querystring letter='X' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'X' %}series-az-link-active{% endif %}">X</a>
-                            <a href="{% querystring letter='Y' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'Y' %}series-az-link-active{% endif %}">Y</a>
-                            <a href="{% querystring letter='Z' page=None %}"
-                               class="series-az-link {% if active_letter|upper == 'Z' %}series-az-link-active{% endif %}">Z</a>
+                            {% if active_letter %}
+                                <a href="{% url 'series_index' series_type=title|lower %}"
+                                   class="series-az-link">All</a>
+                            {% endif %}
+                            <a href="{% querystring letter='0-9' page=None %}"
+                               class="series-az-link {% if active_letter|upper == letter %}series-az-link-active{% endif %}">0</a>
+                            {% for letter in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' %}
+                                <a href="{% querystring letter=letter page=None %}"
+                                   class="series-az-link {% if active_letter|upper == letter %}series-az-link-active{% endif %}">{{ letter }}</a>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
