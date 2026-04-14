@@ -27,8 +27,8 @@
             <!-- LEFT COLUMN -->
             <div class="lg:col-span-8 flex flex-col gap-8">
                 <div class="flex flex-col gap-2">
-                    <h2 class="text-4xl font-bold tracking-tight text-slate-900 dark:text-white">Review Your Order</h2>
-                    <p class="text-slate-500 dark:text-slate-400">Please verify your details before placing the order.</p>
+                    <h2 class="type-display-2">Review Your Order</h2>
+                    <p class="type-body">Please verify your details before placing the order.</p>
                 </div>
                 <!-- Information Review Cards -->
                 <div class="flex flex-col gap-4 border-t border-b border-[#e6dbdb] py-6">
@@ -39,8 +39,8 @@
                                 <span class="material-symbols-outlined">location_on</span>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-1">Shipping Address</h3>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                                <h3 class="type-heading-4 font-bold mb-1">Shipping Address</h3>
+                                <p class="type-caption leading-relaxed">
                                     {{ request.session.firstname }} {{ request.session.lastname }}
                                     <br />
                                     {{ request.session.address_desc }}
@@ -57,8 +57,8 @@
                                 <span class="material-symbols-outlined">local_shipping</span>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-900 dark:text-white mb-1">Shipping Method</h3>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm">Express Delivery (2-3 Business Days)</p>
+                                <h3 class="type-heading-4 font-bold mb-1">Shipping Method</h3>
+                                <p class="type-caption">Express Delivery (2-3 Business Days)</p>
                             </div>
                         </div>
                     </div>
@@ -69,15 +69,15 @@
                                 <span class="material-symbols-outlined text-stone-400">payments</span>
                             </div>
                             <div>
-                                <h3 class="font-bold text-slate-900 mb-1">Payment Method</h3>
-                                <p class="text-slate-600 dark:text-slate-300 text-sm">Paystack Secure Payment</p>
+                                <h3 class="type-heading-4 font-bold mb-1">Payment Method</h3>
+                                <p class="type-caption">Paystack Secure Payment</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- Items List -->
                 <div id="item_container">
-                    <h3 class="text-xl font-bold mb-6 text-slate-900">Items in your cart</h3>
+                    <h3 class="type-heading-3 font-bold mb-6">Items in your cart</h3>
                     <div class="flex flex-col gap-6">
                         <!-- Item 1 -->
                         {% for item in cart_items %}
@@ -91,19 +91,19 @@
                                 <div class="flex-grow pt-1">
                                     <div class="flex justify-between items-start mb-2">
                                         <div>
-                                            <h4 class="font-bold text-slate-900">{{ item.sku.book.title }}</h4>
-                                            <p class="text-sm text-slate-500 dark:text-slate-400">
+                                            <h4 class="type-heading-4 font-bold">{{ item.sku.book.title }}</h4>
+                                            <p class="type-caption">
                                                 {{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}
                                             </p>
                                         </div>
                                         {% if item.sku.has_discount %}
-                                            <span class="font-bold text-slate-900">₦{{ item.sku.discounted_price|intcomma }}</span>
+                                            <span class="type-body font-bold">₦{{ item.sku.discounted_price|intcomma }}</span>
                                         {% else %}
-                                            <span class="font-bold text-slate-900">₦{{ item.sku.price|intcomma }}</span>
+                                            <span class="type-body font-bold">₦{{ item.sku.price|intcomma }}</span>
                                         {% endif %}
                                     </div>
                                     <div class="flex items-center gap-4 mt-4">
-                                        <div class="text-sm text-slate-600 bg-white border border-[#e6dbdb] px-3 py-1 rounded">Qty: {{ item.quantity }}</div>
+                                        <div class="type-caption bg-white border border-[#e6dbdb] px-3 py-1 rounded">Qty: {{ item.quantity }}</div>
                                         <form action="{% url 'cart_update' %}" method="post">
                                             {% csrf_token %}
                                             <input type="hidden" name="sku_id" value="{{ item.sku.public_id }}">
@@ -139,27 +139,27 @@
             <!-- RIGHT COLUMN -->
             <div class="lg:col-span-5 xl:col-span-4">
                 <div class="sticky top-24 rounded-lg border border-stone-200 dark:border-stone-800 bg-white dark:bg-[#1a0c0c] p-6 shadow-sm lg:p-8">
-                    <h3 class="text-lg font-bold text-slate-900 dark:text-white">Order Summary</h3>
+                    <h3 class="type-heading-4 font-bold">Order Summary</h3>
                     <div class="mt-6 space-y-4 border-t border-stone-200 dark:border-stone-800 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Subtotal</p>
-                            <p class="font-medium text-slate-900 dark:text-white">₦{{ request.session.subtotal_price|intcomma }}</p>
+                            <p class="type-body font-medium">₦{{ request.session.subtotal_price|intcomma }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500 dark:text-stone-400">Shipping</p>
-                            <p class="font-medium text-slate-900">₦{{ request.session.shipping_fee|intcomma }}</p>
+                            <p class="type-body font-medium">₦{{ request.session.shipping_fee|intcomma }}</p>
                         </div>
                         <div class="flex items-center justify-between border-t border-stone-200 pt-4">
-                            <p class="text-base font-bold text-slate-900">Total</p>
-                            <p class="text-base font-bold text-primary">₦{{ request.session.total_price|intcomma }}</p>
+                            <p class="type-body font-bold">Total</p>
+                            <p class="type-body font-bold text-primary">₦{{ request.session.total_price|intcomma }}</p>
                         </div>
                     </div>
                     <div class="mt-6 rounded bg-stone-50 p-4">
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-stone-400 mt-0.5">local_shipping</span>
                             <div>
-                                <p class="text-sm font-medium text-slate-900 dark:text-white">Express Shipping</p>
-                                <p class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                                <p class="type-caption font-medium">Express Shipping</p>
+                                <p class="type-caption mt-0.5">
                                     Estimated delivery: {{ delivery_date_1 }} - {{ delivery_date_2 }}
                                 </p>
                             </div>

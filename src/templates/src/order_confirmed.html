@@ -10,12 +10,12 @@
             <div class="size-24 rounded-full border-4 border-primary flex items-center justify-center text-primary mb-2">
                 <span class="material-symbols-outlined text-[48px] font-bold">check</span>
             </div>
-            <h1 class="text-5xl md:text-6xl font-bold uppercase tracking-tight text-text-main">Order Confirmed</h1>
-            <p class="text-text-muted text-lg md:text-xl font-light max-w-md">
+            <h1 class="type-display-2 uppercase">Order Confirmed</h1>
+            <p class="type-body-lg font-light max-w-md">
                 Thank you for your purchase. Your taste is impeccable.
             </p>
             <div class="mt-4 bg-text-main text-white px-6 py-3 flex items-center gap-3 shadow-[4px_4px_0px_0px_#9F1239]">
-                <span class="uppercase text-sm tracking-widest opacity-80">Order Number:</span>
+                <span class="type-overline font-bold opacity-80 text-white">Order Number:</span>
                 <span class="font-mono text-lg font-bold">{{ order.order_number }}</span>
             </div>
         </div>
@@ -23,7 +23,7 @@
         <div class="w-full grid grid-cols-1 md:grid-cols-2 gap-0 border-2 border-border-sharp">
             <!-- Order Summary -->
             <div class="p-8 md:p-10 border-b-2 md:border-b-0 md:border-r-2 border-border-sharp bg-gray-50/50">
-                <h3 class="text-xl font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
+                <h3 class="type-heading-3 font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
                     <span class="material-symbols-outlined">receipt_long</span>
                     Summary
                 </h3>
@@ -38,31 +38,31 @@
                                      src="{{ item.sku.book.cover_image }}" />
                             </div>
                             <div class="flex-1">
-                                <h4 class="font-bold text-lg leading-tight">{{ item.sku.book.title }}</h4>
-                                <p class="text-sm text-text-muted mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
+                                <h4 class="type-heading-4 font-bold leading-tight">{{ item.sku.book.title }}</h4>
+                                <p class="type-caption mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
                                 {% if item.sku.has_discount %}
-                                    <p class="text-sm font-medium mt-2">₦{{ item.sku.discounted_price|intcomma }}</p>
+                                    <p class="type-caption font-medium mt-2">₦{{ item.sku.discounted_price|intcomma }}</p>
                                 {% else %}
-                                    <p class="text-sm font-medium mt-2">₦{{ item.sku.price|intcomma }}</p>
+                                    <p class="type-caption font-medium mt-2">₦{{ item.sku.price|intcomma }}</p>
                                 {% endif %}
                             </div>
                         </div>
                     {% endfor %}
                     <div class="h-px bg-gray-300 my-2"></div>
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-text-muted">Subtotal</span>
+                    <div class="flex justify-between items-center">
+                        <span class="type-caption">Subtotal</span>
                         <span class="font-mono">₦{{ order.subtotal_amount|intcomma }}</span>
                     </div>
-                    <div class="flex justify-between items-center text-sm">
-                        <span class="text-text-muted">Shipping</span>
+                    <div class="flex justify-between items-center">
+                        <span class="type-caption">Shipping</span>
                         {% if order.shipping_fee %}
                             <span class="font-mono">₦{{ order.shipping_fee|intcomma }}</span>
                         {% else %}
                             <span class="font-mono">Free</span>
                         {% endif %}
                     </div>
-                    <div class="flex justify-between items-center text-lg font-bold pt-2 border-t border-gray-300 mt-2">
-                        <span>Total</span>
+                    <div class="flex justify-between items-center pt-2 border-t border-gray-300 mt-2">
+                        <span class="type-body font-bold">Total</span>
                         <span class="font-mono">₦{{ order.total_amount|intcomma }}</span>
                     </div>
                 </div>
@@ -70,27 +70,27 @@
             <!-- Shipping Details -->
             <div class="flex flex-col">
                 <div class="p-8 md:p-10 flex-1">
-                    <h3 class="text-xl font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
+                    <h3 class="type-heading-3 font-bold uppercase tracking-wider mb-6 flex items-center gap-2">
                         <span class="material-symbols-outlined">local_shipping</span>
                         Delivery
                     </h3>
                     <div class="space-y-6">
                         <div>
-                            <p class="text-xs uppercase tracking-widest text-text-muted mb-2">Shipping Address</p>
-                            <p class="font-medium text-lg">{{ order_address.recipient_firstname }} {{ order_address.recipient_lastname }}</p>
-                            <p class="text-text-muted">{{ order_address.address_desc }}</p>
-                            <p class="text-text-muted">{{ order_address.address_city }}, {{ order_address.address_state }}</p>
+                            <p class="type-overline mb-2">Shipping Address</p>
+                            <p class="type-body-lg font-medium">{{ order_address.recipient_firstname }} {{ order_address.recipient_lastname }}</p>
+                            <p class="type-body">{{ order_address.address_desc }}</p>
+                            <p class="type-body">{{ order_address.address_city }}, {{ order_address.address_state }}</p>
                         </div>
                         <div>
-                            <p class="text-xs uppercase tracking-widest text-text-muted mb-2">Estimated Arrival</p>
-                            <p class="font-medium text-lg flex items-center gap-2">
+                            <p class="type-overline mb-2">Estimated Arrival</p>
+                            <p class="type-body-lg font-medium flex items-center gap-2">
                                 <span class="material-symbols-outlined text-primary">schedule</span>
                                 {{ delivery_date1 }} - {{ delivery_date2 }}
                             </p>
                         </div>
                         <div>
-                            <p class="text-xs uppercase tracking-widest text-text-muted mb-2">Shipping Method</p>
-                            <p class="text-text-main">Express</p>
+                            <p class="type-overline mb-2">Shipping Method</p>
+                            <p class="type-body">Express</p>
                         </div>
                     </div>
                 </div>

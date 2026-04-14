@@ -35,20 +35,20 @@
                     <!-- Name Fields -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white"
+                            <label class="type-caption font-medium"
                                    for="firstName">First Name</label>
                             {{ form.recipient_firstname }}
                             {% if form.recipient_firstname.errors %}{{ form.recipient_firstname.errors }}{% endif %}
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main" for="lastName">Last Name</label>
+                            <label class="type-caption font-medium" for="lastName">Last Name</label>
                             {{ form.recipient_lastname }}
                             {% if form.recipient_lastname.errors %}{{ form.recipient_lastname.errors }}{% endif %}
                         </div>
                     </div>
                     <!-- Address Field -->
                     <div class="flex flex-col gap-2">
-                        <label class="text-sm font-medium text-text-main dark:text-white"
+                        <label class="type-caption font-medium"
                                for="address">Address</label>
                         {{ form.address_desc }}
                         {% if form.address_desc.errors %}{{ form.address_desc.errors }}{% endif %}
@@ -56,7 +56,7 @@
                     <!-- City, State -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main" for="state">State</label>
+                            <label class="type-caption font-medium" for="state">State</label>
                             <div class="relative">
                                 {{ form.address_state }}
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
@@ -64,7 +64,7 @@
                             </div>
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main dark:text-white" for="city">City</label>
+                            <label class="type-caption font-medium" for="city">City</label>
                             <div class="relative">
                                 {{ form.address_city }}
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
@@ -75,12 +75,12 @@
                     <!-- Phone & Email -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main" for="phone">Phone Number</label>
+                            <label class="type-caption font-medium" for="phone">Phone Number</label>
                             {{ form.phone_no }}
                             {% if form.phone_no.errors %}{{ form.phone_no.errors }}{% endif %}
                         </div>
                         <div class="flex flex-col gap-2">
-                            <label class="text-sm font-medium text-text-main" for="email">Email Address</label>
+                            <label class="type-caption font-medium" for="email">Email Address</label>
                             {{ form.email }}
                             {% if form.email.errors %}{{ form.email.errors }}{% endif %}
                         </div>
@@ -103,15 +103,15 @@
             <!-- Right Column: Order Summary (Sticky) -->
             <div class="lg:col-span-5 xl:col-span-4">
                 <div class="sticky top-24 rounded-lg border border-stone-200 bg-white p-6 shadow-sm lg:p-8">
-                    <h3 class="text-lg font-bold text-slate-900">Order Summary</h3>
+                    <h3 class="type-heading-4 font-bold">Order Summary</h3>
                     <div class="mt-6 space-y-4 border-t border-stone-200 pt-6">
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500">Subtotal</p>
-                            <p class="font-medium text-slate-900">₦{{ request.session.subtotal_price|intcomma }}</p>
+                            <p class="type-body font-medium">₦{{ request.session.subtotal_price|intcomma }}</p>
                         </div>
                         <div class="flex items-center justify-between text-sm">
                             <p class="text-stone-500">Shipping</p>
-                            <p class="font-medium text-slate-900" id="shipping_fee">
+                            <p class="type-body font-medium" id="shipping_fee">
                                 {% if request.session.shipping_fee %}
                                     ₦{{ request.session.shipping_fee|intcomma }}
                                 {% else %}
@@ -120,8 +120,8 @@
                             </p>
                         </div>
                         <div class="flex items-center justify-between border-t border-stone-200 pt-4">
-                            <p class="text-base font-bold text-slate-900">Total</p>
-                            <span class="text-base font-bold text-primary"
+                            <p class="type-body font-bold">Total</p>
+                            <span class="type-body font-bold text-primary"
                                   id="total_price"
                                   hx-swap-oob="true">₦{{ request.session.total_price|intcomma }}</span>
                         </div>
@@ -130,8 +130,8 @@
                         <div class="flex items-start gap-3">
                             <span class="material-symbols-outlined text-stone-400 mt-0.5">local_shipping</span>
                             <div>
-                                <p class="text-sm font-medium text-slate-900 dark:text-white">Express Shipping</p>
-                                <p class="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+                                <p class="type-caption font-medium">Express Shipping</p>
+                                <p class="type-caption mt-0.5">
                                     Estimated delivery: {{ delivery_date_1 }} - {{ delivery_date_2 }}
                                 </p>
                             </div>

@@ -5,137 +5,113 @@
     Pulp - {{ default_sku.book.title }}
 {% endblock title %}
 {% block content %}
-    <!-- Product Hero Section -->
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
-        <!-- Left Column: Image -->
-        <div class="lg:col-span-5 xl:col-span-4">
-            <div class="relative group">
-                <div class="aspect-[2/3] w-full rounded-sm overflow-hidden border-[2px] border-slate-900 relative">
-                    <img alt="{{ default_sku.book.title }} Image Cover"
-                         class="w-full h-full object-cover transition-transform duration-500"
-                         data-alt="{{ default_sku.book.title }} Image Cover"
-                         src="{{ default_sku.book.cover_image }}" />
-                    <div class="absolute inset-0 bg-black/0 transition-colors duration-300"></div>
-                </div>
-            </div>
-        </div>
-        <!-- Right Column: Details -->
-        <div class="lg:col-span-7 xl:col-span-8 flex flex-col h-full">
-            <!-- Title & Author -->
-            <div class="mb-6">
-                <h1 class="text-4xl md:text-5xl font-bold text-slate-900 dark:text-white mb-2 leading-tight">
-                    {{ default_sku.book.title }}
-                </h1>
-                <div class="flex flex-wrap items-center gap-2 text-lg">
-                    <span class="text-slate-500">By {{ default_sku.book.authors.all|join:", " }}</span>
-                    <span class="text-slate-300 dark:text-slate-600">|</span>
-                    <span class="text-slate-500 dark:text-slate-400">Series:</span>
-                    <a class="text-primary font-semibold hover:underline decoration-primary underline-offset-4"
-                       href="{% url 'series_detail' default_sku.book.series.public_id %}">{{ default_sku.book.series.title }}</a>
-                </div>
-            </div>
-            <!-- Reviews -->
-            <div class="flex items-center gap-4 mb-8">
-                {% to_stars default_sku.book.average_rating %}
-                <span class="text-sm font-medium text-slate-600 dark:text-slate-400 border-b border-dashed border-slate-400 pb-0.5">({{ default_sku.book.reviewer_count }} Reviews)</span>
-            </div>
-            <!-- Price -->
-            <div class="flex items-end gap-3 mb-8">
-                {% if default_sku.has_discount %}
-                    <span class="text-4xl font-bold text-primary">₦{{ default_sku.discounted_price|intcomma }}</span>
-                    <span class="text-xl text-slate-400 line-through mb-1.5">₦{{ default_sku.price|intcomma }}</span>
-                    <span class="text-xs font-bold text-white bg-primary px-2 py-1 rounded mb-2 ml-2">{{ default_sku.discount_percent }}% OFF</span>
-                {% else %}
-                    <span class="text-4xl font-bold text-primary">₦{{ default_sku.price|intcomma }}</span>
-                {% endif %}
-            </div>
-            <!-- Format Selection -->
-            <div class="mb-8">
-                <label class="block text-sm font-bold text-slate-700 dark:text-slate-200 mb-3 uppercase tracking-wider">
-                    Select Format
-                </label>
-                <div class="flex flex-wrap gap-4">
-                    {% for sku in default_sku.book.sku.all %}
-                        {% if not sku.is_discontinued %}
-                            <a href="{% url 'product_detail' sku.public_id %}?f={{ sku.format|lower }}"
-                               class="flex flex-col items-start p-4 rounded border-2 min-w-[160px] relative group hover:shadow-lg transition-all border-slate-500 bg-white dark:bg-slate-800">
-                                {% if sku.format == default_sku.format %}
-                                    <div class="absolute top-2 right-2 text-primary">
-                                        <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                                    </div>
-                                {% endif %}
-                                <span class="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">{{ sku.format }}</span>
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-            <!-- Actions -->
-            <form action="{% url 'cart' %}" method="post">
-                {% csrf_token %}
-                <div class="flex flex-col sm:flex-row gap-4 mb-10 w-full lg:max-w-md">
-                    <input type="hidden" name="sku_id" value="{{ default_sku.public_id }}">
-                    <input type="hidden" name="next" value="{{ request.path }}">
-                    <button type="submit"
-                            hx-post="{% url 'cart' %}"
-                            hx-target="#cart-count"
-                            hx-swap="innerHTML"
-                            class="flex-1 bg-primary text-white font-bold py-4 px-8 rounded hover:bg-primary-dark transition-all flex items-center justify-center gap-2 add-to-cart-btn">
-                        <span class="material-symbols-outlined">shopping_cart</span>
-                        Add to Cart
-                    </button>
-                </div>
-            </form>
-            <hr class="border-slate-200 dark:border-slate-800 mb-8" />
-            <!-- Details -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-8 py-6">
-                <div>
-                    <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Publisher</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.publisher }}</span>
-                </div>
-                <div>
-                    <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Release Date</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.published_at }}</span>
-                </div>
-                <div>
-                    <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">Pages</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.book.page_count }}</span>
-                </div>
-                <div>
-                    <span class="block text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-1">ISBN</span>
-                    <span class="text-sm font-semibold text-slate-800 dark:text-slate-200">{{ default_sku.isbn_number }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Volume List -->
-    <div>
-        <div class="flex items-center justify-between mb-4">
-            <h3 class="text-xl font-bold text-slate-900 dark:text-white">More Books in this Series</h3>
-            <a class="text-sm text-primary font-medium hover:underline"
-               href="{% url 'series_detail' default_sku.book.series.public_id %}">View All</a>
-        </div>
-        <div class="flex gap-4 overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
-            {% for book in books_in_series %}
-                <div class="flex-none w-32 group">
-                    <div class="aspect-[2/3] bg-slate-200 dark:bg-slate-800 rounded mb-2 overflow-hidden">
-                        <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                             data-alt="{{ book.title }} Cover"
-                             src="{{ book.cover_image }}" />
+    <main class="page-shell py-8 md:py-12">
+        <!-- Product Hero Section -->
+        <div class="grid grid-cols-1 gap-8 md:gap-10 lg:grid-cols-12 lg:gap-12 mb-12 md:mb-20">
+            <!-- Left Column: Image -->
+            <div class="lg:col-span-5 xl:col-span-4">
+                <div class="relative group flex justify-center lg:justify-start">
+                    <div class="series-cover-hero rounded-sm overflow-hidden border-[2px] border-slate-900 relative">
+                        <img alt="{{ default_sku.book.title }} Image Cover"
+                             class="w-full h-full object-cover transition-transform duration-500"
+                             data-alt="{{ default_sku.book.title }} Image Cover"
+                             src="{{ default_sku.book.cover_image }}" />
+                        <div class="absolute inset-0 bg-black/0 transition-colors duration-300"></div>
                     </div>
-                    <h4 class="text-sm font-bold truncate">{{ book.title }}</h4>
-                    <p class="text-xs text-slate-500">{{ book.authors.all|join:", " }}</p>
                 </div>
-            {% empty %}
-                <p class="mb-4">No other book in this series</p>
-            {% endfor %}
+            </div>
+            <!-- Right Column: Details -->
+            <div class="lg:col-span-7 xl:col-span-8 flex flex-col h-full">
+                <!-- Title & Author -->
+                <div class="mb-6">
+                    <h1 class="type-display-2 mb-2 leading-tight">{{ default_sku.book.title }}</h1>
+                    <div class="flex flex-wrap items-center gap-2 text-lg">
+                        <span class="type-body">By {{ default_sku.book.authors.all|join:", " }}</span>
+                        <span class="text-slate-300 dark:text-slate-600">|</span>
+                        <span class="type-body">Series:</span>
+                        <a class="text-primary font-semibold hover:underline decoration-primary underline-offset-4"
+                           href="{% url 'series_detail' default_sku.book.series.public_id %}">{{ default_sku.book.series.title }}</a>
+                    </div>
+                </div>
+                <!-- Reviews -->
+                <div class="flex items-center gap-4 mb-8">
+                    {% to_stars default_sku.book.average_rating %}
+                    <span class="type-caption font-medium border-b border-dashed border-slate-400 pb-0.5">({{ default_sku.book.reviewer_count }} Reviews)</span>
+                </div>
+                <!-- Price -->
+                <div class="flex items-end gap-3 mb-8">
+                    {% if default_sku.has_discount %}
+                        <span class="text-4xl font-bold text-primary">₦{{ default_sku.discounted_price|intcomma }}</span>
+                        <span class="text-xl text-slate-400 line-through mb-1.5">₦{{ default_sku.price|intcomma }}</span>
+                        <span class="text-xs font-bold text-white bg-primary px-2 py-1 rounded mb-2 ml-2">{{ default_sku.discount_percent }}% OFF</span>
+                    {% else %}
+                        <span class="text-4xl font-bold text-primary">₦{{ default_sku.price|intcomma }}</span>
+                    {% endif %}
+                </div>
+                <!-- Format Selection -->
+                <div class="mb-8">
+                    <label class="block type-overline font-bold mb-3 text-text-main">Select Format</label>
+                    <div class="flex flex-wrap gap-4">
+                        {% for sku in default_sku.book.sku.all %}
+                            {% if not sku.is_discontinued %}
+                                <a href="{% url 'product_detail' sku.public_id %}?f={{ sku.format|lower }}"
+                                   class="flex flex-col items-start p-4 rounded border-2 min-w-[160px] relative group hover:shadow-lg transition-all border-slate-500 bg-white dark:bg-slate-800">
+                                    {% if sku.format == default_sku.format %}
+                                        <div class="absolute top-2 right-2 text-primary">
+                                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
+                                        </div>
+                                    {% endif %}
+                                    <span class="type-caption font-medium mb-1">{{ sku.format }}</span>
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <!-- Actions -->
+                <form action="{% url 'cart' %}" method="post">
+                    {% csrf_token %}
+                    <div class="flex flex-col sm:flex-row gap-4 mb-10 w-full lg:max-w-md">
+                        <input type="hidden" name="sku_id" value="{{ default_sku.public_id }}">
+                        <input type="hidden" name="next" value="{{ request.path }}">
+                        <button type="submit"
+                                hx-post="{% url 'cart' %}"
+                                hx-target="#cart-count"
+                                hx-swap="innerHTML"
+                                class="flex-1 bg-primary text-white font-bold py-4 px-8 rounded hover:bg-primary-dark transition-all flex items-center justify-center gap-2 add-to-cart-btn">
+                            <span class="material-symbols-outlined">shopping_cart</span>
+                            Add to Cart
+                        </button>
+                    </div>
+                </form>
+                <hr class="border-slate-200 mb-8" />
+                <!-- Details -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-y-4 gap-x-8 py-6">
+                    <div>
+                        <span class="block type-overline font-bold mb-1">Publisher</span>
+                        <span class="type-caption font-semibold">{{ default_sku.publisher }}</span>
+                    </div>
+                    <div>
+                        <span class="block type-overline font-bold mb-1">Release Date</span>
+                        <span class="type-caption font-semibold">{{ default_sku.published_at }}</span>
+                    </div>
+                    <div>
+                        <span class="block type-overline font-bold mb-1">Pages</span>
+                        <span class="type-caption font-semibold">{{ default_sku.book.page_count }}</span>
+                    </div>
+                    <div>
+                        <span class="block type-overline font-bold mb-1">ISBN</span>
+                        <span class="type-caption font-semibold">{{ default_sku.isbn_number }}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Related Titles Section -->
-        <section class="mt-20 mb-12">
-            <h2 class="text-3xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-primary pl-4">
-                You May Also Like
-            </h2>
-            <!-- Product Cards -->
+        <!-- Volume List -->
+        <div>
+            <div class="flex items-center justify-between mb-4">
+                <h3 class="type-heading-3 font-bold">More Books in this Series</h3>
+                <a class="text-sm text-primary font-medium hover:underline"
+                   href="{% url 'series_detail' default_sku.book.series.public_id %}">View All</a>
+            </div>
             <div class="relative group">
                 <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
                     <span class="material-symbols-outlined">chevron_left</span>
@@ -143,10 +119,42 @@
                 <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
                     <span class="material-symbols-outlined">chevron_right</span>
                 </button>
-                <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
-                    {% include "partials/book_card_scroll.html" with books=related_sku %}
+                <div class="scroll-container flex overflow-x-auto gap-4 pb-4 scroll-smooth scrollbar-none">
+                    {% for book in books_in_series %}
+                        <a href="{% url 'product_detail' book.sku.first.public_id %}?f={{ book.sku.first.format|lower }}">
+                            <div class="group relative flex min-w-0 flex-none w-32 flex-col gap-2 snap-start">
+                                <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
+                                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                         data-alt="{{ book.title }} Cover"
+                                         style="background-image: url('{{ book.cover_image }}')"></div>
+                                </div>
+                                <div class="flex min-w-0 flex-col gap-1">
+                                    <h4 class="type-heading-4 truncate">{{ book.title }}</h4>
+                                    <p class="type-caption truncate">{{ book.authors.all|join:", " }}</p>
+                                </div>
+                            </div>
+                        </a>
+                    {% empty %}
+                        <p class="type-body mb-4">No other book in this series</p>
+                    {% endfor %}
                 </div>
             </div>
-        </section>
-    </div>
+            <!-- Related Titles Section -->
+            <section class="mt-16 md:mt-20 mb-12">
+                <h2 class="type-heading-3 font-bold mb-8 border-l-4 border-primary pl-4">You May Also Like</h2>
+                <!-- Product Cards -->
+                <div class="relative group">
+                    <button class="scroll-left absolute left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_left</span>
+                    </button>
+                    <button class="scroll-right absolute right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 bg-white border border-black rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 hover:bg-black hover:text-white">
+                        <span class="material-symbols-outlined">chevron_right</span>
+                    </button>
+                    <div class="scroll-container flex overflow-x-auto gap-6 pb-6 snap-x snap-mandatory scroll-smooth scrollbar-none">
+                        {% include "partials/book_card_scroll.html" with books=related_sku %}
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
 {% endblock content %}

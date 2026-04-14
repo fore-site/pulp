@@ -17,7 +17,7 @@
         {% if genres %}
             <div class="space-y-4">
                 <div class="flex items-center justify-between w-full">
-                    <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Genre</h3>
+                    <h3 class="type-heading-4 font-bold">Genre</h3>
                     <!-- Clear Filters Button moved inline with first heading -->
                     <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
                        class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
@@ -34,7 +34,7 @@
                                    value="{{ genre.name }}"
                                    {% if genre.name in selected_genres %}checked{% endif %} />
                             <div class="flex flex-col">
-                                <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
+                                <span class="type-caption font-medium group-hover:text-primary transition-colors">{{ genre.name }}</span>
                             </div>
                         </label>
                     {% endfor %}
@@ -46,7 +46,7 @@
         {% if categories and not genres %}
             <div class="space-y-4">
                 <div class="flex items-center justify-between w-full">
-                    <h3 class="font-display font-bold text-lg text-slate-900">Category</h3>
+                    <h3 class="type-heading-4 font-bold">Category</h3>
                     <!-- Clear Filters Button moved inline with first heading -->
                     <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
                        class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
@@ -62,7 +62,7 @@
                                value="{{ category.name }}"
                                {% if category.name in selected_categories %}checked{% endif %} />
                         <div class="flex flex-col">
-                            <span class="text-slate-900 text-sm font-medium group-hover:text-primary transition-colors">{{ category.name }}</span>
+                            <span class="type-caption font-medium group-hover:text-primary transition-colors">{{ category.name }}</span>
                         </div>
                     </label>
                 {% endfor %}
@@ -73,7 +73,7 @@
         <div class="space-y-4">
             {% if price_range and not categories and not genres %}
                 <div class="flex items-center justify-between w-full">
-                    <h3 class="font-display font-bold text-lg text-slate-900">Price Range</h3>
+                    <h3 class="type-heading-4 font-bold">Price Range</h3>
                     <!-- Clear Filters Button moved inline with first heading -->
                     <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
                        class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
@@ -82,7 +82,7 @@
                        aria-label="Clear all filters">Clear filters</a>
                 </div>
             {% else %}
-                <h3 class="font-display font-bold text-lg text-slate-900">Price Range</h3>
+                <h3 class="type-heading-4 font-bold">Price Range</h3>
             {% endif %}
             {% for price in price_range %}
                 <label class="flex items-start gap-3 group cursor-pointer">
@@ -92,15 +92,16 @@
                            value="{{ price }}"
                            {% if price == selected_price %}checked{% endif %} />
                     <div class="flex flex-col">
-                        <span class="text-slate-900 text-sm font-medium group-hover:text-primary transition-colors">₦{{ price | intcomma }} and below</span>
+                        <span class="type-caption font-medium group-hover:text-primary transition-colors">₦{{ price | intcomma }} and below</span>
                     </div>
                 </label>
             {% endfor %}
         </div>
         {% if discounts %}
+            <hr class="border-[#e5dcde]" />
             <!-- Discount -->
             <div class="space-y-4">
-                <h3 class="font-display font-bold text-lg text-slate-900">Discount</h3>
+                <h3 class="type-heading-4 font-bold">Discount</h3>
                 {% for discount in discounts %}
                     <label class="flex items-start gap-3 group cursor-pointer">
                         <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
@@ -109,7 +110,7 @@
                                value="{{ discount }}"
                                {% if discount == selected_discount %}checked{% endif %} />
                         <div class="flex flex-col">
-                            <span class="text-slate-900 dark:text-slate-100 text-sm font-medium group-hover:text-primary transition-colors">
+                            <span class="type-caption font-medium group-hover:text-primary transition-colors">
                                 {% if discount == 'lt50' %}
                                     5-50%
                                 {% else %}
@@ -122,10 +123,10 @@
             </div>
         {% endif %}
         {% if publishers %}
-            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+            <hr class="border-[#e5dcde]" />
             <!-- Publishers -->
             <div class="space-y-4">
-                <h3 class="font-display font-bold text-lg text-slate-900 dark:text-slate-100">Publisher</h3>
+                <h3 class="type-heading-4 font-bold">Publisher</h3>
                 <div class="space-y-2">
                     {% for publisher in publishers %}
                         <label class="flex items-center gap-3 group cursor-pointer">
@@ -134,7 +135,7 @@
                                    name="publisher"
                                    value="{{ publisher.name }}"
                                    {% if publisher.name == selected_publisher %}checked{% endif %} />
-                            <span class="text-slate-700 dark:text-slate-300 text-sm group-hover:text-primary transition-colors">{{ publisher.name }}</span>
+                            <span class="type-caption group-hover:text-primary transition-colors">{{ publisher.name }}</span>
                         </label>
                     {% endfor %}
                 </div>

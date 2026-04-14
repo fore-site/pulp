@@ -3,20 +3,20 @@
     Pulp - Payment Failed
 {% endblock title %}
 {% block content %}
-    <div class="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-        <div class="bg-white rounded-lg shadow-lg p-6 max-w-md w-full text-center">
+    <main class="page-shell flex min-h-[60vh] items-center justify-center py-8 md:py-12">
+        <div class="bg-white rounded-lg shadow-lg p-6 sm:p-8 max-w-md w-full text-center">
             <span class="material-symbols-outlined text-6xl text-red-500 mb-4">error</span>
-            <h2 class="text-2xl font bold mb-2">Payment Failed</h2>
-            <p class="text-gray-600 mb-6">Unfortunately, your payment could not be processed. Please try again.</p>
+            <h2 class="type-display-2 mb-2">Payment Failed</h2>
+            <p class="type-body mb-6">Unfortunately, your payment could not be processed. Please try again.</p>
             <a href="{% url 'cart' %}"
                class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2 mb-4">
                 Back to Cart
             </a>
             <a href="{% url 'checkout_shipping' %}"
-               class="text-primary hover:underline">
+               class="type-body text-primary hover:underline">
                 <span class="material-symbols-outlined text-lg">arrow_back</span>
                 Return to Checkout
             </a>
         </div>
-    </div>
+    </main>
 {% endblock %}

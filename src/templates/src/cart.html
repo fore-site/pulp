@@ -14,7 +14,7 @@
             {% else %}
                 <!-- Page Title -->
                 <div class="flex flex-col gap-3 pb-8">
-                    <h1 class="text-text-main text-4xl md:text-5xl font-black leading-tight tracking-[-0.033em] uppercase">Your Cart</h1>
+                    <h1 class="type-display-2 uppercase">Your Cart</h1>
                 </div>
                 <div class="flex flex-col lg:flex-row gap-12">
                     <!-- Left Column: Cart Items -->
@@ -47,8 +47,8 @@
                                     </a>
                                     <div class="flex flex-col gap-1">
                                         <a href="{% url 'product_detail' item.sku.public_id %}?f={{ item.sku.format|lower }}">
-                                            <h3 class="text-text-main dark:text-white text-xl font-bold leading-tight font-display">{{ item.sku.book.title }}</h3>
-                                            <p class="text-text-muted text-sm mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
+                                            <h3 class="type-heading-4 font-bold leading-tight">{{ item.sku.book.title }}</h3>
+                                            <p class="type-caption mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
                                         </a>
                                     </div>
                                 </div>
@@ -125,7 +125,7 @@
                     <!-- Right Column: Order Summary -->
                     <div class="w-full lg:w-1/4">
                         <div class="sticky top-24 rounded-lg border border-stone-200 bg-white p-6 shadow-sm lg:p-8">
-                            <h3 class="text-lg font-bold text-slate-900">Order Summary</h3>
+                            <h3 class="type-heading-4 font-bold">Order Summary</h3>
                             <div class="grid grid-cols-2 gap-y-2 pb-6 border-b border-dashed border-slate-300 dark:border-slate-700">
                                 <span class="text-text-muted text-sm">{{ request.session.item_count }} items</span>
                                 <span class="font-medium text-text-main text-right text-sm">₦{{ request.session.subtotal_price|intcomma }}</span>
@@ -133,8 +133,8 @@
                                 <span class="font-medium text-text-main text-right text-sm">Calculated at next step</span>
                             </div>
                             <div class="flex justify-between items-center">
-                                <span class="text-base font-bold text-text-main font-display">Subtotal</span>
-                                <span class="text-2xl font-bold text-primary font-display">₦{{ request.session.subtotal_price|intcomma }}</span>
+                                <span class="type-heading-4 font-bold">Subtotal</span>
+                                <span class="type-heading-3 font-bold text-primary">₦{{ request.session.subtotal_price|intcomma }}</span>
                             </div>
                             <a class="w-full bg-primary hover:bg-[#880d2f] text-white font-bold py-3 px-4 rounded transition-colors flex items-center justify-center gap-2 group mt-2"
                                href="{% url 'checkout_shipping' %}">
