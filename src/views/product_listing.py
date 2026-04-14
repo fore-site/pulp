@@ -67,10 +67,9 @@ class ProductDetailView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        selected_format = self.request.GET.get('f', 'digital')
         public_id = self.kwargs.get('public_id')
 
-        default_format_sku = base_book_queryset(Sku).filter(format=selected_format.capitalize(), public_id=public_id).get()
+        default_format_sku = base_book_queryset(Sku).filter(public_id=public_id).get()
         BookEvent.objects.create(sku=default_format_sku, event_type='view')
         
         # More books in the series
@@ -85,7 +84,7 @@ class ProductDetailView(generic.TemplateView):
         
         related_titles_sku = get_related_books(default_format_sku, base_queryset, genre_ids=genre_ids) 
 
-        context['format'] = selected_format
+        context['format'] = default_format_sku.format
         context['default_sku'] = default_format_sku
         context['books_in_series'] = books_in_series
         context['related_sku'] = related_titles_sku

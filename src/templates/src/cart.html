@@ -57,7 +57,7 @@
                                         <div class="flex items-center border border-black rounded overflow-hidden">
                                             {% csrf_token %}
                                             <input type="hidden" name="sku_id" value="{{ item.sku.public_id }}">
-                                            <input type="hidden" name="next" value="{{ request.path }}">
+                                            <input type="hidden" name="next" value="{% url 'cart' %}">
                                             {% if item.quantity > 1 %}
                                                 <button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 transition-colors text-text-main cart-btn"
                                                         type="button"
@@ -107,7 +107,7 @@
                                     <form action="{% url 'cart_update' %}" method="post" novalidate>
                                         {% csrf_token %}
                                         <input type="hidden" name="sku_id" value="{{ item.sku.public_id }}">
-                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <input type="hidden" name="next" value="{% url 'cart' %}">
                                         <button class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
                                                 type="button"
                                                 name="action"

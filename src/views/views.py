@@ -154,7 +154,6 @@ def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
     next_url = request.POST.get('next')
     if next_url:
         next_url = next_url.strip()
-        print(next_url)
 
     # validate the next parameter and ensure user has not tampered with it
     is_safe = url_has_allowed_host_and_scheme(

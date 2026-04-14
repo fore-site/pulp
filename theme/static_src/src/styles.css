@@ -80,15 +80,6 @@
         letter-spacing: var(--tracking-heading);
     }
 
-    .dark h1,
-    .dark h2,
-    .dark h3,
-    .dark h4,
-    .dark h5,
-    .dark h6 {
-        color: var(--color-text-main-dark);
-    }
-
     h1 {
         font-size: var(--text-heading-1);
         line-height: var(--text-heading-1-line);
@@ -273,21 +264,6 @@ input[type='range']::-webkit-slider-thumb {
         color: var(--color-text-muted-light);
     }
 
-    .dark .type-display-1,
-    .dark .type-display-2,
-    .dark .type-heading,
-    .dark .type-heading-3,
-    .dark .type-heading-4,
-    .dark .type-body-lg,
-    .dark .type-body {
-        color: var(--color-text-main-dark);
-    }
-
-    .dark .type-caption,
-    .dark .type-overline {
-        color: var(--color-text-muted-dark);
-    }
-
     .text-text-main,
     .text-slate-900,
     .text-on-surface,
@@ -310,12 +286,67 @@ input[type='range']::-webkit-slider-thumb {
     .series-cover-grid {
         width: 100%;
         aspect-ratio: 2 / 3;
-        min-height: clamp(15rem, 44vw, 24rem);
+        min-height: clamp(12.5rem, 31vw, 18rem);
     }
 
     .series-cover-hero {
         width: min(100%, clamp(11rem, 30vw, 16rem));
         aspect-ratio: 2 / 3;
+    }
+
+    .dropdown-menu-panel {
+        border: 1px solid color-mix(in srgb, var(--color-text-muted-light) 18%, white);
+        border-radius: var(--radius-xl);
+        background: var(--color-surface-light);
+        color: var(--color-text-main-light);
+    }
+
+    .dropdown-menu-panel-wide {
+        width: min(22rem, calc(100vw - 2.5rem));
+    }
+
+    .series-az-link {
+        @apply flex h-10 items-center justify-center rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-colors;
+    }
+
+    .series-az-link:hover {
+        border-color: var(--color-primary);
+        color: var(--color-primary);
+    }
+
+    .series-az-link-active {
+        border-color: var(--color-primary);
+        background: var(--color-primary);
+        color: var(--color-surface-light);
+    }
+
+    .format-option {
+        @apply relative flex min-w-[150px] flex-col items-start gap-2 rounded-xl border px-4 py-4 transition-colors;
+        border-color: color-mix(in srgb, var(--color-text-muted-light) 28%, white);
+        background: color-mix(in srgb, var(--color-surface-light) 99%, var(--color-primary) 1%);
+    }
+
+    .format-option:hover {
+        border-color: var(--color-primary);
+        background: color-mix(in srgb, var(--color-surface-light) 90%, var(--color-primary) 10%);
+    }
+
+    .format-option-active {
+        border-color: var(--color-primary);
+        background: color-mix(in srgb, var(--color-surface-light) 84%, var(--color-primary) 16%);
+    }
+
+    .format-option-indicator {
+        @apply absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full;
+        background: var(--color-primary);
+        color: var(--color-surface-light);
+    }
+
+    .format-option-label {
+        font-family: var(--font-body);
+        font-size: clamp(1rem, 0.94rem + 0.28vw, 1.125rem);
+        line-height: 1.2;
+        color: var(--color-text-main-light);
     }
 
     .text-text-muted,
@@ -345,6 +376,45 @@ input[type='range']::-webkit-slider-thumb {
     .dark .dark\:text-slate-400,
     .dark .dark\:text-stone-400 {
         color: var(--color-text-muted-dark) !important;
+    }
+
+    .dark .dropdown-menu-panel {
+        border-color: color-mix(in srgb, var(--color-text-muted-dark) 24%, black);
+        background: var(--color-surface-dark);
+        color: var(--color-text-main-dark);
+    }
+
+    .dark .series-az-link {
+        @apply border-slate-700 text-slate-200;
+    }
+
+    .dark .series-az-link:hover {
+        color: var(--color-primary-light);
+    }
+
+    .dark .series-az-link-active {
+        border-color: var(--color-primary-light);
+        background: var(--color-primary-light);
+        color: var(--color-surface-light);
+    }
+
+    .dark .format-option {
+        border-color: color-mix(in srgb, var(--color-text-muted-dark) 35%, black);
+        background: color-mix(in srgb, var(--color-surface-dark) 90%, var(--color-primary) 10%);
+    }
+
+    .dark .format-option:hover {
+        border-color: var(--color-primary-light);
+        background: color-mix(in srgb, var(--color-surface-dark) 82%, var(--color-primary) 18%);
+    }
+
+    .dark .format-option-active {
+        border-color: var(--color-primary-light);
+        background: color-mix(in srgb, var(--color-surface-dark) 76%, var(--color-primary) 24%);
+    }
+
+    .dark .format-option-label {
+        color: var(--color-text-main-dark);
     }
 
     .font-display,

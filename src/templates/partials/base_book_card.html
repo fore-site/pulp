@@ -4,7 +4,7 @@
     <!-- Image Container -->
     <div class="card-cover relative overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
         <!-- Background Image -->
-        <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
+        <a href="{% url 'product_detail' book_sku.public_id %}">
             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                  style="background-image: url('{{ book_sku.book.cover_image }}')"></div>
         </a>
@@ -31,10 +31,8 @@
         {% endif %}
     </div>
     <!-- Title, Author, Format -->
-    <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
-        <h3 class="type-heading-4 truncate group transition-colors">
-            {{ book_sku.book.title }}
-        </h3>
+    <a href="{% url 'product_detail' book_sku.public_id %}">
+        <h3 class="type-heading-4 truncate group transition-colors">{{ book_sku.book.title }}</h3>
         <p class="type-caption truncate">{{ book_sku.book.authors.all|join:", " }}</p>
         <p class="type-caption truncate">{{ book_sku.format }}</p>
         <!-- Rating -->

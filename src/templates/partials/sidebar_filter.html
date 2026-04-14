@@ -17,7 +17,7 @@
         {% if genres %}
             <div class="space-y-4">
                 <div class="flex items-center justify-between w-full">
-                    <h3 class="type-heading-4 font-bold">Genre</h3>
+                    <h3 class="type-heading-5">Genre</h3>
                     <!-- Clear Filters Button moved inline with first heading -->
                     <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
                        class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
@@ -40,13 +40,13 @@
                     {% endfor %}
                 </div>
             </div>
-            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+            <hr class="border-[#e5dcde]" />
         {% endif %}
         <!-- Category -->
         {% if categories and not genres %}
             <div class="space-y-4">
                 <div class="flex items-center justify-between w-full">
-                    <h3 class="type-heading-4 font-bold">Category</h3>
+                    <h3 class="type-heading-6">Category</h3>
                     <!-- Clear Filters Button moved inline with first heading -->
                     <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
                        class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
@@ -67,13 +67,13 @@
                     </label>
                 {% endfor %}
             </div>
-            <hr class="border-[#e5dcde] dark:border-[#3a2e32]" />
+            <hr class="border-[#e5dcde]" />
         {% endif %}
         <!-- Price Range -->
         <div class="space-y-4">
             {% if price_range and not categories and not genres %}
                 <div class="flex items-center justify-between w-full">
-                    <h3 class="type-heading-4 font-bold">Price Range</h3>
+                    <h3 class="type-heading-6">Price</h3>
                     <!-- Clear Filters Button moved inline with first heading -->
                     <a href="{{ request.path }}{% if request.GET.q %}?q={{ request.GET.q }}{% endif %}"
                        class="text-text-muted hover:text-primary transition-colors p-2 rounded-full hover:bg-red-50"
@@ -82,7 +82,7 @@
                        aria-label="Clear all filters">Clear filters</a>
                 </div>
             {% else %}
-                <h3 class="type-heading-4 font-bold">Price Range</h3>
+                <h3 class="type-heading-6">Price</h3>
             {% endif %}
             {% for price in price_range %}
                 <label class="flex items-start gap-3 group cursor-pointer">
@@ -101,7 +101,7 @@
             <hr class="border-[#e5dcde]" />
             <!-- Discount -->
             <div class="space-y-4">
-                <h3 class="type-heading-4 font-bold">Discount</h3>
+                <h3 class="type-heading-6">Discount</h3>
                 {% for discount in discounts %}
                     <label class="flex items-start gap-3 group cursor-pointer">
                         <input class="mt-1 size-4 rounded border-[#e5dcde] text-primary focus:ring-primary bg-transparent"
@@ -126,7 +126,7 @@
             <hr class="border-[#e5dcde]" />
             <!-- Publishers -->
             <div class="space-y-4">
-                <h3 class="type-heading-4 font-bold">Publisher</h3>
+                <h3 class="type-heading-6">Publisher</h3>
                 <div class="space-y-2">
                     {% for publisher in publishers %}
                         <label class="flex items-center gap-3 group cursor-pointer">

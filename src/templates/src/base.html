@@ -67,7 +67,8 @@
                             {% if search_bar_form.q.errors %}<p class="text-red-500 text-sm mt-1">{{ search_bar_form.q.errors.0 }}</p>{% endif %}
                         </form>
                     </div>
-                    <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+                    <div class="relative flex items-center gap-1 sm:gap-2 shrink-0"
+                         data-dropdown-root>
                         <a href="{% url 'cart' %}"
                            class="relative p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors group">
                             <span class="material-symbols-outlined group-hover:text-primary transition-colors">shopping_cart</span>
@@ -75,13 +76,17 @@
                                   id="cart-count"
                                   hx-swap-oob="true">{{ request.session.item_count|default:0 }}</span>
                         </a>
-                        <button onclick="document.getElementById('user-menu').classList.toggle('hidden')"
-                                class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors">
+                        <button type="button"
+                                class="p-2 hover:bg-gray-100 rounded-full text-text-main-light dark:text-text-main-dark transition-colors"
+                                data-dropdown-toggle
+                                data-dropdown-target="user-menu"
+                                aria-expanded="false"
+                                aria-controls="user-menu">
                             <span class="material-symbols-outlined">person</span>
                         </button>
-                        <!-- Dropdown -->
                         <div id="user-menu"
-                             class="hidden absolute right-4 top-full mt-2 w-48 bg-white dark:bg-gray-800 rounded shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                             class="dropdown-menu-panel hidden absolute right-0 top-full mt-2 w-52 py-2 z-50"
+                             data-dropdown-menu>
                             <!-- Orders -->
                             <a href="{% url 'order_history' %}"
                                class="block px-4 py-2 text-sm hover:bg-gray-50">Orders</a>
@@ -90,7 +95,6 @@
                             <!-- Divider -->
                             <div class="border-t my-1"></div>
                             <!-- Auth Action -->
-                            <!-- Replace condition with Django template logic -->
                             {% if user.is_authenticated %}
                                 <a href="{% url 'logout' %}"
                                    class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-50">Logout</a>
@@ -106,12 +110,12 @@
                 </div>
                 <nav class="hidden md:block border-t border-gray-100">
                     <div class="page-shell flex items-center justify-center gap-8 py-3">
-                    <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
-                       href="{% url 'series_index' series_type='comic' %}">Comics</a>
-                    <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
-                       href="{% url 'series_index' series_type='manga' %}">Manga</a>
-                    <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
-                       href="{% url 'deals' %}">Sales</a>
+                        <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                           href="{% url 'series_index' series_type='comic' %}">Comics</a>
+                        <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                           href="{% url 'series_index' series_type='manga' %}">Manga</a>
+                        <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                           href="{% url 'deals' %}">Sales</a>
                     </div>
                 </nav>
             </header>
@@ -138,7 +142,7 @@
                         </div>
                         <!-- Explore -->
                         <div class="flex-1 min-w-[180px]">
-                            <h4 class="font-display font-bold text-lg mb-4">Explore</h4>
+                            <h4 class="font-display font-bold text-white text-lg mb-4">Explore</h4>
                             <ul class="space-y-2 font-body text-sm text-white/80">
                                 <li>
                                     <a class="hover:text-white transition-colors"
@@ -156,7 +160,7 @@
                             </div>
                             <!-- Socials -->
                             <div class="flex-1 min-w-[180px] flex flex-col gap-1">
-                                <h4 class="font-display font-bold text-lg mb-2">Socials</h4>
+                                <h4 class="font-display font-bold text-white text-lg mb-2">Socials</h4>
                                 <div class="flex flex-row gap-2 mt-0">
                                     <a aria-label="X"
                                        class="inline-flex items-center text-white/70 hover:text-white transition-colors"

@@ -51,17 +51,12 @@
                 <!-- Format Selection -->
                 <div class="mb-8">
                     <label class="block type-overline font-bold mb-3 text-text-main">Select Format</label>
-                    <div class="flex flex-wrap gap-4">
+                    <div class="flex flex-wrap gap-3">
                         {% for sku in default_sku.book.sku.all %}
                             {% if not sku.is_discontinued %}
                                 <a href="{% url 'product_detail' sku.public_id %}?f={{ sku.format|lower }}"
-                                   class="flex flex-col items-start p-4 rounded border-2 min-w-[160px] relative group hover:shadow-lg transition-all border-slate-500 bg-white dark:bg-slate-800">
-                                    {% if sku.format == default_sku.format %}
-                                        <div class="absolute top-2 right-2 text-primary">
-                                            <span class="material-symbols-outlined text-[20px]">check_circle</span>
-                                        </div>
-                                    {% endif %}
-                                    <span class="type-caption font-medium mb-1">{{ sku.format }}</span>
+                                   class="format-option {% if sku.format == default_sku.format %}format-option-active{% endif %}">
+                                    <span class="format-option-label">{{ sku.format }}</span>
                                 </a>
                             {% endif %}
                         {% endfor %}
