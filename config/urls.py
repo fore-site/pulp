@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from src.views import *
 from django.contrib.auth import views as auth_views
 from src.forms import CustomLoginForm
@@ -8,6 +8,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('chaining', include('smart_selects.urls')),
     path('', IndexView.as_view(), name='home'),
     path('login/', auth_views.LoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
     path('sign-up/', signup, name='signup'),

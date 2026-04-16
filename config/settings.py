@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'nigerian_states',
+    'smart_selects',
     'tailwind',
     'theme',
     'django_htmx',
@@ -158,3 +159,5 @@ AUTHENTICATION_BACKENDS = [
 
 CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev']
 CORS_ALLOW_HEADERS = ['Idempotency-Key']
+
+USE_DJANGO_JQUERY = True

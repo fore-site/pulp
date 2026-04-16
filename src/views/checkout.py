@@ -25,6 +25,11 @@ class CheckoutShippingView(generic.TemplateView):
                 request.session['total_price'] = str(total_price)
                 total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>₦{intcomma(request.session.get('total_price'))}</span>"
                 return HttpResponse('₦3,000.00' + total_price_oob)
+            elif state == 'Select a State from the dropdown':
+                request.session['shipping_fee'] = None
+                request.session['total_price'] = str(subtotal)
+                total_price_oob = f"<span id='total_price' hx-swap-oob='true' class='text-base font-bold text-primary'>₦{intcomma(request.session.get('total_price'))}</span>"
+                return HttpResponse('pending' + total_price_oob)
             else:
                 request.session['shipping_fee'] = '5000.00'
                 total_price = (subtotal + Decimal('5000.00')).quantize(Decimal('0.01'))

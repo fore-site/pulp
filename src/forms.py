@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from .models import User, UserAddress
 from django import forms
 from django.urls import reverse_lazy
+from nigerian_states.fields import StateField, LocalGovernmentField
 
 class CustomUserCreationForm(UserCreationForm):
     
@@ -69,18 +70,6 @@ class CartUpdateForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'w-10 h-8 text-center bg-transparent border-none text-text-main font-medium focus:ring-0 p-0 text-sm quantity-input'})
     )
 
-STATES = {
-    "Lagos": 'Lagos',
-    "Ogun": 'Ogun',
-    "Abuja": 'Abuja',
-}
-
-CITIES = {
-    "Ikeja": 'Ikeja',
-    "Abeokuta": 'Abeokuta',
-    "Maitama": 'Maitama',
-}
-
 class ShippingAddressForm(forms.ModelForm):
     phone_no = forms.CharField(max_length=255, required=True, 
                                widget=forms.TextInput(
@@ -92,18 +81,17 @@ class ShippingAddressForm(forms.ModelForm):
                                     attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
                                     'id': 'email',
                                     'placeholder': 'example@email.com'}))
-    address_state = forms.CharField(
-        widget=forms.Select(choices=STATES, 
-                            attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
+    address_state = StateField(
+        widget=forms.Select(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
                                    'id': 'state',
                                    'hx-get': reverse_lazy('checkout_shipping'),
                                    'hx-target': '#shipping_fee',
                                    'hx-swap': 'innerHTML',
-                                   'hx-trigger': 'change'})
+                                   'hx-trigger': 'change',
+                                   'required': 'required'})
     )
-    address_city = forms.CharField(
-        widget=forms.Select(choices=CITIES,
-                             attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
+    address_city = LocalGovernmentField(
+        widget=forms.Select(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
                                     'id': 'city'})
     )
 
