@@ -96,8 +96,13 @@
                             <hr class="border-[#e5dcde]" />
                             <!-- Auth Action -->
                             {% if user.is_authenticated %}
-                                <a href="{% url 'logout' %}"
-                                   class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-50">Logout</a>
+                                <form action="{% url 'logout' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="block px-4 py-2 text-sm text-primary hover:bg-gray-50">
+                                        Logout
+                                    </button>
+                                </form>
                             {% else %}
                                 <a href="{% url 'login' %}"
                                    class="block px-4 py-2 text-sm hover:bg-gray-50">Sign In</a>

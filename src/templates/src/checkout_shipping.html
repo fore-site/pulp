@@ -38,19 +38,23 @@
                         <div class="flex flex-col gap-2">
                             <label class="type-caption font-medium" for="firstName">First Name</label>
                             {{ form.recipient_firstname }}
-                            {% if form.recipient_firstname.errors %}{{ form.recipient_firstname.errors }}{% endif %}
+                            {% if form.recipient_firstname.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ form.recipient_firstname.errors }}</p>
+                            {% endif %}
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="type-caption font-medium" for="lastName">Last Name</label>
                             {{ form.recipient_lastname }}
-                            {% if form.recipient_lastname.errors %}{{ form.recipient_lastname.errors }}{% endif %}
+                            {% if form.recipient_lastname.errors %}
+                                <p class="text-red-500 text-sm mt-1">{{ form.recipient_lastname.errors }}</p>
+                            {% endif %}
                         </div>
                     </div>
                     <!-- Address Field -->
                     <div class="flex flex-col gap-2">
                         <label class="type-caption font-medium" for="address">Address</label>
                         {{ form.address_desc }}
-                        {% if form.address_desc.errors %}{{ form.address_desc.errors }}{% endif %}
+                        {% if form.address_desc.errors %}<p class="text-red-500 text-sm mt-1">{{ form.address_desc.errors }}</p>{% endif %}
                     </div>
                     <!-- City, State -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -59,7 +63,7 @@
                             <div class="relative">
                                 {{ form.address_state }}
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
-                                {% if form.address_state.errors %}{{ form.address_state.errors }}{% endif %}
+                                {% if form.address_state.errors %}<p class="text-red-500 text-sm mt-1">{{ form.address_state.errors }}</p>{% endif %}
                             </div>
                         </div>
                         <div class="flex flex-col gap-2">
@@ -67,7 +71,7 @@
                             <div class="relative">
                                 {{ form.address_city }}
                                 <span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">expand_more</span>
-                                {% if form.address_city.errors %}{{ form.address_city.errors }}{% endif %}
+                                {% if form.address_city.errors %}<p class="text-red-500 text-sm mt-1">{{ form.address_city.errors }}</p>{% endif %}
                             </div>
                         </div>
                     </div>
@@ -76,12 +80,12 @@
                         <div class="flex flex-col gap-2">
                             <label class="type-caption font-medium" for="phone">Phone Number</label>
                             {{ form.phone_no }}
-                            {% if form.phone_no.errors %}{{ form.phone_no.errors }}{% endif %}
+                            {% if form.phone_no.errors %}<p class="text-red-500 text-sm mt-1">{{ form.phone_no.errors }}</p>{% endif %}
                         </div>
                         <div class="flex flex-col gap-2">
                             <label class="type-caption font-medium" for="email">Email Address</label>
                             {{ form.email }}
-                            {% if form.email.errors %}{{ form.email.errors }}{% endif %}
+                            {% if form.email.errors %}<p class="text-red-500 text-sm mt-1">{{ form.email.errors }}</p>{% endif %}
                         </div>
                     </div>
                     <!-- Navigation Buttons -->
@@ -114,7 +118,7 @@
                                 {% if request.session.shipping_fee %}
                                     ₦{{ request.session.shipping_fee|intcomma }}
                                 {% else %}
-                                    To be calculated
+                                    pending
                                 {% endif %}
                             </p>
                         </div>

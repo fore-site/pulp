@@ -6,15 +6,28 @@ import uuid
 
 class Order(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, null=True)
+    class OrderStatus(models.TextChoices):
+        pending = 'Pending'
+        processed = 'Processed'
+        shipped = 'Shipped'
+        delivered = 'Delivered'
+        cancelled = 'Cancelled'
+
+    class PaymentStatus(models.TextChoices):
+        pending = 'Pending'
+        processing = 'Processing'
+        failed = 'Failed'
+        paid = 'Paid'
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.RESTRICT, null=True, blank=True)
     session_id = models.CharField(max_length=255, blank=True)
     subtotal_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text='Total amount of the sku prices')
     shipping_fee = models.DecimalField(max_digits=10, decimal_places=2)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, help_text='total fee cost')
     public_id = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
     order_number = models.CharField(max_length=20, unique=True, editable=False)
-    order_status = models.CharField(max_length=255, blank=True, default='Pending')
-    payment_status = models.CharField(max_length=255, blank=True, default='Pending')
+    order_status = models.CharField(max_length=255, choices=OrderStatus, default='Pending')
+    payment_status = models.CharField(max_length=255, choices=PaymentStatus, default='Pending')
     delivered_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -45,7 +58,7 @@ class Order(models.Model):
         return f"PULP-{part1}-{part2}"
 
     def __str__(self):
-        return self.user
+        return self.order_number
 
     class Meta:
         db_table = 'orders'

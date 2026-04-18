@@ -57,7 +57,7 @@ class IndexView(generic.TemplateView):
         context['hot_deals'] = hot_deals
         context['comic_bestselling'] = comic_bestselling
         context['manga_bestselling'] = manga_bestselling
-
+        
         return context
                
 class ProductDetailView(generic.TemplateView):

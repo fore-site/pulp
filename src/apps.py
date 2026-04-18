@@ -7,7 +7,9 @@ class SrcConfig(AppConfig):
 
     def ready(self):
         """Set default rounding in decimal.quantize() method to ROUND_HALF_UP. Import signals"""
-        import src.signals
+        
         context = decimal.getcontext()
         context.rounding = decimal.ROUND_HALF_UP
         decimal.DefaultContext.rounding = decimal.ROUND_HALF_UP
+
+        import src.signals

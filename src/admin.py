@@ -95,12 +95,17 @@ class RatingsAdmin(admin.ModelAdmin):
 
 class CartAdmin(admin.ModelAdmin):
     model = Cart
-    list_display = ("public_id", "user")
+    list_display = ("id", "public_id", "user", "session_id")
+
+class CartItemAdmin(admin.ModelAdmin):
+    model = CartItem
+    list_display = ("id", "cart", "sku", "quantity")
+    search_fields = ("cart__user__email",)
 
 class OrderAdmin(admin.ModelAdmin):
     model = Order
-    list_display = ("order_number", "user", "session_id", "total_amount", "status", "created_at")
-    list_filter = ("status", "created_at")
+    list_display = ("order_number", "user", "session_id", "subtotal_amount", "shipping_fee", "total_amount", "order_status", "payment_status", "created_at", "delivered_at")
+    list_filter = ("order_status", "payment_status", "created_at")
     search_fields = ("order_number", "user__email")
     ordering = ("-created_at",)
 
@@ -118,6 +123,8 @@ admin.site.register(Genre, GenreAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Rating, RatingsAdmin)
 admin.site.register(Cart, CartAdmin)
+admin.site.register(CartItem, CartItemAdmin)
+admin.site.register(Order, OrderAdmin)
 
 admin.site.site_header = 'Pulp administration'
 admin.site.site_title = 'Pulp site admin'

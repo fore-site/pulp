@@ -1,4 +1,5 @@
 {% extends 'src/base.html' %}
+{% load humanize %}
 {% block title %}
     Pulp - Order History
 {% endblock title %}
@@ -30,7 +31,7 @@
 </div>
 <div class="flex flex-col items-end">
 <span class="bg-primary text-white text-[10px] font-bold px-3 py-1 uppercase tracking-widest rounded-full mb-1">{{ order.order_status }}</span>
-<span class="font-bold text-xl text-primary">₦{{ order.total_amount }}</span>
+<span class="font-bold text-xl text-primary">₦{{ order.total_amount|intcomma }}</span>
 </div>
 </div>
 <div class="flex items-center gap-4 py-4 border-t border-outline-variant">

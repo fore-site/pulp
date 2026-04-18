@@ -19,7 +19,9 @@ def signup(request: HtmxHttpRequest) -> HttpResponse:
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=True)
+            old_session_key = request.session.session_key
             login(request, user)
+            request.session['old_session_key'] = old_session_key
             return HttpResponseRedirect(reverse('home'))
         else:
             return render(request, 'src/signup.html', {"form": form})

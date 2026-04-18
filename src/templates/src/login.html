@@ -11,7 +11,6 @@
                 <h2 class="type-display-2">WELCOME</h2>
             </div>
             <form class="flex flex-col gap-6"
-                  onsubmit="event.preventDefault();"
                   action="{% url 'login' %}"
                   method="post"
                   novalidate>
@@ -31,7 +30,8 @@
                 <label class="flex flex-col gap-2">
                     <div class="flex justify-between items-center">
                         <span class="type-overline font-bold text-text-main">Password</span>
-                        <a class="type-caption font-semibold text-primary hover:underline" href="#">Forgot password?</a>
+                        <a class="type-caption font-semibold text-primary hover:underline"
+                           href="#">Forgot password?</a>
                     </div>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
@@ -43,7 +43,8 @@
                 </label>
                 <!-- Action Buttons -->
                 <div class="flex flex-col gap-4 mt-2">
-                    <button class="flex w-full items-center justify-center h-12 rounded bg-primary hover:bg-primary-dark text-white text-base font-bold tracking-wide transition-all duration-200">
+                    <button type="submit"
+                            class="flex w-full items-center justify-center h-12 rounded bg-primary hover:bg-primary-dark text-white text-base font-bold tracking-wide transition-all duration-200">
                         Sign In
                     </button>
                 </div>

@@ -81,14 +81,13 @@ class ShippingAddressForm(forms.ModelForm):
                                     attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
                                     'id': 'email',
                                     'placeholder': 'example@email.com'}))
-    address_state = StateField(
+    address_state = StateField(empty_label='Select a state',
         widget=forms.Select(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
                                    'id': 'state',
                                    'hx-get': reverse_lazy('checkout_shipping'),
                                    'hx-target': '#shipping_fee',
                                    'hx-swap': 'innerHTML',
-                                   'hx-trigger': 'change',
-                                   'required': 'required'})
+                                   'hx-trigger': 'change'})
     )
     address_city = LocalGovernmentField(
         widget=forms.Select(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',

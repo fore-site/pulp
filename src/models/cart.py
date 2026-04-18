@@ -16,7 +16,7 @@ class Cart(models.Model):
         db_table = 'carts'
 
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name="cart_items")
     sku = models.ForeignKey('Sku', on_delete=models.RESTRICT)
     quantity = models.PositiveIntegerField(validators=[MaxValueValidator(100)])
     created_at = models.DateTimeField(auto_now_add=True, null=True)

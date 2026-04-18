@@ -7,7 +7,14 @@ class PaymentStateSyncMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        
+
+        # If guest, Save session key 
+        if not request.user.is_authenticated and request.session.session_key:
+            print('Guest user, session active')
+            if not request.session.get('old_session_key'):
+                print('session key stored as old session key')
+                request.session['old_session_key'] = request.session.session_key
+
         # Logic before the view
         if not request.session.get("is_payment_processing", False):
             return self.get_response(request)

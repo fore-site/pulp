@@ -57,13 +57,18 @@ def order_detail_view(request: HtmxHttpRequest, order_number) -> HttpResponse:
         order = Order.objects.get(order_number__iexact=order_number)
         order_items = OrderItem.objects.filter(order=order)
         order_address = OrderAddress.objects.get(order=order)
+        order_created_at = order.created_at
+        estimated_delivery_dates = (order_created_at + timedelta(days=2)).strftime("%b, %d"), (order_created_at + timedelta(days=3)).strftime("%b, %d")
+        context = {'order': order, 'order_items': order_items, 'order_address': order_address,
+                    'delivery_date1': estimated_delivery_dates[0],
+                    'delivery_date2': estimated_delivery_dates[1]}
     except Order.DoesNotExist:
         order = []
         order_items = []
         order_address = []
+        context = {'order': order, 'order_items': order_items, 'order_address': order_address}
     
-    return render(request, 'src/order_detail.html',
-                   {'order': order, 'order_items': order_items, 'order_address': order_address})
+    return render(request, 'src/order_detail.html', context)
 
 @require_POST
 def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpResponse:
