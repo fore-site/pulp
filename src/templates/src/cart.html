@@ -47,7 +47,7 @@
                                     </a>
                                     <div class="flex flex-col gap-1">
                                         <a href="{% url 'product_detail' item.sku.public_id %}?f={{ item.sku.format|lower }}">
-                                            <h3 class="type-heading-4 font-bold leading-tight">{{ item.sku.book.title }}</h3>
+                                            <h3 class="type-heading-4 leading-tight">{{ item.sku.book.title }}</h3>
                                             <p class="type-caption mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
                                         </a>
                                     </div>

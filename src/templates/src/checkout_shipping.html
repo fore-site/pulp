@@ -4,6 +4,10 @@
     Pulp - Checkout
 {% endblock title %}
 {% block content %}
+    {% block head %}
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        {{ form.media }}
+    {% endblock head %}
     <!-- Main Content Area -->
     <main class="page-shell py-8 lg:py-12">
         <div class="flex flex-col lg:flex-row gap-12 lg:gap-20">
@@ -32,7 +36,6 @@
                       action="{% url 'checkout_shipping' %}"
                       novalidate>
                     {% csrf_token %}
-                    {{ form.media.js }}
                     <!-- Name Fields -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex flex-col gap-2">

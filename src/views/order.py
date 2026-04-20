@@ -31,10 +31,13 @@ class OrderHistoryView(generic.ListView):
         session_id = self.request.session.session_key
 
         if user:
-            orders = Order.objects.filter(user=user)
+            orders = (Order.objects.filter(user=user)
+                      .exclude(payment_status='Pending')
+                      .prefetch_related('order_items__sku__book').order_by('-created_at'))
         else:
             orders = (Order.objects
                       .filter(session_id=session_id)
+                      .exclude(payment_status='Pending')
                       .prefetch_related('order_items__sku__book').order_by('-created_at'))
         return orders
 

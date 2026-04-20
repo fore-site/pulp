@@ -8,7 +8,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('chaining', include('smart_selects.urls')),
+    path('lga-autocomplete/', LGAAutocomplete.as_view(), name='lga-autocomplete'),
     path('', IndexView.as_view(), name='home'),
     path('login/', auth_views.LoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
     path('sign-up/', signup, name='signup'),

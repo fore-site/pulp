@@ -4,7 +4,8 @@ from django.utils.translation import gettext_lazy as _
 from .models import User, UserAddress
 from django import forms
 from django.urls import reverse_lazy
-from nigerian_states.fields import StateField, LocalGovernmentField
+from dal import autocomplete
+from nigerian_states.models import State, LocalGovernment
 
 class CustomUserCreationForm(UserCreationForm):
     
@@ -81,18 +82,33 @@ class ShippingAddressForm(forms.ModelForm):
                                     attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
                                     'id': 'email',
                                     'placeholder': 'example@email.com'}))
-    address_state = StateField(empty_label='Select a state',
-        widget=forms.Select(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
+    address_state = forms.ModelChoiceField(queryset=State.objects.all(),
+        widget=autocomplete.ModelSelect2(url=reverse_lazy('state-autocomplete'),
+        attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
                                    'id': 'state',
                                    'hx-get': reverse_lazy('checkout_shipping'),
                                    'hx-target': '#shipping_fee',
                                    'hx-swap': 'innerHTML',
                                    'hx-trigger': 'change'})
     )
-    address_city = LocalGovernmentField(
-        widget=forms.Select(attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
-                                    'id': 'city'})
+    address_city = forms.ModelChoiceField(queryset=LocalGovernment.objects.none(),
+        widget=autocomplete.ModelSelect2(url=reverse_lazy('lga-autocomplete'),
+                                         forward=('address_state',),
+                                        attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
+                                            'id': 'city'})
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Lazy load choices – this runs after Django is fully ready
+        from nigerian_states.models import State, LocalGovernment
+        self.fields['address_state'].choices = [('', 'Select a state')] + [
+            (state.id, state.name) for state in State.objects.all()
+        ]
+        self.fields['address_city'].choices = [('', 'Select a city')] + [
+            (city.id, city.name) for city in LocalGovernment.objects.all()
+        ]
+
 
     class Meta:
         model = UserAddress

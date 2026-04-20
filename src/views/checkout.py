@@ -8,7 +8,27 @@ from src.models import CartItem, Cart
 from ..forms import ShippingAddressForm
 from datetime import timedelta
 from decimal import Decimal
+from dal import autocomplete
+from nigerian_states.models import LocalGovernment
 import json
+
+class LGAAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = LocalGovernment.objects.all()
+
+        # Get the selected state's ID from the forwarded data
+        state_id = self.forwarded.get('state', None)
+        print(f'forwarded state: {state_id}') 
+
+        # Filter LGAs by the selected state
+        if state_id:
+            qs = qs.filter(state=state_id)
+
+        # If the user is typing in the autocomplete, filter by the query text
+        if self.q:
+            qs = qs.filter(name__icontains=self.q)
+
+        return qs
 
 class CheckoutShippingView(generic.TemplateView):
     template_name = 'src/checkout_shipping.html'

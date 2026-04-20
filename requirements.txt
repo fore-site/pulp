@@ -5,7 +5,7 @@ psycopg_binary
 psycopg[pool]
 google-auth
 django-nigerian-states
-django-smart-selects
+django-autocomplete-light
 djlint
 Pillow
 django-tailwind

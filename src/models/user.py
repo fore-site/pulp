@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from django.conf import settings
 from ..managers import CustomUserManager
 from nigerian_states.models import State, LocalGovernment
-from smart_selects.db_fields import ChainedForeignKey
 import uuid
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -36,13 +35,7 @@ class UserAddress(models.Model):
     recipient_phone_no = models.CharField(max_length=255)
     address_desc = models.CharField(max_length=300)
     address_state = models.ForeignKey(State, on_delete=models.RESTRICT)
-    address_city = ChainedForeignKey(LocalGovernment, 
-                                     chained_field="address_state",
-                                     chained_model_field="state",
-                                     show_all=False,
-                                     auto_choose=True,
-                                     sort=True,
-                                     on_delete=models.RESTRICT)
+    address_city = models.ForeignKey(LocalGovernment, on_delete=models.RESTRICT)
     is_default = models.BooleanField(default=False)
 
     def __str__(self):
