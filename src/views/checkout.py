@@ -9,7 +9,7 @@ from ..forms import ShippingAddressForm
 from datetime import timedelta
 from decimal import Decimal
 from dal import autocomplete
-from nigerian_states.models import LocalGovernment
+from nigerian_states.models import LocalGovernment, State
 import json
 
 class LGAAutocomplete(autocomplete.Select2QuerySetView):
@@ -17,8 +17,7 @@ class LGAAutocomplete(autocomplete.Select2QuerySetView):
         qs = LocalGovernment.objects.all()
 
         # Get the selected state's ID from the forwarded data
-        state_id = self.forwarded.get('state', None)
-        print(f'forwarded state: {state_id}') 
+        state_id = self.forwarded.get('address_state', None) 
 
         # Filter LGAs by the selected state
         if state_id:
@@ -29,6 +28,12 @@ class LGAAutocomplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__icontains=self.q)
 
         return qs
+    
+    def get_result_label(self, result):
+        return result.name
+    
+    def get_selected_result_label(self, result):
+        return result.name
 
 class CheckoutShippingView(generic.TemplateView):
     template_name = 'src/checkout_shipping.html'
@@ -36,8 +41,12 @@ class CheckoutShippingView(generic.TemplateView):
 
     def get(self, request):
         if request.htmx:
-            state = request.GET.get('address_state')
-            request.session['address_state'] = state
+            state_id = request.GET.get('address_state')
+            try:
+                state = State.objects.get(id=state_id).name if state_id else None
+            except State.DoesNotExist:
+                state = None
+
             subtotal = Decimal(request.session.get('subtotal_price'))
             if state == 'Lagos':
                 request.session['shipping_fee'] = '3000.00'
@@ -107,8 +116,8 @@ class CheckoutShippingView(generic.TemplateView):
             self.request.session['firstname'] = form.cleaned_data['recipient_firstname']
             self.request.session['lastname'] = form.cleaned_data['recipient_lastname']
             self.request.session['address_desc'] = form.cleaned_data['address_desc']
-            self.request.session['address_state'] = form.cleaned_data['address_state']
-            self.request.session['address_city'] = form.cleaned_data['address_city']
+            self.request.session['address_state'] = State.objects.get(id=form.cleaned_data['address_state']).name
+            self.request.session['address_city'] = form.cleaned_data['address_city'].name
             self.request.session['phone_no'] = form.cleaned_data['phone_no']
             self.request.session['email'] = form.cleaned_data['email']
 

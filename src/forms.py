@@ -71,6 +71,11 @@ class CartUpdateForm(forms.Form):
         widget=forms.NumberInput(attrs={'class': 'w-10 h-8 text-center bg-transparent border-none text-text-main font-medium focus:ring-0 p-0 text-sm quantity-input'})
     )
 
+class LGAModelChoiceField(forms.ModelChoiceField):
+    def label_from_instance(self, obj):
+        """Return only the LGA name, not the state prefix."""
+        return obj.name
+
 class ShippingAddressForm(forms.ModelForm):
     phone_no = forms.CharField(max_length=255, required=True, 
                                widget=forms.TextInput(
@@ -82,33 +87,39 @@ class ShippingAddressForm(forms.ModelForm):
                                     attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main placeholder:text-text-muted focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none transition-shadow',
                                     'id': 'email',
                                     'placeholder': 'example@email.com'}))
-    address_state = forms.ModelChoiceField(queryset=State.objects.all(),
-        widget=autocomplete.ModelSelect2(url=reverse_lazy('state-autocomplete'),
-        attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
-                                   'id': 'state',
+    address_state = forms.ChoiceField(choices=[],
+        widget=autocomplete.Select(
+                            attrs={
+                                'id': 'state',
+                                   'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
                                    'hx-get': reverse_lazy('checkout_shipping'),
                                    'hx-target': '#shipping_fee',
                                    'hx-swap': 'innerHTML',
                                    'hx-trigger': 'change'})
     )
-    address_city = forms.ModelChoiceField(queryset=LocalGovernment.objects.none(),
+    address_city = LGAModelChoiceField(queryset=LocalGovernment.objects.none(),
         widget=autocomplete.ModelSelect2(url=reverse_lazy('lga-autocomplete'),
-                                         forward=('address_state',),
-                                        attrs={'class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
-                                            'id': 'city'})
+                                        forward=('address_state',),
+                                        attrs={
+                                            'id': 'city',
+                                            'data-placeholder': 'Select LGA',
+                                            'data-width': '100%',
+                                            'data-selection-css-class': 'w-full h-12 px-4 rounded-lg border border-neutral-border bg-neutral-surface text-text-main focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none appearance-none transition-shadow cursor-pointer',
+                                            'data-dropdown-css-class': 'shipping-select2-dropdown'})
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Lazy load choices – this runs after Django is fully ready
-        from nigerian_states.models import State, LocalGovernment
-        self.fields['address_state'].choices = [('', 'Select a state')] + [
-            (state.id, state.name) for state in State.objects.all()
-        ]
-        self.fields['address_city'].choices = [('', 'Select a city')] + [
-            (city.id, city.name) for city in LocalGovernment.objects.all()
-        ]
+        # Load state choices once – no extra query later
+        states = State.objects.all().values_list('id', 'name')
+        self.fields['address_state'].choices =  [('', '---------')] + list(states)
 
+        initial_state_id = self.initial.get('address_state') or self.data.get('address_state')
+        if initial_state_id:
+            self.fields['address_city'].queryset = LocalGovernment.objects.filter(state=initial_state_id)
+        else:
+            # If no state is selected, you might want an empty queryset to force a selection
+            self.fields['address_city'].queryset = LocalGovernment.objects.none()
 
     class Meta:
         model = UserAddress

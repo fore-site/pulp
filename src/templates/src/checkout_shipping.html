@@ -7,6 +7,49 @@
     {% block head %}
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         {{ form.media }}
+        <style>
+            .select2.select2-container.select2-container--default {
+                width: 100% !important;
+                display: block;
+                min-width: 0;
+                box-sizing: border-box;
+            }
+
+            .select2.select2-container.select2-container--default .select2-selection--single {
+                width: 100%;
+                height: 3rem;
+                padding: 0 1rem;
+                border-radius: 0.5rem;
+                border: 1px solid #000;
+                background-color: var(--color-neutral-surface, #fff);
+                color: var(--color-text-main-light, #1f1517);
+                outline: none;
+                appearance: none;
+                transition: box-shadow 150ms ease, border-color 150ms ease;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                box-sizing: border-box;
+            }
+
+            .select2.select2-container.select2-container--default .select2-selection--single .select2-selection__rendered {
+                color: var(--color-text-main-light, #1f1517);
+                line-height: 1.5rem;
+                padding-left: 0;
+                padding-right: 1.5rem;
+                box-sizing: border-box;
+            }
+
+            .select2.select2-container.select2-container--default .select2-selection--single .select2-selection__arrow {
+                display: none;
+            }
+
+            .select2.select2-container.select2-container--default.select2-container--focus .select2-selection--single,
+            .select2.select2-container.select2-container--default.select2-container--open .select2-selection--single {
+                border-color: var(--color-primary, #9f1239);
+                box-shadow: 0 0 0 1px var(--color-primary, #9f1239);
+            }
+        </style>
     {% endblock head %}
     <!-- Main Content Area -->
     <main class="page-shell py-8 lg:py-12">
@@ -14,18 +57,18 @@
             <!-- Left Column: Checkout Process -->
             <div class="flex-1 min-w-0">
                 <nav aria-label="Progress">
-                    <ol class="flex items-center space-x-4 md:space-x-8" role="list">
-                        <li class="flex items-center">
+                    <ol class="flex w-full items-center gap-2 sm:gap-4" role="list">
+                        <li class="flex min-w-0 items-center">
                             <span class="flex items-center text-primary">
-                                <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-primary text-xs font-bold">1</span>
-                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Shipping</span>
+                                <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary text-xs font-bold">1</span>
+                                <span class="ml-1.5 text-[11px] font-bold uppercase tracking-wide sm:ml-2 sm:text-sm sm:tracking-wider">Shipping</span>
                             </span>
                         </li>
-                        <li class="h-px w-8 bg-stone-300 md:w-16"></li>
-                        <li class="flex items-center">
+                        <li class="h-px min-w-[1.5rem] flex-1 bg-stone-300"></li>
+                        <li class="flex min-w-0 items-center">
                             <span class="flex items-center text-stone-400">
-                                <span class="flex h-6 w-6 items-center justify-center rounded-full border-2 border-stone-300 dark:border-stone-700 text-xs font-bold">2</span>
-                                <span class="ml-2 text-sm font-bold uppercase tracking-wider">Review</span>
+                                <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 border-stone-300 text-xs font-bold dark:border-stone-700">2</span>
+                                <span class="ml-1.5 text-[11px] font-bold uppercase tracking-wide sm:ml-2 sm:text-sm sm:tracking-wider">Review</span>
                             </span>
                         </li>
                     </ol>
@@ -61,7 +104,7 @@
                     </div>
                     <!-- City, State -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                        <div class="flex flex-col gap-2">
+                        <div class="flex min-w-0 flex-col gap-2">
                             <label class="type-caption font-medium" for="state">State</label>
                             <div class="relative">
                                 {{ form.address_state }}
@@ -69,7 +112,7 @@
                                 {% if form.address_state.errors %}<p class="text-red-500 text-sm mt-1">{{ form.address_state.errors }}</p>{% endif %}
                             </div>
                         </div>
-                        <div class="flex flex-col gap-2">
+                        <div class="flex min-w-0 flex-col gap-2">
                             <label class="type-caption font-medium" for="city">Local Government</label>
                             <div class="relative">
                                 {{ form.address_city }}
