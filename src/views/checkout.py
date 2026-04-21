@@ -98,7 +98,7 @@ class CheckoutShippingView(generic.TemplateView):
                 'recipient_firstname': request.session.get('firstname'),
                 'recipient_lastname': request.session.get('lastname'),
                 'address_desc': request.session.get('address_desc'),
-                'address_state': request.session.get('address_state'),
+                'address_state': State.objects.get(name=request.session.get('address_state')).id,
                 'address_city': request.session.get('address_city'),
                 'phone_no': request.session.get('phone_no'),
                 'email': request.session.get('email')})

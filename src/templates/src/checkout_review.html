@@ -5,27 +5,27 @@
 {% endblock title %}
 {% block content %}
     <main class="page-shell py-8 md:py-12">
-        <!-- Progress Steps -->
-        <nav aria-label="Progress">
-            <ol class="flex w-full items-center gap-2 sm:gap-4" role="list">
-                <li class="flex min-w-0 items-center">
-                    <span class="flex items-center text-primary">
-                        <span class="material-symbols-outlined mr-1.5 flex-shrink-0 text-[18px] sm:mr-2 sm:text-[20px]">check_circle</span>
-                        <span class="text-[11px] font-bold uppercase tracking-wide sm:text-sm sm:tracking-wider">Shipping</span>
-                    </span>
-                </li>
-                <li class="h-px min-w-[1.5rem] flex-1 bg-stone-300"></li>
-                <li class="flex min-w-0 items-center">
-                    <span class="flex items-center text-primary">
-                        <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary text-xs font-bold">2</span>
-                        <span class="ml-1.5 text-[11px] font-bold uppercase tracking-wide sm:ml-2 sm:text-sm sm:tracking-wider">Review</span>
-                    </span>
-                </li>
-            </ol>
-        </nav>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
             <!-- LEFT COLUMN -->
             <div class="lg:col-span-8 flex flex-col gap-8">
+                <!-- Progress Steps -->
+                <nav aria-label="Progress">
+                    <ol class="flex w-full items-center gap-2 sm:gap-4" role="list">
+                        <li class="flex min-w-0 items-center">
+                            <span class="flex items-center text-primary">
+                                <span class="material-symbols-outlined mr-1.5 flex-shrink-0 text-[18px] sm:mr-2 sm:text-[20px]">check_circle</span>
+                                <span class="text-[11px] font-bold uppercase tracking-wide sm:text-sm sm:tracking-wider">Shipping</span>
+                            </span>
+                        </li>
+                        <li class="h-px min-w-[1.5rem] flex-1 bg-stone-300"></li>
+                        <li class="flex min-w-0 items-center">
+                            <span class="flex items-center text-primary">
+                                <span class="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 border-primary text-xs font-bold">2</span>
+                                <span class="ml-1.5 text-[11px] font-bold uppercase tracking-wide sm:ml-2 sm:text-sm sm:tracking-wider">Review</span>
+                            </span>
+                        </li>
+                    </ol>
+                </nav>
                 <div class="flex flex-col gap-2">
                     <h2 class="type-display-2">Review Your Order</h2>
                     <p class="type-body">Please verify your details before placing the order.</p>
