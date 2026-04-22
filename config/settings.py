@@ -12,8 +12,6 @@ database_user = os.getenv('DATABASE_USER')
 database_name = os.getenv('DATABASE_NAME')
 PAYSTACK_TEST_SECRET_KEY = os.getenv('PAYSTACK_TEST_SECRET_KEY')
 
-# Quick-start development settings - unsuitable for production
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 
