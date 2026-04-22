@@ -13,3 +13,4 @@ whitenoise
 django-htmx
 requests
 faker
+gunicorn

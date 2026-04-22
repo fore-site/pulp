@@ -6,3 +6,5 @@
 /.github
 /.continue
 .codex
+/.vscode
+.pytest_cache/
