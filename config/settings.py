@@ -18,9 +18,9 @@ PAYSTACK_TEST_SECRET_KEY = os.getenv('PAYSTACK_TEST_SECRET_KEY')
 SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*', '.ngrok-free.app']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
