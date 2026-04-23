@@ -126,8 +126,9 @@
                                 Return to shipping
                             </a>
                             <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
-                                    id="pay-button">
-                                Pay with Paystack
+                                    id="pay-button"
+                                    type="button">
+                                <span id="pay-button-label">Pay with Paystack</span>
                                 <span class="material-symbols-outlined ml-2 text-lg">lock</span>
                             </button>
                         </div>
@@ -201,58 +202,67 @@
             return key;
         }
 
-        document.addEventListener("DOMContentLoaded", async () => {
-            const button = document.getElementById('pay-button');
+	        document.addEventListener("DOMContentLoaded", async () => {
+	            const button = document.getElementById('pay-button');
+	            const buttonLabel = document.getElementById('pay-button-label');
 
-            const key = await getIdempotencyKey();
+	            const key = await getIdempotencyKey();
 
-            button.addEventListener('click', async function(e) {
-                await fetch("{% url 'create_order_and_init_payment' %}", {
-                        method: "POST",
-                        headers: {
-                            "X-CSRFToken": "{{ csrf_token }}",
-                            "Idempotency-Key": key
-                        },
-                    })
-                    .then(async response => {
-                        // Check if response is JSON
-                        const contentType = response.headers.get('content-type');
-                        if (contentType && contentType.includes('application/json')) {
-                            const data = await response.json();
-                            return {
-                                data,
-                                redirected: false
-                            };
-                        } else if (response.redirected) {
-                            // Fetch followed a redirect – we may need to navigate manually
-                            return {
-                                redirected: true,
-                                url: response.url
-                            };
-                        } else {
-                            // Probably an error page HTML
-                            const html = await response.text();
-                            // Display error page
-                            document.open();
-                            document.write(html);
-                            document.close();
-                        }
-                    })
-                    .then(result => {
-                        if (result.redirected) {
-                            // Manually navigate to the redirect URL
-                            window.location.href = result.url;
-                        } else {
-                            const data = result.data;
-                            if (data.access_code) {
-                                const popup = new PaystackPop();
-                                popup.resumeTransaction(data.access_code);
-                            } else {
-                                // handle other JSON responses
-                            }
-                        }
-                    });
-            });
-        });
-    </script>
+	            const setProcessing = (isProcessing) => {
+	                button.dataset.processing = isProcessing ? "true" : "false";
+	                button.disabled = isProcessing;
+	                button.setAttribute("aria-busy", isProcessing ? "true" : "false");
+	                buttonLabel.textContent = isProcessing ? "processing" : "Pay with Paystack";
+	            };
+
+	            button.addEventListener('click', async function(e) {
+	                e.preventDefault();
+	                if (button.dataset.processing === "true") return;
+
+	                setProcessing(true);
+
+	                try {
+	                    const response = await fetch("{% url 'create_order_and_init_payment' %}", {
+	                        method: "POST",
+	                        headers: {
+	                            "X-CSRFToken": "{{ csrf_token }}",
+	                            "Idempotency-Key": key
+	                        },
+	                    });
+
+	                    const contentType = response.headers.get('content-type') || '';
+	                    if (contentType.includes('application/json')) {
+	                        const data = await response.json();
+
+	                        if (data.authorization_url) {
+	                            window.location.href = data.authorization_url;
+	                            return;
+	                        }
+
+	                        if (data.access_code) {
+	                            const popup = new PaystackPop();
+	                            popup.resumeTransaction(data.access_code);
+	                            return;
+	                        }
+
+	                        setProcessing(false);
+	                        return;
+	                    }
+
+	                    if (response.redirected) {
+	                        window.location.href = response.url;
+	                        return;
+	                    }
+
+	                    const html = await response.text();
+	                    document.open();
+	                    document.write(html);
+	                    document.close();
+	                } catch (err) {
+	                    console.error(err);
+	                    setProcessing(false);
+	                }
+	            });
+	        });
+	    </script>
 {% endblock scripts %}

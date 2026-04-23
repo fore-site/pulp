@@ -1,6 +1,7 @@
 import hashlib
 import hmac
 import json
+from urllib.parse import urlencode
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -117,7 +118,7 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
                 return render(request, 'src/payment_failed.html')
             else:
                 print('Order already exists for key, redirecting to payment callback')
-                return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
+                return HttpResponseRedirect(f"{reverse('payment_callback')}?{urlencode({'reference': order.order_number})}")
         else:
         # Key exists but no order
             print('Key exists, but no order')
@@ -129,7 +130,7 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
                                 status=500)
     else:
         # If key does not exist. First time request.
-        print('Key does not exist')
+        
         try:
             order = create_order_and_related_data(request, user, cart_items, key=key, first_time=True)
         except IntegrityError:
@@ -137,16 +138,18 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
             record = IdempotencyKey.objects.get(key=key)
             if record.order_id:
                 order = get_object_or_404(Order, id=record.order_id)
-                return HttpResponseRedirect(reverse('payment_callback', query={'reference': order.order_number}))
+                return HttpResponseRedirect(f"{reverse('payment_callback')}?{urlencode({'reference': order.order_number})}")
             else:
             # If order still does not exist
                 try:
                     order = create_order_and_related_data(request, user, cart_items, record)
                 except Exception:
+                    print('something went wrong while creating order')
                     return render(request, '404.html', 
                             {'exception': Exception("Idempotency key is required")}, 
                             status=500)
         except Exception:
+            print('Something went wrong while creating order')
             return render(request, '404.html', 
             {'exception': Exception("Unexpected error occurred while creating order")}, 
             status=500)
@@ -159,18 +162,37 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
                             'callback_url': request.build_absolute_uri(reverse('payment_callback'))},
                       headers={'Authorization': f'Bearer {settings.PAYSTACK_TEST_SECRET_KEY}'})
     except:
+        print('something went wrong while initializing payment')
         return render(request, '404.html', 
             {'exception': Exception("Unexpected error occurred while initializing payment")}, 
             status=500)
     else:
         request.session['is_payment_processing'] = True
-        return JsonResponse({'access_code': res.json().get('data', {}).get('access_code', '')})
+        try:
+            payload = res.json()
+        except Exception:
+            payload = {}
+
+        if res.status_code != 200 or not payload.get('data'):
+            print(payload)
+            return JsonResponse({'error': 'Unable to initialize payment'}, status=502)
+
+        data = payload.get('data', {})
+        return JsonResponse(
+            {
+                'access_code': data.get('access_code', ''),
+                'authorization_url': data.get('authorization_url', ''),
+                'reference': data.get('reference', order.order_number),
+            }
+        )
 
 @require_GET
 def payment_callback_view(request: HtmxHttpRequest) -> HttpResponse:
     """Callback view after successful payment to display order details and estimated delivery date"""
     
-    reference = request.GET.get('reference')
+    reference = request.GET.get('reference') or request.GET.get('trxref')
+    if not reference:
+        return redirect('home')
     
     # Fetch order
     try:
