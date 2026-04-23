@@ -20,7 +20,6 @@
                     <span class="type-overline font-bold text-text-main">Email Address</span>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">mail</span>
                         </div>
                         {{ form.email }}
                         {% if form.email.errors %}<p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>{% endif %}
@@ -33,7 +32,6 @@
                     </div>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">lock</span>
                         </div>
                         {{ form.password1 }}
                         {% if form.password1.errors %}<p class="text-red-500 text-sm mt-1">{{ form.password1.errors.0 }}</p>{% endif %}
@@ -46,7 +44,6 @@
                     </div>
                     <div class="relative group">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
-                            <span class="material-symbols-outlined text-[20px]">lock</span>
                         </div>
                         {{ form.password2 }}
                         {% if form.password2.errors %}<p class="text-red-500 text-sm mt-1">{{ form.password2.errors.0 }}</p>{% endif %}
