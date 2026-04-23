@@ -148,6 +148,14 @@
     --radius-full: 9999px;
   }
 }
+
+/* Touch devices (and "desktop site" mode on phones) can't hover. */
+@media (hover: none), (pointer: coarse) {
+  .add-to-cart-overlay {
+    transform: translateY(0) !important;
+    opacity: 1 !important;
+  }
+}
 @layer base {
   *, ::after, ::before, ::backdrop, ::file-selector-button {
     box-sizing: border-box;

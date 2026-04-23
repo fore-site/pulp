@@ -14,7 +14,7 @@
             </div>
             <!-- Filters -->
             {% with active_letter=request.GET.letter|default:'' %}
-                <div class="relative flex flex-wrap gap-2" data-dropdown-root>
+                <div class="relative w-full sm:w-auto flex flex-wrap gap-2" data-dropdown-root>
                     <button type="button"
                             name="filter"
                             class="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-5 py-2 text-sm font-medium text-text-main transition-all hover:border-primary hover:text-primary"
@@ -33,7 +33,7 @@
                         <span class="material-symbols-outlined text-[18px]">keyboard_arrow_down</span>
                     </button>
                     <div id="series-az-menu"
-                         class="dropdown-menu-panel dropdown-menu-panel-wide hidden absolute right-0 top-full mt-3 z-40"
+                         class="dropdown-menu-panel dropdown-menu-panel-wide hidden absolute left-0 sm:left-auto sm:right-0 top-full mt-3 z-40"
                          data-dropdown-menu>
                         <div class="mb-3 flex items-center justify-between gap-3 border-slate-200 px-4 pb-3"></div>
                         <div class="grid grid-cols-5 gap-2 px-4 pb-4 sm:grid-cols-7">
@@ -53,7 +53,7 @@
             {% endwith %}
         </div>
         <!-- Content Grid -->
-        <div class="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 md:gap-x-6 md:gap-y-10"
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 sm:gap-x-6 gap-y-8 md:gap-y-10"
              id="books">
             {% for series in series_list %}
                 <a class="group flex flex-col gap-2"

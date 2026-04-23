@@ -11,8 +11,7 @@
                 <h2 class="type-display-2">REGISTER NOW</h2>
             </div>
             <form class="flex flex-col gap-6"
-                  onsubmit="event.preventDefault();"
-                  action="{% url 'login' %}"
+                  action="{% url 'signup' %}"
                   method="post"
                   novalidate>
                 {% csrf_token %}
@@ -23,8 +22,8 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400 group-focus-within:text-primary transition-colors">
                             <span class="material-symbols-outlined text-[20px]">mail</span>
                         </div>
-                        {{ form.username }}
-                        {% if form.username.errors %}<p class="text-red-500 text-sm mt-1">{{ form.username.errors.0 }}</p>{% endif %}
+                        {{ form.email }}
+                        {% if form.email.errors %}<p class="text-red-500 text-sm mt-1">{{ form.email.errors.0 }}</p>{% endif %}
                     </div>
                 </label>
                 <!-- Password Input -->

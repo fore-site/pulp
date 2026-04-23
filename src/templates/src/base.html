@@ -11,11 +11,20 @@
             {% endblock title %}
         </title>
         <script src="{% static 'src/ext/event_header.js' %}" defer></script>
-        <script src="{% static 'src/app.js' %}"></script>
         <script src="https://js.paystack.co/v2/inline.js" defer></script>
         {% block head %}
         {% endblock head %}
         {% htmx_script %}
+        <style>
+            /* Touch devices (and "desktop site" mode on phones) can't hover. */
+            @media (hover: none), (pointer: coarse) {
+                .add-to-cart-overlay {
+                    transform: translateY(0) !important;
+                    opacity: 1 !important;
+                }
+            }
+        </style>
+        <script src="{% static 'src/app.js' %}?v=20260422" defer></script>
         <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap"
               rel="stylesheet" />
         <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
@@ -29,13 +38,13 @@
           hx-ext="event_header">
         <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
             <header class="sticky top-0 z-50 w-full bg-surface-light/95 backdrop-blur supports-[backdrop-filter]:bg-surface-light/80 border-b border-gray-100 dark:border-surface-dark/50">
-                <div class="page-shell py-4 flex items-center justify-between gap-4 sm:gap-6">
-                    <a class="relative flex items-center gap-2 group shrink-0 h-20 w-auto"
+                <div class="page-shell py-4 flex items-center justify-between gap-2 sm:gap-4">
+                    <a class="relative flex items-center gap-2 group shrink-0 h-16 w-auto sm:h-20"
                        href="{% url 'home' %}"
                        role="img"
                        aria-label="Pulp Logo"
                        tabindex="-1">
-                        <span class="relative block h-20 w-20 overflow-hidden">
+                        <span class="relative block h-16 w-16 overflow-hidden sm:h-20 sm:w-20">
                             <svg class="w-full h-full fill-primary drop-shadow-md"
                                  viewBox="0 0 100 80"
                                  focusable="false"
@@ -43,17 +52,17 @@
                                 <path d="M10,20 L90,10 L95,60 L60,65 L50,85 L40,68 L5,75 Z"></path>
                                 <path d="M92,8 L100,0 M94,12 L105,10 M90,6 L95,-5" stroke="#C1121F" stroke-width="3"></path>
                             </svg>
-                            <span class="absolute inset-0 flex items-center justify-center font-display italic text-white text-lg md:text-xl lg:text-2xl tracking-tighter transform -rotate-2 mt-[2px] ml-[-2px] select-none pointer-events-none w-full h-full whitespace-nowrap overflow-hidden">PULP</span>
+                            <span class="absolute inset-0 flex items-center justify-center font-display italic text-white text-base sm:text-lg md:text-xl lg:text-2xl tracking-tighter transform -rotate-2 mt-[2px] ml-[-2px] select-none pointer-events-none w-full h-full whitespace-nowrap overflow-hidden">PULP</span>
                         </span>
                     </a>
-                    <div class="hidden md:flex flex-1 max-w-2xl mx-auto">
+                    <div class="flex flex-1 min-w-0 max-w-2xl mx-auto">
                         <form action="{% url 'search_results' %}"
                               method="get"
-                              class="flex w-full"
+                              class="flex w-full min-w-0"
                               novalidate>
                             {{ search_bar_form.q }}
                             <button type="submit"
-                                    class="h-11 px-4 rounded-r-full bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center border border-primary border-l-0">
+                                    class="h-11 px-3 sm:px-4 rounded-r-full bg-primary text-white hover:bg-primary-dark transition-colors flex items-center justify-center border border-primary border-l-0 shrink-0">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      class="w-5 h-5"
                                      viewBox="0 0 24 24"
@@ -110,18 +119,15 @@
                                    class="block px-4 py-2 text-sm hover:bg-gray-50">Sign In</a>
                             {% endif %}
                         </div>
-                        <button class="md:hidden p-2 text-text-main-light">
-                            <span class="material-symbols-outlined">menu</span>
-                        </button>
                     </div>
                 </div>
-                <nav class="hidden md:block border-t border-gray-100">
-                    <div class="page-shell flex items-center justify-center gap-8 py-3">
-                        <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                <nav class="block border-t border-gray-100">
+                    <div class="page-shell flex items-center justify-center gap-4 sm:gap-8 py-3 overflow-x-auto hide-scrollbar whitespace-nowrap">
+                        <a class="text-xs sm:text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                            href="{% url 'series_index' series_type='comic' %}">Comics</a>
-                        <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                        <a class="text-xs sm:text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                            href="{% url 'series_index' series_type='manga' %}">Manga</a>
-                        <a class="text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
+                        <a class="text-xs sm:text-sm font-medium text-text-main-light hover:text-primary transition-colors uppercase tracking-wide"
                            href="{% url 'deals' %}">Sales</a>
                     </div>
                 </nav>

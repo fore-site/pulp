@@ -305,6 +305,14 @@ input[type='range']::-webkit-slider-thumb {
         width: min(22rem, calc(100vw - 2.5rem));
     }
 
+    /* Touch devices (and "desktop site" mode on phones) can't hover. */
+    @media (hover: none), (pointer: coarse) {
+        .add-to-cart-overlay {
+            transform: translateY(0) !important;
+            opacity: 1 !important;
+        }
+    }
+
     .series-az-link {
         @apply flex h-10 items-center justify-center rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-colors;
     }

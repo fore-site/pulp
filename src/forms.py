@@ -56,7 +56,7 @@ class SearchBarForm(forms.Form):
         required=True,
         widget=forms.TextInput(
             attrs={
-                'class': 'flex-1 h-11 px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-sm placeholder:text-text-muted-light transition-all',
+                'class': 'flex-1 min-w-0 w-full h-11 px-3 sm:px-4 rounded-l-full bg-background-light border border-text-main-light border-r-0 focus:outline-none text-xs sm:text-sm placeholder:text-text-muted-light transition-all',
                 'placeholder': 'Search titles, authors, isbn number...',
                 'type': 'search',
                 'id': 'search-bar'

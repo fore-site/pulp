@@ -9,7 +9,7 @@
                  style="background-image: url('{{ book_sku.book.cover_image }}')"></div>
         </a>
         <!-- Add to Cart button (hover overlay) -->
-        <div class="absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+        <div class="add-to-cart-overlay absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
             <form action="{% url 'cart' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="sku_id" value="{{ book_sku.public_id }}">

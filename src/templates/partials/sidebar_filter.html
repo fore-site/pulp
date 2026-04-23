@@ -1,17 +1,18 @@
 {% load humanize %}
-<aside class="w-full lg:w-64 flex-shrink-0 lg:sticky lg:top-24 max-h-[80vh] overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-[#e5dcde] scrollbar-track-transparent">
+<aside class="w-full md:w-64 flex-shrink-0 md:sticky md:top-24 md:max-h-[80vh] md:overflow-y-auto space-y-8 scrollbar-thin scrollbar-thumb-[#e5dcde] scrollbar-track-transparent">
     <form hx-get="{{ request.path }}"
           hx-target="#books"
           hx-swap="innerHTML"
           hx-push-url="true"
           hx-trigger="change delay:500ms"
+          id="{{ form_id|default:'sidebar-filter-form' }}"
           class="space-y-3 sidebar-filter-form">
         <!-- Clear Filters Button moved inline with first heading -->
         {% if request.GET.q %}<input type="hidden" name="q" value="{{ request.GET.q }}">{% endif %}
         <!-- Hidden input to preserve sort state -->
         <input type="hidden"
                name="sort"
-               id="sidebar-sort-value"
+               id="{{ sort_input_id|default:'sidebar-sort-value' }}"
                value="{{ selected_sort|default:'' }}">
         <!-- Genres -->
         {% if genres %}

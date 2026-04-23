@@ -3,7 +3,7 @@
         <select id="sort-select"
                 name="sort"
                 class="bg-transparent border border-[#e5dcde] dark:border-[#3a2e32] rounded-lg type-caption font-medium py-2 pl-3 pr-8 focus:ring-primary focus:border-primary cursor-pointer"
-                onchange="document.getElementById('sidebar-sort-value').value = this.value; document.querySelector('.sidebar-filter-form').dispatchEvent(new Event('change', {bubbles:true}));">
+                onchange="document.getElementById('{{ sort_input_id|default:'sidebar-sort-value' }}').value = this.value; document.getElementById('{{ form_id|default:'sidebar-filter-form' }}').dispatchEvent(new Event('change', {bubbles:true}));">
                 <option value="">Default</option>
                 {% if page_title == 'Hot Deals' %}
                         <option value="discount"

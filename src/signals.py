@@ -42,6 +42,5 @@ def merge_session_data_with_db(sender, request, user, **kwargs):
                         pass
             finally:
                 del request.session['old_session_key']
-    else:
-        del request.session['old_session_key']
+    
             

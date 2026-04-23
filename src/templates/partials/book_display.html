@@ -1,14 +1,48 @@
-<div class="flex flex-col lg:flex-row gap-10">
-    <!-- Sticky Sidebar Filters -->
-    {% include 'partials/sidebar_filter.html' with genres=genres publishers=publishers price_range=price_range %}
+<div class="flex flex-col md:flex-row gap-10 md:items-start">
+    <div class="hidden md:block">
+        {% include 'partials/sidebar_filter.html' with genres=genres publishers=publishers price_range=price_range form_id='desktop-sidebar-filter-form' sort_input_id='desktop-sidebar-sort-value' %}
+    </div>
     <!-- Product Grid Area -->
-    <div class="flex-1">
+    <div class="flex-1 min-w-0">
         <!-- Header Section -->
-        <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-8 gap-4">
-            {% include 'partials/sort.html' with selected_sort=selected_sort %}
+        <div class="mb-8 flex items-center justify-between gap-4">
+            <div class="md:hidden" data-drawer-root>
+                <button type="button"
+                        class="inline-flex items-center gap-2 rounded-full border border-[#e5dcde] px-4 py-2 text-sm font-medium text-text-main transition-colors hover:border-primary hover:text-primary"
+                        data-drawer-open
+                        aria-expanded="false">
+                    <span class="material-symbols-outlined text-[18px]">tune</span>
+                    Filter &amp; Sort
+                </button>
+                <div class="fixed inset-0 z-50 hidden md:hidden" data-drawer-container aria-hidden="true">
+                    <button type="button" class="absolute inset-0 bg-black/40" data-drawer-overlay aria-label="Close filters and sort"></button>
+                    <div class="absolute inset-y-0 left-0 flex w-[min(21rem,calc(100vw-1.25rem))] max-w-full flex-col bg-white shadow-2xl" data-drawer-panel>
+                        <div class="flex items-center justify-between border-b border-[#e5dcde] px-5 py-4">
+                            <h3 class="type-heading-4">Filter &amp; Sort</h3>
+                            <button type="button"
+                                    class="rounded-full p-2 text-text-muted transition-colors hover:bg-gray-100 hover:text-text-main"
+                                    data-drawer-close
+                                    aria-label="Close filters and sort">
+                                <span class="material-symbols-outlined">close</span>
+                            </button>
+                        </div>
+                        <div class="flex-1 overflow-y-auto px-5 py-5">
+                            <div class="border-b border-[#e5dcde] pb-5">
+                                {% include 'partials/sort.html' with selected_sort=selected_sort form_id='mobile-sidebar-filter-form' sort_input_id='mobile-sidebar-sort-value' %}
+                            </div>
+                            <div class="pt-5">
+                                {% include 'partials/sidebar_filter.html' with genres=genres publishers=publishers price_range=price_range form_id='mobile-sidebar-filter-form' sort_input_id='mobile-sidebar-sort-value' %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden md:flex md:w-full md:justify-end">
+                {% include 'partials/sort.html' with selected_sort=selected_sort form_id='desktop-sidebar-filter-form' sort_input_id='desktop-sidebar-sort-value' %}
+            </div>
         </div>
         <!-- Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 sm:gap-x-6 gap-y-8 md:gap-y-10">
             <!-- Product Cards -->
             {% for book_sku in page %}
                 <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with book_sku=book_sku %}</div>
