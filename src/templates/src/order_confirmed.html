@@ -11,9 +11,7 @@
                 <span class="material-symbols-outlined text-[48px] font-bold">check</span>
             </div>
             <h1 class="type-display-2 uppercase">Order Confirmed</h1>
-            <p class="type-body-lg font-light max-w-md">
-                Thank you for your purchase. Your taste is impeccable.
-            </p>
+            <p class="type-body-lg font-light max-w-md">Thank you for your purchase. Your taste is impeccable.</p>
             <div class="mt-4 bg-text-main text-white px-6 py-3 flex items-center gap-3 shadow-[4px_4px_0px_0px_#9F1239]">
                 <span class="type-overline font-bold opacity-80 text-white">Order Number:</span>
                 <span class="font-mono text-lg font-bold">{{ order.order_number }}</span>
@@ -38,7 +36,7 @@
                                      src="{{ item.sku.book.cover_image }}" />
                             </div>
                             <div class="flex-1">
-                                <h4 class="type-heading-4 font-bold leading-tight">{{ item.sku.book.title }}</h4>
+                                <h4 class="type-heading-4 leading-tight">{{ item.sku.book.title }}</h4>
                                 <p class="type-caption mt-1">{{ item.sku.book.authors.all|join:", " }} | {{ item.sku.format }}</p>
                                 {% if item.sku.has_discount %}
                                     <p class="type-caption font-medium mt-2">₦{{ item.sku.discounted_price|intcomma }}</p>
@@ -115,7 +113,7 @@
                class="flex-1 bg-primary text-white h-14 font-bold uppercase tracking-widest hover:bg-primary-dark transition-all duration-300 active:translate-x-[4px] active:translate-y-[4px] border border-transparent">
                 Continue Shopping
             </a>
-            <a href="{% url 'order_detail' %}?order_number={{ order.order_number }}"
+            <a href="{% url 'order_detail' order.order_number %}"
                class="flex-1 bg-transparent text-text-main border-2 border-border-sharp h-14 font-bold uppercase tracking-widest hover:bg-gray-100 transition-all duration-300 hover:translate-x-[2px] hover:translate-y-[2px] active:translate-x-[4px] active:translate-y-[4px]">
                 Track Order
             </a>

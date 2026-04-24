@@ -30,6 +30,8 @@ class PaymentStateSyncMiddleware:
         
         order = Order.objects.filter(
             user=user,
+            payment_status__iexact="Processing"
+        ).order_by("-created_at").first() if user else Order.objects.filter(
             session_id=session_id,
             payment_status__iexact="Processing"
         ).order_by("-created_at").first()

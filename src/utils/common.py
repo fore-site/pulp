@@ -252,9 +252,9 @@ def create_order_and_related_data(request, user, cart_items, record: Idempotency
         user_order = Order.objects.create(
             user = user,
             session_id = request.session.session_key,
-            subtotal_amount = request.session.get('subtotal_price'),
-            shipping_fee = request.session.get('shipping_fee'),
-            total_amount = request.session.get('total_price'),
+            subtotal_amount = Decimal(request.session.get('subtotal_price')),
+            shipping_fee = Decimal(request.session.get('shipping_fee')),
+            total_amount = Decimal(request.session.get('total_price')),
         )
 
         for item in cart_items:
@@ -290,34 +290,39 @@ def update_db_after_payment(order: Order,
                             order_items: BaseManager[OrderItem]):
     """Database operations to carry out depending on payment status."""
     if payment_status == 'Paid':
-            order.payment_status = 'Paid'
-            order.save()
-            request.session['is_payment_processing'] = False
-            request.session['item_count'] = 0
+            with transaction.atomic():
+                order.payment_status = 'Paid'
+                order.save()
+                request.session['is_payment_processing'] = False
+                request.session['item_count'] = 0
+                print('session reset')
 
-            # Clear cart items
-            user = order.user if order.user else order.session_id
-            try:
-                cart = Cart.objects.get(user)
-            except Cart.DoesNotExist:
-                pass
-            else:
-                item_deleted, _ = CartItem.objects.filter(user=user, cart=cart).delete()
-                print(f'{item_deleted} items cleared from cart after successful purchase.')
+                # Clear cart items
+                user = order.user if order.user else None
+                try:
+                    cart = Cart.objects.get(user=user) if user else Cart.objects.get(session_id=order.session_id)
+                except Cart.DoesNotExist:
+                    pass
+                else:
+                    item_deleted, _ = CartItem.objects.filter(cart=cart).delete()
+                    print(f'{item_deleted} items cleared from cart after successful purchase.')
 
-            # Update stock quantity in database
-            sku_to_update = []
-            for item in order_items:
-                stock_left = item.sku.quantity - item.quantity
-                item.sku.quantity = stock_left
-                sku_to_update.append(item.sku)
+                # Update stock quantity in database if format is not digital
+                sku_to_update = []
+                for item in order_items:
+                    if item.sku.format != 'Digital':
+                        stock_left = item.sku.quantity - item.quantity
+                        item.sku.quantity = stock_left
+                        sku_to_update.append(item.sku)
 
-            rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
-            print(f'{rows_updated} stocks updated after successful purchase')
+                # If there are any stocks to update
+                if sku_to_update:
+                    rows_updated = Sku.objects.bulk_update(sku_to_update, ['quantity'])
+                    print(f'{rows_updated} stocks updated after successful purchase')
 
-            # Delete corresponding idempotency key
-            deleted, _ = IdempotencyKey.objects.filter(order_id=order.id).delete()
-            print(f'{deleted} idempotency key(s) deleted after successful purchase')
+                # Delete corresponding idempotency key
+                deleted, _ = IdempotencyKey.objects.filter(order_id=order.id).delete()
+                print(f'{deleted} idempotency key(s) deleted after successful purchase')
     elif payment_status == 'Processing':
         order.payment_status = 'Processing'
         order.save()

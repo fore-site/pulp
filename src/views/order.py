@@ -112,7 +112,9 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
         if record.order_id:
             order = get_object_or_404(Order, id=record.order_id)
             if order.payment_status == 'Pending':
-                pass
+                order.order_number = ''
+                order.save()
+                print(order.order_number)
             elif order.payment_status == 'Failed':
                 print('Payment failed for existing order')
                 return render(request, 'src/payment_failed.html')
@@ -161,8 +163,8 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
                             'reference': order.order_number,
                             'callback_url': request.build_absolute_uri(reverse('payment_callback'))},
                       headers={'Authorization': f'Bearer {settings.PAYSTACK_TEST_SECRET_KEY}'})
-    except:
-        print('something went wrong while initializing payment')
+    except Exception as e:
+        print(f'something went wrong while initializing payment', e)
         return render(request, '404.html', 
             {'exception': Exception("Unexpected error occurred while initializing payment")}, 
             status=500)
@@ -250,6 +252,7 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
     if verified:
         payload = json.loads(request.body)
         event = payload.get('event')
+        print(event)
         if event == 'charge.success':
             reference = payload.get('data', {}).get('reference')
             try:
