@@ -112,6 +112,7 @@ def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpRespons
         if record.order_id:
             order = get_object_or_404(Order, id=record.order_id)
             if order.payment_status == 'Pending':
+                # Regenerate the order number which is the trx reference
                 order.order_number = ''
                 order.save()
                 print(order.order_number)
