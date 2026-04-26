@@ -2,7 +2,7 @@
 workers = 1
 
 # Threads allow concurrency without the heavy memory cost of a new process
-threads = 4
+threads = 1
 
 # The 'gthread' worker is a good default when using threads
 worker_class = 'gthread'
