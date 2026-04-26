@@ -125,7 +125,7 @@
                                 <span class="material-symbols-outlined text-lg">arrow_back</span>
                                 Return to shipping
                             </a>
-                            <button class="w-full sm:w-auto h-12 px-8 rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
+                            <button class="w-full sm:w-auto h-12 px-8 cursor-pointer rounded-lg bg-primary hover:bg-primary-dark text-white font-bold transition-colors shadow-sm active:scale-95 transform duration-100 flex items-center justify-center gap-2"
                                     id="pay-button"
                                     type="button">
                                 <span id="pay-button-label">Pay with Paystack</span>
@@ -202,41 +202,41 @@
             return key;
         }
 
-	        document.addEventListener("DOMContentLoaded", async () => {
-	            const button = document.getElementById('pay-button');
-	            const buttonLabel = document.getElementById('pay-button-label');
-	            const checkoutReviewUrl = "{% url 'checkout_review' %}";
-	            const paymentCallbackUrl = "{% url 'payment_callback' %}";
+        document.addEventListener("DOMContentLoaded", async () => {
+            const button = document.getElementById('pay-button');
+            const buttonLabel = document.getElementById('pay-button-label');
+            const checkoutReviewUrl = "{% url 'checkout_review' %}";
+            const paymentCallbackUrl = "{% url 'payment_callback' %}";
 
-	            const key = await getIdempotencyKey();
+            const key = await getIdempotencyKey();
 
-	            const setProcessing = (isProcessing) => {
-	                button.dataset.processing = isProcessing ? "true" : "false";
-	                button.disabled = isProcessing;
-	                button.setAttribute("aria-busy", isProcessing ? "true" : "false");
-	                buttonLabel.textContent = isProcessing ? "Processing..." : "Pay with Paystack";
-	            };
+            const setProcessing = (isProcessing) => {
+                button.dataset.processing = isProcessing ? "true" : "false";
+                button.disabled = isProcessing;
+                button.setAttribute("aria-busy", isProcessing ? "true" : "false");
+                buttonLabel.textContent = isProcessing ? "Processing..." : "Pay with Paystack";
+            };
 
-	            const redirectToFreshCheckoutReview = () => {
-	                const url = new URL(checkoutReviewUrl, window.location.origin);
-	                url.searchParams.set("_", Date.now().toString());
-	                window.location.replace(url.toString());
-	            };
+            const redirectToFreshCheckoutReview = () => {
+                const url = new URL(checkoutReviewUrl, window.location.origin);
+                url.searchParams.set("_", Date.now().toString());
+                window.location.replace(url.toString());
+            };
 
-	            // If the user navigates away for payment and then comes back via the browser back button,
-	            // the page can be restored from the bfcache with the button still stuck in "Processing...".
-	            window.addEventListener("pageshow", (event) => {
-	                const isStuck = button.disabled || button.dataset.processing === "true";
-	                if (event.persisted && isStuck) {
-	                    redirectToFreshCheckoutReview();
-	                }
-	            });
+            // If the user navigates away for payment and then comes back via the browser back button,
+            // the page can be restored from the bfcache with the button still stuck in "Processing...".
+            window.addEventListener("pageshow", (event) => {
+                const isStuck = button.disabled || button.dataset.processing === "true";
+                if (event.persisted && isStuck) {
+                    redirectToFreshCheckoutReview();
+                }
+            });
 
-	            button.addEventListener('click', async function(e) {
-	                e.preventDefault();
-	                if (button.dataset.processing === "true") return;
+            button.addEventListener('click', async function(e) {
+                e.preventDefault();
+                if (button.dataset.processing === "true") return;
 
-	                setProcessing(true);
+                setProcessing(true);
 
                 try {
                     const response = await fetch("{% url 'create_order_and_init_payment' %}", {
@@ -251,32 +251,32 @@
                     if (contentType.includes('application/json')) {
                         const data = await response.json();
 
-	                        if (data.authorization_url) {
-	                            window.location.href = data.authorization_url;
-	                            return;
-	                        }
+                        if (data.authorization_url) {
+                            window.location.href = data.authorization_url;
+                            return;
+                        }
 
-	                        if (data.access_code) {
-	                            const popup = new PaystackPop();
-	                            popup.resumeTransaction(data.access_code, {
-	                                onSuccess: () => {
-	                                    const reference = data.reference;
-	                                    const callbackUrl = new URL(paymentCallbackUrl, window.location.origin);
-	                                    if (reference) callbackUrl.searchParams.set("reference", reference);
-	                                    window.location.href = callbackUrl.toString();
-	                                },
-	                                onCancel: () => {
-	                                    redirectToFreshCheckoutReview();
-	                                },
-	                                onError: () => {
-	                                    setProcessing(false);
-	                                }
-	                            });
-	                            return;
-	                        }
+                        if (data.access_code) {
+                            const popup = new PaystackPop();
+                            popup.resumeTransaction(data.access_code, {
+                                onSuccess: () => {
+                                    const reference = data.reference;
+                                    const callbackUrl = new URL(paymentCallbackUrl, window.location.origin);
+                                    if (reference) callbackUrl.searchParams.set("reference", reference);
+                                    window.location.href = callbackUrl.toString();
+                                },
+                                onCancel: () => {
+                                    redirectToFreshCheckoutReview();
+                                },
+                                onError: () => {
+                                    setProcessing(false);
+                                }
+                            });
+                            return;
+                        }
 
-	                        setProcessing(false);
-	                        return;
+                        setProcessing(false);
+                        return;
                     }
 
                     if (response.redirected) {

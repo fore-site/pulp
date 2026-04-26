@@ -10,13 +10,15 @@ load_dotenv(dotenv_path=BASE_DIR / '.env')
 database_password = os.getenv('DATABASE_PASSWORD')
 database_user = os.getenv('DATABASE_USER')
 database_name = os.getenv('DATABASE_NAME')
+database_host = os.getenv('DATABASE_HOST')
+
 PAYSTACK_TEST_SECRET_KEY = os.getenv('PAYSTACK_TEST_SECRET_KEY')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -80,7 +82,7 @@ DATABASES = {
         'NAME': database_name,
         'USER': database_user,
         'PASSWORD': database_password,
-        'HOST': 'localhost',
+        'HOST': database_host,
         'PORT': '5432',
         'OPTIONS': {
             'options': '-c search_path=public'
