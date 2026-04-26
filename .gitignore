@@ -8,3 +8,4 @@
 .codex
 /.vscode
 .pytest_cache/
+bash.exe.stackdump
