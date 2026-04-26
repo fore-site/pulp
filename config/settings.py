@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'django_htmx',
 ]
 
+MIGRATION_MODULES = {
+    'nigerian_states': 'src.external_migrations.nigerian_states',
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -151,3 +155,4 @@ CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev
 CORS_ALLOW_HEADERS = ['Idempotency-Key']
 
 USE_DJANGO_JQUERY = True
+
