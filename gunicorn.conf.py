@@ -1,6 +1,3 @@
-# gunicorn.conf.py
-import multiprocessing
-
 # Recommended for low-memory environments: 1 worker only
 workers = 1
 
