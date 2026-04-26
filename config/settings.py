@@ -89,7 +89,8 @@ DATABASES = {
         'HOST': database_host,
         'PORT': '5432',
         'OPTIONS': {
-            'options': '-c search_path=public'
+            'options': '-c search_path=public',
+            'pool': True
         }
     }
 }
@@ -110,7 +111,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 
@@ -155,21 +155,3 @@ CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev
 CORS_ALLOW_HEADERS = ['Idempotency-Key']
 
 USE_DJANGO_JQUERY = True
-
-import resource
-print(f"Memory limit: {resource.getrlimit(resource.RLIMIT_AS)}")
-
-import sys
-from django.db import connection
-
-def log_queries():
-    for query in connection.queries:
-        print(f"Query: {query['sql']} Duration: {query['time']}s", file=sys.stderr)
-
-# At the very end of settings.py
-print("Checking for startup queries...", file=sys.stderr)
-# Connect the signal to log queries after app loads
-from django.db.backends.signals import connection_created
-def on_connection_created(connection, **kwargs):
-    connection.queries_log = []
-connection_created.connect(on_connection_created)
