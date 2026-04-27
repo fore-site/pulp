@@ -374,57 +374,6 @@ input[type='range']::-webkit-slider-thumb {
         color: var(--color-text-soft-light) !important;
     }
 
-    .dark .dark\:text-white,
-    .dark .dark\:text-slate-200,
-    .dark .dark\:text-slate-300,
-    .dark .dark\:text-text-main-dark {
-        color: var(--color-text-main-dark) !important;
-    }
-
-    .dark .dark\:text-slate-400,
-    .dark .dark\:text-stone-400 {
-        color: var(--color-text-muted-dark) !important;
-    }
-
-    .dark .dropdown-menu-panel {
-        border-color: color-mix(in srgb, var(--color-text-muted-dark) 24%, black);
-        background: var(--color-surface-dark);
-        color: var(--color-text-main-dark);
-    }
-
-    .dark .series-az-link {
-        @apply border-slate-700 text-slate-200;
-    }
-
-    .dark .series-az-link:hover {
-        color: var(--color-primary-light);
-    }
-
-    .dark .series-az-link-active {
-        border-color: var(--color-primary-light);
-        background: var(--color-primary-light);
-        color: var(--color-surface-light);
-    }
-
-    .dark .format-option {
-        border-color: color-mix(in srgb, var(--color-text-muted-dark) 35%, black);
-        background: color-mix(in srgb, var(--color-surface-dark) 90%, var(--color-primary) 10%);
-    }
-
-    .dark .format-option:hover {
-        border-color: var(--color-primary-light);
-        background: color-mix(in srgb, var(--color-surface-dark) 82%, var(--color-primary) 18%);
-    }
-
-    .dark .format-option-active {
-        border-color: var(--color-primary-light);
-        background: color-mix(in srgb, var(--color-surface-dark) 76%, var(--color-primary) 24%);
-    }
-
-    .dark .format-option-label {
-        color: var(--color-text-main-dark);
-    }
-
     .font-display,
     h1,
     h2,
