@@ -14,9 +14,15 @@
                     <span class="material-symbols-outlined text-[18px]">tune</span>
                     Filter &amp; Sort
                 </button>
-                <div class="fixed inset-0 z-50 hidden md:hidden" data-drawer-container aria-hidden="true">
-                    <button type="button" class="absolute inset-0 bg-black/40" data-drawer-overlay aria-label="Close filters and sort"></button>
-                    <div class="absolute inset-y-0 left-0 flex w-[min(21rem,calc(100vw-1.25rem))] max-w-full flex-col bg-white shadow-2xl" data-drawer-panel>
+                <div class="fixed inset-0 z-50 hidden md:hidden"
+                     data-drawer-container
+                     aria-hidden="true">
+                    <button type="button"
+                            class="absolute inset-0 bg-black/40"
+                            data-drawer-overlay
+                            aria-label="Close filters and sort"></button>
+                    <div class="absolute inset-y-0 left-0 flex w-[min(21rem,calc(100vw-1.25rem))] max-w-full flex-col bg-white shadow-2xl"
+                         data-drawer-panel>
                         <div class="flex items-center justify-between border-b border-[#e5dcde] px-5 py-4">
                             <h3 class="type-heading-4">Filter &amp; Sort</h3>
                             <button type="button"
@@ -42,10 +48,10 @@
             </div>
         </div>
         <!-- Grid -->
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-x-5 sm:gap-x-6 gap-y-8 md:gap-y-10">
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-5 sm:gap-x-6 gap-y-8 md:gap-y-10">
             <!-- Product Cards -->
             {% for book_sku in page %}
-                <div class="group flex flex-col gap-3">{% include 'partials/base_book_card.html' with book_sku=book_sku %}</div>
+                {% include 'partials/base_book_card.html' with book_sku=book_sku %}
             {% empty %}
                 <p class="type-body text-center">No books available</p>
             {% endfor %}
