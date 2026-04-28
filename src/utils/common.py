@@ -1,5 +1,5 @@
-from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef, Q
-from ..models import Sku, Cart, CartItem, Category, Order, OrderAddress, OrderItem, IdempotencyKey
+from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef, Q, Prefetch
+from ..models import Sku, Cart, CartItem, Category, Order, OrderAddress, OrderItem, IdempotencyKey, Author
 from django.db import transaction
 from django.db.models.manager import BaseManager
 from django.utils import timezone
@@ -82,8 +82,8 @@ def base_book_queryset(sku: Sku):
     """Function that acts as the base queryset for subsequent queries on the Sku model. Fundamental filters have been applied"""
 
     return (sku.objects.filter(Q(quantity__gt=0) | Q(quantity__isnull=True), is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False)
-                         .select_related('book__series__category')
-                         .prefetch_related('book__authors')
+                         .select_related('book')
+                        .prefetch_related(Prefetch('book__authors', queryset=Author.objects.only('name')))
                          )
 
 def get_user_and_session(request: HttpRequest):
