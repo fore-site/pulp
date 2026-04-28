@@ -9,3 +9,4 @@
 /.vscode
 .pytest_cache/
 bash.exe.stackdump
+requirements-dev.txt

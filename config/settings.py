@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.ngrok-free.dev', '.ngrok-free.app', '.onrender.com', '.pxxl.click']
+ALLOWED_HOSTS = ['.ngrok-free.dev', '.ngrok-free.app', '.onrender.com']
 
 # Application definition
 
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'nigerian_states',
     'tailwind',
     'theme',
-    'django_htmx',
+    'django_htmx'
 ]
 
 MIGRATION_MODULES = {
@@ -155,3 +155,8 @@ CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev
 CORS_ALLOW_HEADERS = ['Idempotency-Key']
 
 USE_DJANGO_JQUERY = True
+
+if DEBUG:
+    INSTALLED_APPS.append('debug_toolbar')
+    MIDDLEWARE.insert(0, 'debug_toolbar.middleware.DebugToolbarMiddleware')
+    INTERNAL_IPS = ['127.0.0.1']
