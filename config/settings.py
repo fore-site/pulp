@@ -20,7 +20,7 @@ SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['.ngrok-free.dev', '.ngrok-free.app', '.onrender.com']
+ALLOWED_HOSTS = ['.ngrok-free.dev', '.ngrok-free.app', '.onrender.com', '.pxxl.click']
 
 # Application definition
 
@@ -151,7 +151,7 @@ AUTHENTICATION_BACKENDS = [
     'src.backends.CustomAuthBackend'
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev', 'https://pulp-3koe.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev', 'https://pulp-3koe.onrender.com', 'pulp.pxxl.click']
 CORS_ALLOW_HEADERS = ['Idempotency-Key']
 
 USE_DJANGO_JQUERY = True

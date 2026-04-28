@@ -12,3 +12,5 @@ django-htmx
 requests
 faker
 gunicorn
+django-ratelimit
+django-redis
