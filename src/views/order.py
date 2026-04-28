@@ -16,6 +16,7 @@ from datetime import timedelta
 from ..forms import OrderLookupForm
 from ..utils.common import create_order_and_related_data, update_db_after_payment
 from django.conf import settings
+from django_ratelimit.decorators import ratelimit
 import requests
 
 class HtmxHttpRequest(HttpRequest):
@@ -42,6 +43,7 @@ class OrderHistoryView(generic.ListView):
                       .prefetch_related('order_items__sku__book').order_by('-created_at'))
         return orders
 
+@ratelimit(key='ip', rate='3/m', method='POST')
 def order_lookup_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to retrieve order lookup form"""
     if request.POST:
@@ -74,6 +76,7 @@ def order_detail_view(request: HtmxHttpRequest, order_number) -> HttpResponse:
     
     return render(request, 'src/order_detail.html', context)
 
+@ratelimit(key='ip', rate='3/m', method='POST')
 @require_POST
 def create_order_and_initialize_payment(request: HtmxHttpRequest) -> HttpResponse:
     """ Create order in database and redirect to payment provider"""

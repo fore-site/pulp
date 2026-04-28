@@ -10,6 +10,8 @@ from datetime import timedelta
 from decimal import Decimal
 from dal import autocomplete
 from nigerian_states.models import LocalGovernment, State
+from django_ratelimit.decorators import ratelimit
+from django.utils.decorators import method_decorator
 import json
 
 class LGAAutocomplete(autocomplete.Select2QuerySetView):
@@ -110,6 +112,7 @@ class CheckoutShippingView(generic.TemplateView):
         
         return context
     
+    @method_decorator(ratelimit(key='ip', rate='3/m', method='POST'))
     def post(self, request):
         form = ShippingAddressForm(request.POST)
         if form.is_valid():

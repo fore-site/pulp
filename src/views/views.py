@@ -9,10 +9,13 @@ from ..forms import CustomUserCreationForm, CartUpdateForm
 from django_htmx.middleware import HtmxDetails
 from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, get_cart_items_and_forms, store_price_and_count, get_related_books, distinct_sku
 from django.utils.http import url_has_allowed_host_and_scheme
+from django.utils.decorators import method_decorator
+from django_ratelimit.decorators import ratelimit
 
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
 
+@ratelimit(key='ip', method='POST', rate='3/m')
 @require_http_methods(['GET', 'POST'])
 def signup(request: HtmxHttpRequest) -> HttpResponse:
     if request.POST:
@@ -50,6 +53,7 @@ class CartView(generic.TemplateView):
             context['trending'] = trending
         return context
     
+    @method_decorator(ratelimit(key='ip', rate='10/m', method='POST'))
     def post(self, request):
         # Get user object if authenticated, create session instance as well
         user, session_id = get_user_and_session(request)
@@ -99,6 +103,7 @@ class CartView(generic.TemplateView):
             return redirect(next_url)
         return redirect('home')
 
+@ratelimit(key='ip', rate='10/m', method='POST')
 @require_POST
 def update_and_delete_cart_view(request: HtmxHttpRequest) -> HttpResponse:
     """View to update cart contents or clear cart"""
