@@ -1,10 +1,11 @@
 from typing import Any
-from django.db.models import Subquery, OuterRef, F
+from django.db.models import Window, F, Prefetch
+from django.db.models.functions import RowNumber
 from django.http import HttpRequest
 from django.http.response import HttpResponse as HttpResponse
 from django.utils import timezone
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render
 from datetime import timedelta
 from src.models import Series, Sku, Book, BookEvent, Genre, Category, Publisher
 from django.views.decorators.http import require_GET
@@ -37,9 +38,9 @@ class IndexView(generic.TemplateView):
             manga_category = Category.objects.get(name__iexact='manga')
             cache.set('manga_category', manga_category, 3600)
         
-        manga_distinct_skus = distinct_sku(Sku, manga_category)
-        comic_distinct_skus = distinct_sku(Sku, comic_category)
-        combined_distinct_skus = manga_distinct_skus | comic_distinct_skus
+        manga_distinct_skus = distinct_sku(base_queryset, manga_category)
+        comic_distinct_skus = distinct_sku(base_queryset, comic_category)
+        combined_distinct_skus = list(set(manga_distinct_skus) | set(comic_distinct_skus))
 
         manga = (base_queryset.filter(published_at__gte=one_year, book__series__category__name__iexact='manga', id__in=manga_distinct_skus)
                  .order_by('-published_at'))[:10]
@@ -47,8 +48,11 @@ class IndexView(generic.TemplateView):
                  .order_by('-published_at'))[:10]
         hot_deals = base_queryset.filter(book__is_featured=True, discount_percent__gt=0).order_by('-discount_percent')[:10]
 
-        trending = (base_queryset.filter(book__trending_score__gt=0, id__in=combined_distinct_skus).order_by('-book__trending_score')[:10]
+        trending = cache.get('trending_sku')
+        if not trending:
+            trending = (base_queryset.filter(book__trending_score__gt=0, id__in=combined_distinct_skus).order_by('-book__trending_score')[:10]
                      )
+            cache.set('trending_sku', list(trending), 86400)
         
         comic_bestselling = (base_queryset
                               .filter(book__series__category__name__iexact='comic', book__bestseller_score__gt=0, id__in=comic_distinct_skus)
@@ -76,20 +80,32 @@ class ProductDetailView(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         public_id = self.kwargs.get('public_id')
 
-        default_format_sku = base_book_queryset(Sku).filter(public_id=public_id).get()
+        book_queryset = base_book_queryset(Sku)
+
+        default_format_sku = book_queryset.filter(public_id=public_id).get()
         BookEvent.objects.create(sku=default_format_sku, event_type='view')
         
         # More books in the series
-        books_in_series = Book.objects.filter(series=default_format_sku.book.series, is_deleted=False).exclude(sku=default_format_sku)[:10]
+        books_in_series = (Book.objects.filter(
+            series=default_format_sku.book.series,
+            is_deleted=False
+        ).exclude(sku=default_format_sku).select_related('series')
+        .prefetch_related(Prefetch('sku', base_book_queryset(Sku), to_attr='prefetched_skus')))[:10]
+
+        cache_key = f'distinct_skus_{default_format_sku.book.series.category.id}'
+        distinct_skus_ids = cache.get(cache_key)
+        if distinct_skus_ids is None:
+            distinct_skus_ids = list(distinct_sku(Sku, default_format_sku.book.series.category))
+            cache.set(cache_key, distinct_skus_ids, 3600)
 
         # Related books/sku - Filter by category        
-        base_queryset = (base_book_queryset(Sku).filter(
+        base_queryset = (book_queryset.filter(
             book__series__category=default_format_sku.book.series.category
             ).exclude(id=default_format_sku.id, book=default_format_sku.book, book__series=default_format_sku.book.series))
 
         genre_ids = default_format_sku.book.series.genres.values_list('id', flat=True)
         
-        related_titles_sku = get_related_books(default_format_sku, base_queryset, genre_ids=genre_ids) 
+        related_titles_sku = get_related_books(default_format_sku, base_queryset, distinct_skus=distinct_skus_ids, genre_ids=genre_ids) 
 
         context['format'] = default_format_sku.format
         context['default_sku'] = default_format_sku
@@ -131,7 +147,8 @@ class SeriesDetailView(generic.TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         series = get_object_or_404(Series, public_id=self.kwargs.get('public_id'), is_deleted=False)
-        sku_list = Sku.objects.filter(book__series=series, is_discontinued=False, book__is_deleted=False).order_by('book').distinct('book')
+        base_queryset = base_book_queryset(Sku)
+        sku_list = base_queryset.filter(book__series=series, is_discontinued=False, book__is_deleted=False).order_by('book').distinct('book')
         book_count = Book.objects.filter(series=series, sku__in=sku_list, is_deleted=False).count()
         
         page_num = self.request.GET.get('page', '1')
@@ -158,7 +175,7 @@ def search_results_view(request):
     base_queryset = base_book_queryset(Sku)
 
     # Get a list of all distinct Sku
-    distinct = distinct_sku(Sku)
+    distinct = distinct_sku(base_queryset)
     
     if form.is_valid():
         query = form.cleaned_data.get('q')
@@ -220,10 +237,10 @@ class BestsellingView(generic.ListView):
 
         self.category = get_object_or_404(Category, name__iexact = self.kwargs.get('category'))
 
-        # Get a list of all distinct Sku in a category 
-        distinct = distinct_sku(Sku, self.category)
-
         base_queryset = base_book_queryset(Sku)
+
+        # Get a list of all distinct Sku in a category 
+        distinct = distinct_sku(base_queryset, self.category)
 
         base_bestselling = (base_queryset
                         .filter(book__series__category=self.category, id__in=distinct, book__bestseller_score__gt=0))
@@ -286,10 +303,10 @@ class NewReleaseView(generic.ListView):
 
         self.category = get_object_or_404(Category, name__iexact=self.kwargs.get('category'))
         
-        # Get a list of all distinct Sku in a category 
-        distinct = distinct_sku(Sku, self.category)
-        
         base_queryset = base_book_queryset(Sku)
+
+        # Get a list of all distinct Sku in a category 
+        distinct = distinct_sku(base_queryset, self.category)
         
         base_new_releases = (base_queryset.filter(published_at__gte=one_year,
         book__series__category=self.category, id__in=distinct))
@@ -345,16 +362,20 @@ class HotDealsView(generic.ListView):
 
         base_queryset = base_book_queryset(Sku)
         
-        distinct_sku_func = (Sku.objects.filter(discount_percent__gt=0)
-            .distinct('book')
-            .annotate(distinct_id=Subquery(
-                Sku.objects.filter(book=OuterRef('book'))
+        base_distinct = (base_queryset.filter(discount_percent__gt=0)
                 .annotate(discounted_price=(F('price') - (F('price') * F('discount_percent') / 100)))
-                .order_by('discounted_price')
-                .values('id')[:1]
-            )).values_list('distinct_id', flat=True))
-
-        base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct_sku_func)
+                .order_by('discounted_price'))
+        
+        # Use Window function to number rows per book by price
+        distinct_sku = base_distinct.annotate(
+        row_num=Window(
+            expression=RowNumber(),
+            partition_by=[F('book_id')],
+            order_by=F('discounted_price').asc()
+        )
+        ).filter(row_num=1).values_list('id', flat=True)
+    
+        base_hot_deals = base_queryset.filter(discount_percent__gt=0, id__in=distinct_sku)
 
         # Apply filter and sort if they exist
         filter_sort = FilterSort(base_hot_deals, sort_by=sort_by, price=price_range, discount=discount, cat_filter=category_filter)

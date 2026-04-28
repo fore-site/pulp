@@ -44,7 +44,7 @@ class CartView(generic.TemplateView):
         if not context['cart_items_and_forms']:        
             # Curate trending books for empty cart state
             base_queryset = base_book_queryset(Sku)
-            distinct = distinct_sku(Sku)
+            distinct = distinct_sku(base_queryset)
             trending = (base_queryset.filter(book__trending_score__gt=0, id__in=distinct).order_by('-book__trending_score')[:10]
                      )
             context['trending'] = trending

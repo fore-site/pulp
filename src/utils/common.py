@@ -1,4 +1,4 @@
-from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef, Q, Prefetch
+from django.db.models import Case, When, F, DecimalField, Sum, Subquery, OuterRef, Q, Prefetch, Window
 from ..models import Sku, Cart, CartItem, Category, Order, OrderAddress, OrderItem, IdempotencyKey, Author
 from django.db import transaction
 from django.db.models.manager import BaseManager
@@ -7,6 +7,8 @@ from datetime import timedelta
 from django.http import HttpRequest
 from ..forms import CartUpdateForm
 from decimal import Decimal, InvalidOperation
+from django.db.models.functions import RowNumber
+from django.core.cache import cache
 
 class FilterSort:
     def __init__(self, books: BaseManager[Sku],
@@ -82,7 +84,7 @@ def base_book_queryset(sku: Sku):
     """Function that acts as the base queryset for subsequent queries on the Sku model. Fundamental filters have been applied"""
 
     return (sku.objects.filter(Q(quantity__gt=0) | Q(quantity__isnull=True), is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False)
-                         .select_related('book')
+                         .select_related('book', 'book__series', 'book__series__category')
                         .prefetch_related(Prefetch('book__authors', queryset=Author.objects.only('name')))
                          )
 
@@ -139,101 +141,108 @@ def store_price_and_count(request, cart):
     except CartItem.DoesNotExist:
         request.session['item_count'] = 0
 
-def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], genre_ids, limit=10):
+def distinct_sku(base_queryset: BaseManager[Sku], category: Category | None = None):
+    """Get cheapest SKU per book using window functions (single query)"""
+    
+    # Build cache key
+    cache_key = f'distinct_skus_{category.id if category else "all"}'
+    
+    # Try cache first
+    cached_result = cache.get(cache_key)
+    if cached_result is not None:
+        return cached_result
+
+    if category:
+        queryset = base_queryset.filter(book__series__category=category)
+    
+    # Annotate row number per book ordered by price (cheapest first)
+    queryset = base_queryset.annotate(
+        row_num=Window(
+            expression=RowNumber(),
+            partition_by=[F('book_id')],
+            order_by=F('price').asc()
+        )
+    )
+    
+    # Filter to only the cheapest SKU per book
+    result = queryset.filter(row_num=1).values_list('id', flat=True)
+    
+    # Cache result
+    cache.set(cache_key, list(result), 3600)
+    
+    # Return just the IDs
+    return result
+
+def get_related_books(book_sku: Sku, base_queryset: BaseManager[Sku], distinct_skus, genre_ids, limit=10):
     """Function to get sku related to a current book/sku"""
     related = []
     used_ids = {book_sku.id}
 
-    
-    # Create a distinct queryset, one sku per book
-    distinct_skus = (Sku.objects.filter(book__series__category=book_sku.book.series.category)
-        .exclude(book=book_sku.book)
-        .distinct('book')
-        .annotate(distinct_id=Subquery(
-            Sku.objects.filter(book=OuterRef('book')).order_by('price')
-            .values('id')[:1]
-        )).values_list('distinct_id', flat=True))
-
-    # Layer 1: Same Genre
-    layer1 = (
-        base_queryset
-        .filter(book__series__genres__in=genre_ids, id__in=distinct_skus)
-        .exclude(id__in=used_ids)
-        .order_by('?')[:limit]
-    )
-
-    for item in layer1:
-        if len(related) >= limit:
-            break
-        related.append(item)
-        used_ids.add(item.id)
-
-    # Layer 2: Same Author
+# Layer 1: Same Genre (use random ordering but limit results)
     if len(related) < limit:
-        layer2 = (
+        layer1 = list(
             base_queryset
-            .filter(book__authors__name=book_sku.book.authors.first().name, 
-            id__in=distinct_skus)
-            .exclude(id__in=used_ids)
+            .filter(book__series__genres__in=genre_ids)
+            .exclude(book=book_sku.book)
+            .distinct()
             .order_by('?')[:limit]
         )
-
+        for item in layer1:
+            if len(related) >= limit:
+                break
+            related.append(item)
+            used_ids.add(item.id)
+    
+    # Layer 2: Same Author
+    if len(related) < limit and book_sku.book.authors.first():
+        author_name = book_sku.book.authors.first().name
+        layer2 = list(
+            base_queryset
+            .filter(book__authors__name=author_name)
+            .exclude(book=book_sku.book)
+            .distinct()
+            .order_by('?')[:limit]
+        )
         for item in layer2:
             if len(related) >= limit:
                 break
-            related.append(item)
-            used_ids.add(item.id)
-
+            if item.id not in used_ids:
+                related.append(item)
+                used_ids.add(item.id)
+    
     # Layer 3: Same Publisher
-    if len(related) < limit:
-        layer3 = (
+    if len(related) < limit and book_sku.publisher:
+        layer3 = list(
             base_queryset
-            .filter(publisher__name=book_sku.publisher.name, id__in=distinct_skus)
-            .exclude(id__in=used_ids)
+            .filter(publisher=book_sku.publisher)
+            .exclude(book=book_sku.book)
+            .distinct()
             .order_by('?')[:limit]
         )
-
         for item in layer3:
             if len(related) >= limit:
                 break
-            related.append(item)
-            used_ids.add(item.id)
-
+            if item.id not in used_ids:
+                related.append(item)
+                used_ids.add(item.id)
+    
     # Layer 4: Trending in Category
     if len(related) < limit:
-        layer4 = (
+        layer4 = list(
             base_queryset
-            .filter(book__trending_score__gt=0, id__in=distinct_skus)
-            .exclude(id__in=used_ids)[:limit]
+            .filter(book__trending_score__gt=0)
+            .exclude(book=book_sku.book)
+            .distinct()
+            .order_by('-book__trending_score')[:limit]
         )
-
         for item in layer4:
             if len(related) >= limit:
                 break
-            related.append(item)
-            used_ids.add(item.id)
-
-    return related
-
-def distinct_sku(sku: Sku, category: Category | None = None):
-
-    """Create a distinct queryset, one sku per book for a category or for any category."""
-    if category:    
-        distinct_skus_with_category = (sku.objects.filter(book__series__category=category)
-            .distinct('book')
-            .annotate(distinct_id=Subquery(
-                sku.objects.filter(book=OuterRef('book')).order_by('price')
-                .values('id')[:1]
-            )).values_list('distinct_id', flat=True))
-        return distinct_skus_with_category
+            if item.id not in used_ids:
+                related.append(item)
+                used_ids.add(item.id)
     
-    distinct_skus = (sku.objects
-            .distinct('book')
-            .annotate(distinct_id=Subquery(
-                sku.objects.filter(book=OuterRef('book')).order_by('price')
-                .values('id')[:1]
-            )).values_list('distinct_id', flat=True))
-    return distinct_skus
+    return related
 
 def create_order_and_related_data(request, user, cart_items, record: IdempotencyKey | None = None, 
                                   key: str | None = None, first_time: bool = False):

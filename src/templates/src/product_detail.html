@@ -116,19 +116,21 @@
                 </button>
                 <div class="scroll-container flex overflow-x-auto gap-4 pb-4 scroll-smooth scrollbar-none">
                     {% for book in books_in_series %}
-                        <a href="{% url 'product_detail' book.sku.first.public_id %}?f={{ book.sku.first.format|lower }}">
-                            <div class="group relative flex min-w-0 flex-none w-32 flex-col gap-2 snap-start">
-                                <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
-                                    <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
-                                         data-alt="{{ book.title }} Cover"
-                                         style="background-image: url('{{ book.cover_image }}')"></div>
+                        {% with book_sku=book.prefetched_skus|first %}
+                            <a href="{% url 'product_detail' book_sku.public_id %}?f={{ book_sku.format|lower }}">
+                                <div class="group relative flex min-w-0 flex-none w-32 flex-col gap-2 snap-start">
+                                    <div class="relative aspect-[2/3] w-full overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
+                                        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                                             data-alt="{{ book.title }} Cover"
+                                             style="background-image: url('{{ book.cover_image }}')"></div>
+                                    </div>
+                                    <div class="flex min-w-0 flex-col gap-1">
+                                        <h4 class="type-heading-4 truncate">{{ book.title }}</h4>
+                                        <p class="type-caption truncate">{{ book.authors.all|join:", " }}</p>
+                                    </div>
                                 </div>
-                                <div class="flex min-w-0 flex-col gap-1">
-                                    <h4 class="type-heading-4 truncate">{{ book.title }}</h4>
-                                    <p class="type-caption truncate">{{ book.authors.all|join:", " }}</p>
-                                </div>
-                            </div>
-                        </a>
+                            </a>
+                        {% endwith %}
                     {% empty %}
                         <p class="type-body mb-4">No other book in this series</p>
                     {% endfor %}
