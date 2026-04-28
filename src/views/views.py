@@ -11,6 +11,7 @@ from ..utils.common import  base_book_queryset, get_user_and_session, get_cart, 
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.decorators import method_decorator
 from django_ratelimit.decorators import ratelimit
+from django.contrib.auth.views import LoginView
 
 class HtmxHttpRequest(HttpRequest):
     htmx: HtmxDetails
@@ -29,6 +30,11 @@ def signup(request: HtmxHttpRequest) -> HttpResponse:
     else:
         form = CustomUserCreationForm()
         return render(request, 'src/signup.html', {"form": form})
+
+@method_decorator(ratelimit(key='ip', rate='3/m', method='POST', block=True), name='dispatch')
+class RateLimitedLoginView(LoginView):
+    """Login view with rate limiting applied to POST requests"""
+    pass
 
 class CartView(generic.TemplateView):
     template_name = 'src/cart.html'

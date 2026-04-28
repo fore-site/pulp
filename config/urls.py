@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from src.views import *
 from django.contrib.auth import views as auth_views
 from src.forms import CustomLoginForm
@@ -10,7 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('lga-autocomplete/', LGAAutocomplete.as_view(), name='lga-autocomplete'),
     path('', IndexView.as_view(), name='home'),
-    path('login/', auth_views.LoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
+    path('login/', RateLimitedLoginView.as_view(template_name="src/login.html", authentication_form=CustomLoginForm), name='login'),
     path('sign-up/', signup, name='signup'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('index/<str:series_type>', SeriesIndexView.as_view(), name='series_index'),
@@ -31,3 +31,8 @@ urlpatterns = [
     path('payment/webhook/', paystack_webhook_view, name='payment_webhook'),
     path('order/creation/', create_order_and_initialize_payment, name='create_order_and_init_payment')
 ]
+
+if settings.DEBUG:
+    from debug_toolbar.toolbar import debug_toolbar_urls
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += debug_toolbar_urls()
