@@ -151,7 +151,7 @@ AUTHENTICATION_BACKENDS = [
     'src.backends.CustomAuthBackend'
 ]
 
-CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev', 'https://pulp-3koe.onrender.com', 'pulp.pxxl.click']
+CSRF_TRUSTED_ORIGINS = ['https://unboasting-avis-hypocoristically.ngrok-free.dev', 'https://pulp-3koe.onrender.com', 'https://pulp.pxxl.click']
 CORS_ALLOW_HEADERS = ['Idempotency-Key']
 
 USE_DJANGO_JQUERY = True
