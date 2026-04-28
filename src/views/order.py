@@ -268,6 +268,5 @@ def paystack_webhook_view(request: HtmxHttpRequest) -> HttpResponse:
                     update_db_after_payment(order, request, 'Paid', order_items)
             except Order.DoesNotExist:
                 pass
-            finally:
-                return HttpResponse(status=200)
+            return HttpResponse(status=200)
     return HttpResponse(status=400)
