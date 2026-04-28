@@ -9,8 +9,6 @@ from ..forms import ShippingAddressForm
 from datetime import timedelta
 from decimal import Decimal
 from dal import autocomplete
-from ratelimit.decorators import RateLimitDecorator
-from ratelimit.exception import RateLimitException
 from nigerian_states.models import LocalGovernment, State
 import json
 
