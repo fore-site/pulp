@@ -11,6 +11,7 @@ database_password = os.getenv('DATABASE_PASSWORD')
 database_user = os.getenv('DATABASE_USER')
 database_name = os.getenv('DATABASE_NAME')
 database_host = os.getenv('DATABASE_HOST')
+redis_uri = os.getenv('REDIS_URI')
 
 PAYSTACK_TEST_SECRET_KEY = os.getenv('PAYSTACK_TEST_SECRET_KEY')
 
@@ -92,6 +93,13 @@ DATABASES = {
             'options': '-c search_path=public',
             'pool': True
         }
+    }
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": redis_uri,
     }
 }
 

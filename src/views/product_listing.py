@@ -13,6 +13,7 @@ from django.db.models import Q, Count
 from django.views import generic
 from datetime import timedelta
 from ..forms import SearchBarForm
+from django.core.cache import cache
 
 class IndexView(generic.TemplateView):
     template_name = 'src/index.html'
@@ -26,9 +27,15 @@ class IndexView(generic.TemplateView):
         one_year = (today - timedelta(weeks=52)).date()
 
         base_queryset = base_book_queryset(Sku)
-        
-        comic_category = Category.objects.get(name__iexact='comic')
-        manga_category = Category.objects.get(name__iexact='manga')
+
+        comic_category = cache.get('comic_category')
+        if not comic_category:
+            comic_category = Category.objects.get(name__iexact='comic')
+            cache.set('comic_category', comic_category, 3600)
+        manga_category = cache.get('manga_category')
+        if not manga_category:
+            manga_category = Category.objects.get(name__iexact='manga')
+            cache.set('manga_category', manga_category, 3600)
         
         manga_distinct_skus = distinct_sku(Sku, manga_category)
         comic_distinct_skus = distinct_sku(Sku, comic_category)
