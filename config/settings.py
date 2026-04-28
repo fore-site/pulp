@@ -18,7 +18,7 @@ PAYSTACK_TEST_SECRET_KEY = os.getenv('PAYSTACK_TEST_SECRET_KEY')
 SECRET_KEY = os.getenv('DEV_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['.ngrok-free.dev', '.ngrok-free.app', '.onrender.com']
 
@@ -90,7 +90,7 @@ DATABASES = {
         'PORT': '5432',
         'OPTIONS': {
             'options': '-c search_path=public',
-            'pool': True
+            'pool': False
         }
     }
 }

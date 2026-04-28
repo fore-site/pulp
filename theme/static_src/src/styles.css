@@ -279,8 +279,9 @@ input[type='range']::-webkit-slider-thumb {
     .card-cover {
         width: 100%;
         min-width: 0;
-        aspect-ratio: 2 / 3;
+        aspect-ratio: 1 / 1;
         min-height: clamp(13rem, 40vw, 18rem);
+
     }
 
     .series-cover-grid {
@@ -305,14 +306,38 @@ input[type='range']::-webkit-slider-thumb {
         width: min(22rem, calc(100vw - 2.5rem));
     }
 
-    /* Touch devices (and "desktop site" mode on phones) can't hover. */
-    @media (hover: none), (pointer: coarse) {
-        .add-to-cart-overlay {
-            transform: translateY(0) !important;
-            opacity: 1 !important;
-        }
+    /* Hide mobile button on desktop */
+    .mobile-add-to-cart-container {
+        display: none;
     }
 
+    /* Desktop hover effect stays the same */
+    .desktop-add-to-cart-overlay {
+        position: absolute;
+        inset-x: 0;
+        bottom: 0;
+        padding: 0.5rem;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: all 0.3s ease;
+        z-index: 10;
+    }
+
+    .group:hover .desktop-add-to-cart-overlay {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Mobile & touch devices: hide desktop overlay, show mobile button */
+    @media (hover: none), (pointer: coarse) {
+        .desktop-add-to-cart-overlay {
+            display: none !important;
+        }
+        
+        .mobile-add-to-cart-container {
+            display: block;
+        }
+    }
     .series-az-link {
         @apply flex h-10 items-center justify-center rounded-full border border-slate-200 text-sm font-semibold text-slate-600 transition-colors;
     }

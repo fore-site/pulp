@@ -1,15 +1,21 @@
 {% load pulp_tags %}
 {% load humanize %}
 <div class="group flex flex-col gap-2">
-    <!-- Image Container -->
-    <div class="card-cover relative overflow-hidden bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
+    <!-- Image Container (no button inside anymore) -->
+    <div class="card-cover relative bg-gray-100 rounded-sm shadow-sm ring-1 ring-black/5 group-hover:ring-primary/50 transition-all duration-300">
         <!-- Background Image -->
         <a href="{% url 'product_detail' book_sku.public_id %}">
             <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
                  style="background-image: url('{{ book_sku.book.cover_image }}')"></div>
         </a>
-        <!-- Add to Cart button (hover overlay) -->
-        <div class="add-to-cart-overlay absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+        <!-- Discount / Limited Badges -->
+        {% if book_sku.has_discount and book_sku.discount_percent > 0 %}
+            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 type-overline font-bold text-white rounded-sm shadow-sm">{{ book_sku.discount_percent }}% OFF</span>
+        {% elif book_sku.quantity < 11 %}
+            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 type-overline font-bold text-white rounded-sm shadow-sm">Limited</span>
+        {% endif %}
+        <!-- Desktop overlay button (hidden by default, shows on hover) -->
+        <div class="desktop-add-to-cart-overlay absolute inset-x-0 bottom-0 p-2 translate-y-full opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
             <form action="{% url 'cart' %}" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="sku_id" value="{{ book_sku.public_id }}">
@@ -23,12 +29,6 @@
                 </button>
             </form>
         </div>
-        <!-- Discount / Limited Badges -->
-        {% if book_sku.has_discount and book_sku.discount_percent > 0 %}
-            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 type-overline font-bold text-white rounded-sm shadow-sm">{{ book_sku.discount_percent }}% OFF</span>
-        {% elif book_sku.quantity < 11 %}
-            <span class="absolute top-2 left-2 z-10 bg-primary px-2 py-1 type-overline font-bold text-white rounded-sm shadow-sm">Limited</span>
-        {% endif %}
     </div>
     <!-- Title, Author, Format -->
     <a href="{% url 'product_detail' book_sku.public_id %}">
@@ -46,5 +46,20 @@
         {% else %}
             <span class="type-body font-bold">₦{{ book_sku.price|intcomma }}</span>
         {% endif %}
+    </div>
+    <!-- Mobile button (always visible, below price) -->
+    <div class="mobile-add-to-cart-container mt-2">
+        <form action="{% url 'cart' %}" method="post">
+            {% csrf_token %}
+            <input type="hidden" name="sku_id" value="{{ book_sku.public_id }}">
+            <input type="hidden" name="next" value="{{ request.path }}">
+            <button type="submit"
+                    hx-post="{% url 'cart' %}"
+                    hx-target="#cart-count"
+                    hx-swap="innerHTML"
+                    class="w-full bg-primary hover:bg-primary-dark text-white type-caption font-bold py-2 rounded shadow-lg transform active:scale-95 transition-transform add-to-cart-btn">
+                Add to Cart
+            </button>
+        </form>
     </div>
 </div>
