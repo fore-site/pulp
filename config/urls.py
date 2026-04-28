@@ -31,8 +31,3 @@ urlpatterns = [
     path('payment/webhook/', paystack_webhook_view, name='payment_webhook'),
     path('order/creation/', create_order_and_initialize_payment, name='create_order_and_init_payment')
 ]
-
-if settings.DEBUG:
-    from debug_toolbar.toolbar import debug_toolbar_urls
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-    urlpatterns += debug_toolbar_urls()
