@@ -28,6 +28,7 @@ urlpatterns = [
     path('orders/', OrderHistoryView.as_view(), name='order_history'),
     path('orders/<str:order_number>/', order_detail_view, name='order_detail'),
     path('payment/callback/', payment_callback_view, name='payment_callback'),
+    path('payment/webhook/', paystack_webhook_view, name='payment_webhook'),
     path('order/creation/', create_order_and_initialize_payment, name='create_order_and_init_payment')
 ]
 
