@@ -84,14 +84,7 @@ def base_book_queryset(sku: Sku):
     return (sku.objects.filter(Q(quantity__gt=0) | Q(quantity__isnull=True), is_discontinued=False, book__is_deleted=False, book__series__is_deleted=False)
                          .select_related('book__series__category')
                          .prefetch_related('book__authors')
-                         .only(
-                             'book__title',
-                             'price',
-                             'format',
-                             'isbn_number',
-                             'book__authors__name',
-                             'book__series'
-                         ))
+                         )
 
 def get_user_and_session(request: HttpRequest):
     """Get user object and session key from the request object"""
