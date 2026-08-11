@@ -67,15 +67,15 @@ Those indexes should not be described as deployed optimizations unless they are 
 
 ## Benchmark status (verified on 2026-08-11)
 
-|| Metric | Historical (5c94a6a) | Current (2026-08-11) |
-||---|---:|---:|
-|| Homepage warm-cache SQL time (mean, 10 req) | 2384.0 ms | 78.0 ms |
-|| Homepage warm-cache query count (mean, 10 req) | 363.0 | 10.0 |
-|| Homepage cold-cache SQL time | 2646.0 ms | 265.0 ms |
-|| Homepage cold-cache query count | 363 | 16 |
-|| Homepage warm-cache elapsed time (mean, 10 req) | 3212.27 ms | 142.30 ms |
-|| Homepage cold-cache elapsed time | 3566.65 ms | 695.65 ms |
-|| Peak RSS after benchmark | 200.14 MB | 105.18 MB |
+| Metric | Historical (5c94a6a) | Current (2026-08-11) |
+|---|---:|---:|
+| Homepage warm-cache SQL time (mean, 10 req) | 2384.0 ms | 78.0 ms |
+| Homepage warm-cache query count (mean, 10 req) | 363.0 | 10.0 |
+| Homepage cold-cache SQL time | 2646.0 ms | 265.0 ms |
+| Homepage cold-cache query count | 363 | 16 |
+| Homepage warm-cache elapsed time (mean, 10 req) | 3212.27 ms | 142.30 ms |
+| Homepage cold-cache elapsed time | 3566.65 ms | 695.65 ms |
+| Peak RSS after benchmark | 200.14 MB | 105.18 MB |
 
 These numbers are verifiable from the benchmark JSON files in the `benchmarks/` directory:
 - `homepage-before-5c94a6a.json` (historical)
