@@ -1,0 +1,211 @@
+{
+  "target": {
+    "path": "/",
+    "host": "127.0.0.1"
+  },
+  "config": {
+    "requests": 10,
+    "warmup": 2,
+    "cold_cache": true
+  },
+  "environment": {
+    "python": "3.14.4",
+    "platform": "Linux-7.0.0-29-generic-x86_64-with-glibc2.43",
+    "peak_rss_mb_before": 74.4375,
+    "peak_rss_mb_after": 200.140625
+  },
+  "cold": {
+    "status_code": 200,
+    "elapsed_ms": 3566.6536709904904,
+    "query_count": 363,
+    "sql_ms": 2646.0,
+    "content_bytes": 472692,
+    "peak_rss_mb": 95.8984375
+  },
+  "warmup": [
+    {
+      "status_code": 200,
+      "elapsed_ms": 4047.26691399992,
+      "query_count": 363,
+      "sql_ms": 3111.0,
+      "content_bytes": 472692,
+      "peak_rss_mb": 105.66015625
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 4000.4954420001013,
+      "query_count": 363,
+      "sql_ms": 3205.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 115.24609375
+    }
+  ],
+  "warm": [
+    {
+      "status_code": 200,
+      "elapsed_ms": 3558.791190996999,
+      "query_count": 363,
+      "sql_ms": 2726.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 124.7734375
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3588.1094429933,
+      "query_count": 363,
+      "sql_ms": 2774.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 134.6953125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3162.784735002788,
+      "query_count": 363,
+      "sql_ms": 2276.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 141.01953125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3023.7908599956427,
+      "query_count": 363,
+      "sql_ms": 2210.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 149.72265625
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3040.362395986449,
+      "query_count": 363,
+      "sql_ms": 2236.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 158.50390625
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3151.127951001399,
+      "query_count": 363,
+      "sql_ms": 2262.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 166.12109375
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3268.0835589999333,
+      "query_count": 363,
+      "sql_ms": 2421.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 174.70703125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3130.305093989591,
+      "query_count": 363,
+      "sql_ms": 2362.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 182.7421875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3072.980283992365,
+      "query_count": 363,
+      "sql_ms": 2254.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 191.42578125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 3126.3410700048553,
+      "query_count": 363,
+      "sql_ms": 2319.0,
+      "content_bytes": 472691,
+      "peak_rss_mb": 200.140625
+    }
+  ],
+  "summary": {
+    "cold": {
+      "requests": 1,
+      "status_counts": {
+        "200": 1
+      },
+      "elapsed_ms": {
+        "min": 3566.6536709904904,
+        "mean": 3566.6536709904904,
+        "median": 3566.6536709904904,
+        "p95": 3566.6536709904904,
+        "p99": 3566.6536709904904,
+        "max": 3566.6536709904904
+      },
+      "query_count": {
+        "min": 363,
+        "mean": 363.0,
+        "median": 363,
+        "max": 363
+      },
+      "sql_ms": {
+        "min": 2646.0,
+        "mean": 2646.0,
+        "median": 2646.0,
+        "p95": 2646.0,
+        "p99": 2646.0,
+        "max": 2646.0
+      }
+    },
+    "warmup": {
+      "requests": 2,
+      "status_counts": {
+        "200": 2
+      },
+      "elapsed_ms": {
+        "min": 4000.4954420001013,
+        "mean": 4023.8811780000106,
+        "median": 4023.8811780000106,
+        "p95": 4047.26691399992,
+        "p99": 4047.26691399992,
+        "max": 4047.26691399992
+      },
+      "query_count": {
+        "min": 363,
+        "mean": 363.0,
+        "median": 363.0,
+        "max": 363
+      },
+      "sql_ms": {
+        "min": 3111.0,
+        "mean": 3158.0,
+        "median": 3158.0,
+        "p95": 3205.0,
+        "p99": 3205.0,
+        "max": 3205.0
+      }
+    },
+    "warm": {
+      "requests": 10,
+      "status_counts": {
+        "200": 10
+      },
+      "elapsed_ms": {
+        "min": 3023.7908599956427,
+        "mean": 3212.2676582963322,
+        "median": 3140.716522495495,
+        "p95": 3588.1094429933,
+        "p99": 3588.1094429933,
+        "max": 3588.1094429933
+      },
+      "query_count": {
+        "min": 363,
+        "mean": 363.0,
+        "median": 363.0,
+        "max": 363
+      },
+      "sql_ms": {
+        "min": 2210.0,
+        "mean": 2384.0,
+        "median": 2297.5,
+        "p95": 2774.0,
+        "p99": 2774.0,
+        "max": 2774.0
+      }
+    }
+  }
+}

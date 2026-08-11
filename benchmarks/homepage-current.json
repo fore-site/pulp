@@ -1,0 +1,299 @@
+{
+  "target": {
+    "path": "/",
+    "host": "pulp-3koe.onrender.com"
+  },
+  "config": {
+    "requests": 20,
+    "warmup": 3,
+    "cold_cache": true
+  },
+  "environment": {
+    "python": "3.14.4",
+    "platform": "Linux-7.0.0-29-generic-x86_64-with-glibc2.43",
+    "peak_rss_mb_before": 71.96875,
+    "peak_rss_mb_after": 105.17578125
+  },
+  "cold": {
+    "status_code": 200,
+    "elapsed_ms": 1252.4506460031262,
+    "query_count": 16,
+    "sql_ms": 282.0,
+    "content_bytes": 457379,
+    "peak_rss_mb": 102.31640625
+  },
+  "warmup": [
+    {
+      "status_code": 200,
+      "elapsed_ms": 265.0065130001167,
+      "query_count": 10,
+      "sql_ms": 145.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 102.31640625
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 338.1827529956354,
+      "query_count": 10,
+      "sql_ms": 181.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 102.6171875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 330.42277199274395,
+      "query_count": 10,
+      "sql_ms": 192.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 102.890625
+    }
+  ],
+  "warm": [
+    {
+      "status_code": 200,
+      "elapsed_ms": 326.7883570078993,
+      "query_count": 10,
+      "sql_ms": 180.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 103.296875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 274.7543570003472,
+      "query_count": 10,
+      "sql_ms": 143.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 103.93359375
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 309.9832149891881,
+      "query_count": 10,
+      "sql_ms": 151.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 103.94921875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 285.5226230021799,
+      "query_count": 10,
+      "sql_ms": 146.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 103.94921875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 314.45296299352776,
+      "query_count": 10,
+      "sql_ms": 177.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 103.94921875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 259.25001900759526,
+      "query_count": 10,
+      "sql_ms": 138.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.51953125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 252.96314799925312,
+      "query_count": 10,
+      "sql_ms": 132.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.51953125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 280.7739170093555,
+      "query_count": 10,
+      "sql_ms": 138.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.51953125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 247.06479400629178,
+      "query_count": 10,
+      "sql_ms": 130.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.55078125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 287.70001100201625,
+      "query_count": 10,
+      "sql_ms": 158.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.55078125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 230.63899099361151,
+      "query_count": 10,
+      "sql_ms": 119.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.55078125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 231.91445399424993,
+      "query_count": 10,
+      "sql_ms": 119.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.55078125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 276.3585329958005,
+      "query_count": 10,
+      "sql_ms": 157.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 104.55078125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 249.4718039961299,
+      "query_count": 10,
+      "sql_ms": 130.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.171875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 293.88717300025746,
+      "query_count": 10,
+      "sql_ms": 165.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.171875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 262.3519890039461,
+      "query_count": 10,
+      "sql_ms": 136.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.171875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 292.5284999946598,
+      "query_count": 10,
+      "sql_ms": 157.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.171875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 287.0436170051107,
+      "query_count": 10,
+      "sql_ms": 132.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.171875
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 261.87094098713715,
+      "query_count": 10,
+      "sql_ms": 138.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.17578125
+    },
+    {
+      "status_code": 200,
+      "elapsed_ms": 334.4184210000094,
+      "query_count": 10,
+      "sql_ms": 184.0,
+      "content_bytes": 457161,
+      "peak_rss_mb": 105.17578125
+    }
+  ],
+  "summary": {
+    "cold": {
+      "requests": 1,
+      "status_counts": {
+        "200": 1
+      },
+      "elapsed_ms": {
+        "min": 1252.4506460031262,
+        "mean": 1252.4506460031262,
+        "median": 1252.4506460031262,
+        "p95": 1252.4506460031262,
+        "p99": 1252.4506460031262,
+        "max": 1252.4506460031262
+      },
+      "query_count": {
+        "min": 16,
+        "mean": 16.0,
+        "median": 16,
+        "max": 16
+      },
+      "sql_ms": {
+        "min": 282.0,
+        "mean": 282.0,
+        "median": 282.0,
+        "p95": 282.0,
+        "p99": 282.0,
+        "max": 282.0
+      }
+    },
+    "warmup": {
+      "requests": 3,
+      "status_counts": {
+        "200": 3
+      },
+      "elapsed_ms": {
+        "min": 265.0065130001167,
+        "mean": 311.204012662832,
+        "median": 330.42277199274395,
+        "p95": 338.1827529956354,
+        "p99": 338.1827529956354,
+        "max": 338.1827529956354
+      },
+      "query_count": {
+        "min": 10,
+        "mean": 10.0,
+        "median": 10,
+        "max": 10
+      },
+      "sql_ms": {
+        "min": 145.0,
+        "mean": 172.66666666666666,
+        "median": 181.0,
+        "p95": 192.0,
+        "p99": 192.0,
+        "max": 192.0
+      }
+    },
+    "warm": {
+      "requests": 20,
+      "status_counts": {
+        "200": 20
+      },
+      "elapsed_ms": {
+        "min": 230.63899099361151,
+        "mean": 277.98689134942833,
+        "median": 278.566225002578,
+        "p95": 326.7883570078993,
+        "p99": 334.4184210000094,
+        "max": 334.4184210000094
+      },
+      "query_count": {
+        "min": 10,
+        "mean": 10.0,
+        "median": 10.0,
+        "max": 10
+      },
+      "sql_ms": {
+        "min": 119.0,
+        "mean": 146.5,
+        "median": 140.5,
+        "p95": 180.0,
+        "p99": 184.0,
+        "max": 184.0
+      }
+    }
+  }
+}
