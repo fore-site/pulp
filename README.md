@@ -72,23 +72,3 @@ python manage.py benchmark_endpoint / --cold-cache --requests 20 --warmup 3 --ou
 # apply the performance change
 python manage.py benchmark_endpoint / --cold-cache --requests 20 --warmup 3 --output benchmarks/homepage-after.json
 ```
-
-For public benchmark claims, report the command, date, commit, dataset size, cache state, database location, Python/Django versions, worker configuration, and the raw JSON artifact path.
-
-## Local development
-
-Create a `.env` file with the database settings used by `config/settings.py` (`DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `REDIS_URI`, and `DEV_SECRET_KEY`). Paystack flows also require `PAYSTACK_TEST_SECRET_KEY`.
-
-With Docker Compose:
-
-```sh
-docker compose up --build
-```
-
-The web service runs migrations, collects static files, and starts Gunicorn on port 8000. The application expects PostgreSQL and Redis to be available; Redis is configured in Django but is not declared as a service in the checked-in `docker-compose.yml`.
-
-Run the Django test suite with:
-
-```sh
-python manage.py test
-```
